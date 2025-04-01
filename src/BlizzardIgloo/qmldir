@@ -5,5 +5,3 @@ ComboBox 1.0 ComboBox.qml
 Menu 1.0 Menu.qml
 MenuBar 1.0 MenuBar.qml
 MenuItem 1.0 MenuItem.qml
-
-import QtQuick.Controls.Basic auto

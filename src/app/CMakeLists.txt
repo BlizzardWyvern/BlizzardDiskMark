@@ -16,16 +16,19 @@ qt_add_qml_module(BlizzardDiskMark
         DiskMarkDlg.cpp DiskMarkDlg.h
     DEPENDENCIES
         QtQuick
+        QtQuick.Controls
+        QtQuick.Layouts
+        QtQuick.Dialogs
     NO_RESOURCE_TARGET_PATH
 )
 
-target_link_libraries(BlizzardDiskMark PRIVATE 
-    BlizzardIgloo
+target_link_libraries(BlizzardDiskMark PRIVATE
     Qt6::Widgets
     Qt6::Gui 
     Qt6::Quick
     Qt6::Core 
-    Qt6::Qml 
+    Qt6::Qml
+    BlizzardIglooplugin
     )
 
 set_target_properties(BlizzardDiskMark PROPERTIES

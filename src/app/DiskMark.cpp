@@ -1,5 +1,7 @@
 ﻿#include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QtQml/qqmlextensionplugin.h>
+#include <QtPlugin>
 
 #include "DiskMarkDlg.h"
 
@@ -25,6 +27,7 @@ int main(int argc, char *argv[])
 	
 	QQmlApplicationEngine engine;
 	engine.addImportPath(QStringLiteral("qrc:/"));
+	qDebug() << engine.importPathList();
 	engine.load(QUrl(QStringLiteral("qrc:/DiskMarkDlg.qml")));
 
 	if (engine.rootObjects().isEmpty())

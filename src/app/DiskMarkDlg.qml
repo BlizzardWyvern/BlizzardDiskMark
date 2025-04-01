@@ -4,7 +4,6 @@ import BlizzardDiskMark
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Shapes
 import QtQuick.Dialogs
 
 ApplicationWindow {
@@ -141,12 +140,12 @@ ApplicationWindow {
                     checked: diskMarkDlg.m_TestData == CDiskMarkDlg.TEST_DATA_RANDOM
                     onTriggered: diskMarkDlg.OnModeDefault()
                 }
-                Action {
-                    text: qsTr("&All 0x00 (0 Fill)")
-                    checkable: true
-                    checked: diskMarkDlg.m_TestData == CDiskMarkDlg.TEST_DATA_ALL0X00
-                    onTriggered: diskMarkDlg.OnModeAll0x00()
-                }
+                // Action {
+                //     text: qsTr("&All 0x00 (0 Fill)")
+                //     checkable: true
+                //     checked: diskMarkDlg.m_TestData == CDiskMarkDlg.TEST_DATA_ALL0X00
+                //     onTriggered: diskMarkDlg.OnModeAll0x00()
+                // }
             }
             MenuSeparator {}
             Action {

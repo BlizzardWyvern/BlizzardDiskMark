@@ -7,9 +7,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Gui Widgets)
 qt_standard_project_setup(REQUIRES 6.8)
 
+set(WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 qt_policy(SET QTP0004 NEW)
 set(CMAKE_AUTOMOC ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
+set(QML_IMPORT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/BlizzardIgloo")
 
+add_subdirectory(src/BlizzardIgloo)
 add_subdirectory(src/app)
-add_subdirectory(src/Igloo)
