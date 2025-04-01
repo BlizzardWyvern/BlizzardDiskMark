@@ -826,8 +826,8 @@ bool Init(void* dlg)
 		close(pipefd[0]);
 
 		waitpid(pid, &status, 0);
-		if (WIFEXITED(status)) {
-			ShowErrorMessage(dlg, "Exit status: %d\n", WEXITSTATUS(status));
+		if (!(WIFEXITED(status) || WEXITSTATUS(status) == 0)) {
+			ShowErrorMessage(dlg, QString::asprintf("Exit status: %d\n", WEXITSTATUS(status)));
 		}
 	}
 #elif defined(_WIN32)
