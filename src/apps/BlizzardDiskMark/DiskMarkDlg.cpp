@@ -7,7 +7,6 @@
 
 #include "DiskMarkDlg.h"
 #include "DiskBench.h"
-#include "../../lib/stdafx.h"
 
 #include <math.h>
 #include <QApplication>

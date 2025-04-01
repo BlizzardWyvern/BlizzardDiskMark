@@ -7,6 +7,9 @@
 
 #pragma once
 
+#define MAX_THREADS 64
+#define MAX_QUEUES 512
+
 #include <QMainWindow>
 #include <QDialog>
 #include <QLabel>
@@ -24,7 +27,6 @@
 
 #include "DiskBench.h"
 #include "SettingsDlg.h"
-//#include "FontSelectionDlg.h"
 
 class CDiskMarkDlg : public QObject
 {

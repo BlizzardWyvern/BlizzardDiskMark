@@ -5,7 +5,6 @@
 //      License : MIT License
 /*---------------------------------------------------------------------------*/
 
-//#include "stdafx.h"
 #include "DiskMarkDlg.h"
 #include "DiskBench.h"
 
@@ -27,8 +26,6 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QTimer>
-
-#pragma warning(disable : 4996)
 
 static QString TestFilePath;
 static QString TestFileDir;

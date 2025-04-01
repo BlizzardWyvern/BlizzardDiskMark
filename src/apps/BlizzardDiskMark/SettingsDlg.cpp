@@ -5,7 +5,6 @@
 //      License : MIT License
 /*---------------------------------------------------------------------------*/
 
-#include "../lib/stdafx.h"
 #include "DiskMarkDlg.h"
 #include "SettingsDlg.h"
 
