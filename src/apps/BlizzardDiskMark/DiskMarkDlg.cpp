@@ -248,15 +248,6 @@ void CDiskMarkDlg::OnExit()
 		m_WinThread->terminate();
 		return;
 	}
-	// Remove test directory
-	if(m_TestTargetPath != "")
-	{
-		QDir dir(m_TestTargetPath);
-		if (dir.exists())
-		{
-			dir.removeRecursively();
-		}
-	}
 	QApplication::quit();
 }
 
@@ -543,7 +534,7 @@ void CDiskMarkDlg::Stop()
 
 		if (m_WinThread != NULL)
 		{
-			m_WinThread->quit();
+			m_WinThread->terminate();
 			m_WinThread = NULL;
 		}
 	}
@@ -1208,16 +1199,8 @@ void CDiskMarkDlg::OnExitBenchmark()
 {
 	if (m_WinThread != NULL)
 	{
-		m_WinThread->quit();
+		m_WinThread->terminate();
 		m_WinThread = NULL;
-	}
-	if(m_TestTargetPath != "")
-	{
-		QDir dir(m_TestTargetPath);
-		if (dir.exists())
-		{
-			dir.removeRecursively();
-		}
 	}
 	m_DiskBenchStatus = false;
 	m_DiskBenchStatusChanged();

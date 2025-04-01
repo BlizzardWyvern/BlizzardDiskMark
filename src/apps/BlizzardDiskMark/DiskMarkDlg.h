@@ -139,6 +139,8 @@ signals:
 	void m_scoreChanged();
 	
 	void m_DiskBenchStatusChanged();
+
+	void error(const QString& message);
 private:
 	QString m_ValueTestCount;
 	QString m_ValueTestUnit;

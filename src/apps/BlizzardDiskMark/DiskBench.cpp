@@ -26,32 +26,27 @@
 #include <QJsonArray>
 #include <QMessageBox>
 #include <QDir>
+#include <QTimer>
 
 #pragma warning(disable : 4996)
 
 static QString TestFilePath;
 static QString TestFileDir;
 
-//static HANDLE hFile;
 static int DiskTestCount;
-static uint64_t DiskTestSize;
+static quint64 DiskTestSize;
 static int BenchType[9];
 static int BenchSize[9];
 static int BenchQueues[9];
 static int BenchThreads[9];
-// static int Affinity;
 static bool MixMode;
 static int MixRatio;
 
-static void ShowErrorMessage(QString message);
+static void ShowErrorMessage(void* dlg, QString message);
 static void Interval(void* dlg);
-
 static bool Init(void* dlg);
 static void DiskSpd(void* dlg, DISK_SPD_CMD cmd);
-
 static unsigned int Exit(void* dlg);
-//static void CALLBACK TimerProc(int hwnd, unsigned int uMsg, unsigned int* idEvent, int dwTime);
-static volatile bool WaitFlag;
 
 int ExecAndWait(QString *pszCmd, double *score, double *latency, double *iops)
 {
@@ -156,7 +151,7 @@ int ExecAndWait(QString *pszCmd, double *score, double *latency, double *iops)
 
 	// Create the child process without showing a window
 	std::wstring commandW = (*pszCmd).toStdWString();
-	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, CREATE_NO_WINDOW | HIGH_PRIORITY_CLASS, NULL, NULL, &si, &pi)) {
 		perror("CreateProcess");
 		return -1;
 	}
@@ -187,8 +182,6 @@ int ExecAndWait(QString *pszCmd, double *score, double *latency, double *iops)
 
 	Code = exitCode;
 #endif
-
-	// printf("Output: %s\n", output.toStdString().c_str());
 	QJsonDocument jsonResponse = QJsonDocument::fromJson(output.toUtf8());
 	if (!jsonResponse.isNull()) {
 		QJsonObject jsonObject = jsonResponse.object();
@@ -221,13 +214,11 @@ int ExecAndWait(QString *pszCmd, double *score, double *latency, double *iops)
 	return Code;
 }
 
-
-void ShowErrorMessage(QString message)
+void ShowErrorMessage(void* dlg, QString message)
 {
-	// QString errorMessage = QString("Error: %1\n%2").arg(message).arg(strerror(errno));
-	// QMetaObject::invokeMethod(QApplication::instance(), [errorMessage]() {
-	// 	QMessageBox::critical(nullptr, QObject::tr("Error"), errorMessage);
-	// }, Qt::QueuedConnection);
+	((CDiskMarkDlg*)dlg)->error(message);
+
+	Exit(dlg);
 }
 
 void Interval(void* dlg)
@@ -235,22 +226,24 @@ void Interval(void* dlg)
 	int intervalTime = ((CDiskMarkDlg*) dlg)->m_IntervalTime;
 	QString title;
 
-	for (int i = 0; i < intervalTime; i++)
-	{
-		if (!((CDiskMarkDlg*) dlg)->m_DiskBenchStatus)
-		{
+	QTimer timer;
+	QEventLoop loop;
+	int elapsed = 0;
+
+	QObject::connect(&timer, &QTimer::timeout, [&]() {
+		if (!((CDiskMarkDlg*) dlg)->m_DiskBenchStatus || elapsed >= intervalTime) {
+			loop.quit();
 			return;
 		}
-		title = QString("Interval Time %1/%2 sec").arg(i).arg(intervalTime);
-		//QMetaObject::invokeMethod(((CDiskMarkDlg*) dlg), "OnUpdateMessage", Qt::QueuedConnection, Q_ARG(QString*, &title));
+		title = QString("Interval Time %1/%2 sec").arg(elapsed).arg(intervalTime);
 		((CDiskMarkDlg*) dlg)->m_WindowTitle = title;
 		((CDiskMarkDlg*) dlg)->m_WindowTitleChanged();
-		#ifdef _WIN32
-				Sleep(1000); // Sleep for 1000 milliseconds
-		#else
-				sleep(1); // Sleep for 1 second
-		#endif
-	}
+		elapsed++;
+	});
+
+	timer.start(1000); // 1000 milliseconds = 1 second
+	loop.exec();
+	timer.stop();
 }
 
 quint64 ExecDiskBenchAll(void* dlg)
@@ -292,7 +285,6 @@ quint64 ExecDiskBenchAll(void* dlg)
 
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBenchAllPeak(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -326,7 +318,6 @@ quint64 ExecDiskBenchAllPeak(void* dlg)
 
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBenchAllReal(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -360,7 +351,6 @@ quint64 ExecDiskBenchAllReal(void* dlg)
 
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBenchAllDemo(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -413,7 +403,6 @@ quint64 ExecDiskBench0(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench1(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -442,7 +431,6 @@ quint64 ExecDiskBench1(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench2(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -471,7 +459,6 @@ quint64 ExecDiskBench2(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench3(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -500,7 +487,6 @@ quint64 ExecDiskBench3(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench4(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -529,7 +515,6 @@ quint64 ExecDiskBench4(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench5(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -558,7 +543,6 @@ quint64 ExecDiskBench5(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench6(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -587,7 +571,6 @@ quint64 ExecDiskBench6(void* dlg)
 	}
 	return Exit(dlg);
 }
-
 quint64 ExecDiskBench7(void* dlg)
 {
 	int benchmark = ((CDiskMarkDlg*)dlg)->m_Benchmark;
@@ -623,22 +606,6 @@ bool Init(void* dlg)
 	bool result;
 	static QString cstr;
 	QString drive;
-
-	// quint64 freeBytesAvailableToCaller;
-	// quint64 totalNumberOfBytes;
-	// quint64 totalNumberOfFreeBytes;
-
-	// // Get Current Path of Executable
-	// char temp[PATH_MAX];
-	// uint32_t size = sizeof(temp);
-	// if (_NSGetExecutablePath(temp, &size) != 0) {
-	// 	perror("_NSGetExecutablePath");
-	// 	return false;
-	// }
-	// char *ptrEnd = strrchr(temp, '/');
-	// if (ptrEnd != NULL) {
-	// 	*ptrEnd = '\0';
-	// }
 
 	DiskTestCount = ((CDiskMarkDlg*) dlg)->m_IndexTestCount + 1;
 	
@@ -702,7 +669,7 @@ bool Init(void* dlg)
 		ULARGE_INTEGER totalNumberOfBytes;
 		ULARGE_INTEGER totalNumberOfFreeBytes;
 		if (GetDiskFreeSpaceEx(cstr.toStdWString().c_str(), &freeBytesAvailableToCaller, &totalNumberOfBytes, &totalNumberOfFreeBytes) == 0) {
-			perror("GetDiskFreeSpaceEx");
+			ShowErrorMessage(dlg, "GetDiskFreeSpaceEx");
 			return false;
 		}
 		if (totalNumberOfBytes.QuadPart < ((quint64)8 * 1024 * 1024 * 1024)) // < 8 GB
@@ -730,7 +697,7 @@ bool Init(void* dlg)
 		RootPath = ((CDiskMarkDlg*)dlg)->m_TestTargetPath;
 		TestFileDir = QString("%1/BlizzardDiskMark%2/").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
 	}
-	qDebug() << "Test path: " << TestFileDir;
+
 #ifdef __APPLE__
 	if (mkdir(TestFileDir.toStdString().c_str(), 0777) != 0) {
 		perror("mkdir");
@@ -738,25 +705,25 @@ bool Init(void* dlg)
 	}
 #elif defined(_WIN32)
 	if (!CreateDirectory(TestFileDir.toStdWString().c_str(), NULL)) {
-		perror("CreateDirectory");
+		ShowErrorMessage(dlg, "CreateDirectory");
 		return false;
 	}
 #endif
 	TestFilePath = QString("%1BlizzardDiskMark%2.tmp").arg(TestFileDir).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
-	qDebug() << "Test file: " << TestFilePath;
+
 #ifdef __APPLE__
 	// Check Read Only //
 	struct statfs fsInfo;
 	if (statfs(RootPath.toStdString().c_str(), &fsInfo) == 0) {
 		FlagArc = (fsInfo.f_flags & ST_RDONLY) != 0;
 	} else {
-		perror("statfs");
+		ShowErrorMessage(dlg, "statfs");
 		FlagArc = false;
 	}
 	// Check Disk Capacity //
 	struct statvfs stat;
 	if (statvfs(RootPath.toStdString().c_str(), &stat) != 0) {
-		perror("statvfs");
+		ShowErrorMessage(dlg, "statvfs");
 		return false;
 	}
 	quint64 freeBytesAvailableToCaller = stat.f_bavail * stat.f_frsize;
@@ -764,7 +731,7 @@ bool Init(void* dlg)
 	quint64 totalNumberOfFreeBytes = stat.f_bfree * stat.f_frsize;
 	if(DiskTestSize > totalNumberOfFreeBytes / 1024 / 1024 )
 	{
-		ShowErrorMessage(((CDiskMarkDlg*)dlg)->m_MesDiskCapacityError);
+		ShowErrorMessage(dlg, ((CDiskMarkDlg*)dlg)->m_MesDiskCapacityError);
 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
 		return false;
 	}
@@ -777,12 +744,12 @@ bool Init(void* dlg)
 	ULARGE_INTEGER totalNumberOfBytes;
 	ULARGE_INTEGER totalNumberOfFreeBytes;
 	if (GetDiskFreeSpaceEx(RootPath.toStdWString().c_str(), &freeBytesAvailableToCaller, &totalNumberOfBytes, &totalNumberOfFreeBytes) == 0) {
-		perror("GetDiskFreeSpaceEx");
+		ShowErrorMessage(dlg, "GetDiskFreeSpaceEx");
 		return false;
 	}
 	if(DiskTestSize > totalNumberOfFreeBytes.QuadPart / 1024 / 1024 )
 	{
-		ShowErrorMessage(((CDiskMarkDlg*)dlg)->m_MesDiskCapacityError);
+		ShowErrorMessage(dlg, ((CDiskMarkDlg*)dlg)->m_MesDiskCapacityError);
 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
 		return false;
 	}
@@ -790,7 +757,6 @@ bool Init(void* dlg)
 
 	QString title;
 	title = QString::asprintf("Preparing... Create Test File");
-	// QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateMessage", Qt::QueuedConnection, Q_ARG(QString*, &title));
 	((CDiskMarkDlg*)dlg)->m_WindowTitle = title;
 	((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
 
@@ -801,13 +767,13 @@ bool Init(void* dlg)
 	int pipefd[2];
 
 	if (pipe(pipefd) == -1) {
-		perror("pipe");
+		ShowErrorMessage(dlg, "pipe");
 		return -1;
 	}
 
 	pid = fork();
 	if (pid == -1) {
-		perror("fork");
+		ShowErrorMessage(dlg, "fork");
 		return -1;
 	}
 
@@ -850,7 +816,7 @@ bool Init(void* dlg)
 				if (errno == EINTR) {
 					continue;
 				} else {
-					perror("read");
+					ShowErrorMessage(dlg, "read");
 					break;
 				}
 			}
@@ -861,11 +827,8 @@ bool Init(void* dlg)
 
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status)) {
-			printf("Exit status: %d\n", WEXITSTATUS(status));
-			// perror(std::to_string(WEXITSTATUS(status)).c_str());
+			ShowErrorMessage(dlg, "Exit status: %d\n", WEXITSTATUS(status));
 		}
-
-		// printf("Output: %s\n", output.toStdString().c_str());
 	}
 #elif defined(_WIN32)
 	// Prepare Test File
@@ -883,13 +846,13 @@ bool Init(void* dlg)
 
 	// Create a pipe for the child process's STDOUT
 	if (!CreatePipe(&hRead, &hWrite, &sa, 0)) {
-		perror("CreatePipe");
+		ShowErrorMessage(dlg, "CreatePipe");
 		return false;
 	}
 
 	// Ensure the read handle to the pipe for STDOUT is not inherited
 	if (!SetHandleInformation(hRead, HANDLE_FLAG_INHERIT, 0)) {
-		perror("SetHandleInformation");
+		ShowErrorMessage(dlg, "SetHandleInformation");
 		return false;
 	}
 
@@ -905,7 +868,6 @@ bool Init(void* dlg)
 
 	// Create the child process
 	std::wstring commandW = command.toStdWString();
-	qDebug() << "Command: " << commandW;
 	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
 		DWORD error = GetLastError();
 		LPVOID lpMsgBuf;
@@ -916,7 +878,7 @@ bool Init(void* dlg)
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(LPTSTR)&lpMsgBuf,
 			0, NULL);
-		qDebug() << "CreateProcess failed with error" << error << ":" << QString::fromWCharArray((wchar_t*)lpMsgBuf);
+		ShowErrorMessage(dlg, QString::fromWCharArray((wchar_t*)lpMsgBuf));
 		LocalFree(lpMsgBuf);
 		return false;
 	}
@@ -938,119 +900,21 @@ bool Init(void* dlg)
 
 	// Get the exit code of the child process
 	if (!GetExitCodeProcess(pi.hProcess, &exitCode)) {
-		perror("GetExitCodeProcess");
-		return -1;
+		ShowErrorMessage(dlg, "GetExitCodeProcess");
+		return false;
 	}
 
 	// Close handles
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 	CloseHandle(hRead);
-
-	// printf("Output: %s\n", output.toStdString().c_str());
 #endif
-
-	// printf("TestFilePath: %s\n", TestFilePath.toStdString().c_str());
-// 	int hFile = open(TestFilePath.toStdString().c_str(), O_CREAT | O_RDWR, 0666);
-// 	if (hFile == -1)
-// 	{
-// 		perror("open");
-// 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
-// 		return false;
-// 	}
-
-// // Set End Of File to prevent fragmentation of test file
-// 	if (ftruncate(hFile, 1024 * 1024 * DiskTestSize) == -1) {
-// 		perror("ftruncate");
-// 		close(hFile);
-// 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
-// 		return false;
-// 	}
-// 	lseek(hFile, 0, SEEK_SET);
-
-// // COMPRESSION_FORMAT_NONE
-// 	// USHORT lpInBuffer = COMPRESSION_FORMAT_NONE;
-// 	// DWORD lpBytesReturned = 0;
-// 	// DeviceIoControl(hFile, FSCTL_SET_COMPRESSION, (LPVOID) &lpInBuffer,
-// 	// 			sizeof(USHORT), NULL, 0, (LPDWORD)&lpBytesReturned, NULL);
-
-// // Fill Test Data
-// 	char* buf = NULL;
-// 	int BufSize;
-// 	int Loop;
-// 	int i;
-// 	ssize_t writesize;
-// 	BufSize = 1024 * 1024;
-// 	Loop = (int)DiskTestSize;
-
-// 	buf = (char*) malloc(BufSize);
-// 	if (buf == NULL)
-// 	{
-// 		perror("malloc");
-// 		((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
-// 		close(hFile);
-// 		return false;
-// 	}
-
-// 	if (((CDiskMarkDlg*) dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
-// 	{
-// 		memset(buf, 0, BufSize);
-// 	}
-// 	else
-// 	{
-// 		// Compatible with DiskSpd
-// 		for (i = 0; i < BufSize; i++)
-// 		{
-// 			buf[i] = (char) (rand() % 256);
-// 		}
-// 	}
-
-// 	for (i = 0; i < Loop; i++)
-// 	{
-// 		if (((CDiskMarkDlg*) dlg)->m_DiskBenchStatus)
-// 		{
-// 			writesize = write(hFile, buf, BufSize);
-// 			if (writesize == -1)
-// 			{
-// 				perror("write");
-// 				free(buf);
-// 				close(hFile);
-// 				((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
-// 				return false;
-// 			}
-// 		}
-// 		else
-// 		{
-// 			free(buf);
-// 			close(hFile);
-// 			((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
-// 			return false;
-// 		}
-// 	}
-// 	free(buf);
-// 	close(hFile);
 
 	return true;
 }
 
-//void CALLBACK TimerProc(int hwnd, unsigned int uMsg, unsigned int* idEvent, int dwTime)
-//{
-	// if(idEvent == TIMER_ID)
-	// {
-	// 	WaitFlag = FALSE;
-	// 	KillTimer(hwnd, idEvent);
-	// }
-//}
-
 uint Exit(void* dlg)
 {
-	if (unlink(TestFilePath.toStdString().c_str()) != 0) {
-		perror("unlink");
-	}
-	QDir dir(TestFileDir);
-	if (!dir.removeRecursively()) {
-		perror("removeRecursively");
-	}
 	static QString cstr;
 	cstr = "";
 
@@ -1058,17 +922,24 @@ uint Exit(void* dlg)
 	{
 		cstr = ALL_0X00_0FILL;
 	}
-	{
-		cstr = ALL_0X00_0FILL;
-	}
 
-	// QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateMessage", Qt::QueuedConnection, Q_ARG(QString*, &cstr));
 	((CDiskMarkDlg*)dlg)->m_WindowTitle = cstr;
 	((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
-	QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnExitBenchmark", Qt::QueuedConnection);
 
-	((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
-	((CDiskMarkDlg*)dlg)->m_WinThread = NULL;
+
+	if (!TestFileDir.isEmpty())
+	{
+		if (TestFileDir.contains("BlizzardDiskMark"))
+		{
+			QDir dir(TestFileDir);
+			if (dir.exists())
+			{
+				dir.removeRecursively();
+			}
+		}
+	}
+
+	QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnExitBenchmark", Qt::QueuedConnection);
 
 	return 0;
 }
@@ -1146,13 +1017,11 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		{
 			title = QString::asprintf("Random Read");
 			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=randread").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
-			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w0 -r").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		else
 		{
 			title = QString::asprintf("Sequential Read");
 			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --startdelay=0 --direct=1 --rw=read").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
-			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w0").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		maxScore = ((CDiskMarkDlg*) dlg)->m_ReadScore[index];
 		minLatency = ((CDiskMarkDlg*)dlg)->m_ReadLatency[index];
@@ -1172,13 +1041,11 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		{
 			title = QString::asprintf("Random Write");
 			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=randwrite").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
-			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w100 -r").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		else
 		{
 			title = QString::asprintf("Sequential Write");
 			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=write").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
-			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w100").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		option += bufOption;
 		maxScore = ((CDiskMarkDlg*)dlg)->m_WriteScore[index];
@@ -1244,16 +1111,14 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 			duration = ((CDiskMarkDlg*)dlg)->m_MeasureTime;
 			cstr = QString::asprintf("%s (%d/%d)", title.toStdString().c_str(), j, DiskTestCount);
 		}
-		// QMetaObject::invokeMethod(static_cast<CDiskMarkDlg*>(dlg), "OnUpdateMessage", Qt::QueuedConnection, Q_ARG(QString*, &cstr));
 		((CDiskMarkDlg*)dlg)->m_WindowTitle = cstr;
 		((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
 		
-		//command = QString::asprintf("\"%s\" %s -d%d -A%d -L \"%s\"", DiskSpdExe.toStdString().c_str(), option.toStdString().c_str(), duration, getpid(), TestFilePath.toStdString().c_str());
 		command = QString::asprintf("%s %s --name=%s --kb_base=1000 --size=%lldMi", "fio", option.toStdString().c_str(), TestFilePath.toStdString().c_str(), DiskTestSize);
 		int ret = ExecAndWait(&command, &score, &latency, &iops);
 		if (ret != 0)
 		{
-			ShowErrorMessage(command);
+			ShowErrorMessage(dlg, command);
 			return;
 		}
 

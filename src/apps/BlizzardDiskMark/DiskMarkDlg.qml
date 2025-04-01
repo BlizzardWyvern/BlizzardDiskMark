@@ -792,4 +792,22 @@ ApplicationWindow {
             m_ComboDrive.currentIndex = m_ComboDrive.prev_index
         }
     }
+
+    MessageDialog {
+        id: errorDialog
+        title: qsTr("Error")
+        text: ""
+        modality: Qt.ApplicationModal
+        // icon: StandardIcon.Critical
+    }
+
+    Connections {
+        target: diskMarkDlg
+        function onError (msg){
+            console.log("Error:", msg)
+            errorDialog.close()
+            errorDialog.text = msg
+            errorDialog.open()
+        }
+    }
 }
