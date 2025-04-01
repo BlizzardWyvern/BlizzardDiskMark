@@ -1,3 +1,5 @@
+qt_policy(SET QTP0004 NEW)
+
 add_executable(BlizzardDiskMark
     application.qrc
     DiskMark.cpp 
@@ -8,10 +10,22 @@ add_executable(BlizzardDiskMark
     SettingsDlg.cpp
 )
 
+qt_add_qml_module(ScoreLabel
+    URI ScoreLabel
+    QML_FILES
+        ScoreLabel/Label.qml
+    SOURCES 
+        ScoreLabel.cpp ScoreLabel.h
+    DEPENDENCIES
+        QtQuick
+    OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ScoreLabel
+)
+
 qt_add_qml_module(BlizzardDiskMark
     URI BlizzardDiskMark
     QML_FILES 
         DiskMarkDlg.qml
+        # ScoreLabel/Label.qml
     SOURCES 
         DiskMarkDlg.cpp DiskMarkDlg.h
     DEPENDENCIES
@@ -19,7 +33,7 @@ qt_add_qml_module(BlizzardDiskMark
     NO_RESOURCE_TARGET_PATH
 )
 
-target_link_libraries(BlizzardDiskMark PRIVATE Qt6::Widgets Qt6::Gui Qt6::Quick)
+target_link_libraries(BlizzardDiskMark PRIVATE Qt6::Widgets Qt6::Gui Qt6::Quick ScoreLabel)
 
 set(QT_QML_GENERATE_QMLLS_INI ON)
 

@@ -1,7 +1,10 @@
+import ScoreLabel
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Shapes
+
 import BlizzardDiskMark
 
 ApplicationWindow {
@@ -12,6 +15,86 @@ ApplicationWindow {
 
     CDiskMarkDlg {
         id: diskMarkDlg
+
+        function scoreToText(score, latency, unit = m_ComboUnit.currentIndex) {
+            switch(unit) {
+                case CDiskMarkDlg.SCORE_MBS:
+                    console.log("score: " + score)
+                    if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
+                        return score >= 1000.0 ? score.toFixed(0) : score.toFixed(1)
+                    } else {
+                        return score >= 1000000.0 ? score.toFixed(0) : score.toFixed(2)
+                    }
+                    break
+                case CDiskMarkDlg.SCORE_GBS:
+                    if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
+                        return (score / 1000.0).toFixed(1)
+                    } else {
+                        return (score / 1000).toFixed(3)
+                    }
+                    break
+                case CDiskMarkDlg.SCORE_IOPS:
+                    if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
+                        return ""
+                    } else {
+                        return ""
+                    }
+                case CDiskMarkDlg.SCORE_US:
+                    if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
+                        if (latency <= 0.0){
+                            return "0.0"
+                        }
+                        else if (latency >= 1000.0) {
+                            return latency.toFixed(0)
+                        } else {
+                            return latency.toFixed(1)
+                        }
+                    } else {
+                        if (latency <= 0.0){
+                            return "0.00"
+                        }
+                        else if (latency >= 1000000.0) {
+                            return latency.toFixed(0)
+                        } else {
+                            return latency.toFixed(2)
+                        }
+                    }
+                default:
+                    return ""
+            }
+        }
+
+        function scoreToToolTipText(score, latency, blocksize) {
+            if (blocksize == -1) {
+                return score.toFixed(3) + " MB/s\n" + (score / 1000).toFixed(3) + " GB/s"
+            } else if (score <= 0) {
+                return "0.000 MB/s\n0.000 GB/s\n -- IOPS\n0.000 μs"
+            } else {
+                return score.toFixed(3) + " MB/s\n" + (score / 1000).toFixed(3) + " GB/s\n -- IOPS\n" + latency.toFixed(3) + " μs"
+            }
+        }
+
+        function calcMeter(score, latency) {
+            let meterRatio = 0.0;
+            if (m_ComboUnit.currentText == "μs") {
+                if (latency > 0.0000000001) {
+                    meterRatio = 1 - 0.16666666666666 * Math.log10(latency);
+                } else {
+                    meterRatio = 0.0
+                }
+            }
+            else {
+                if (score > 0.1) {
+                    meterRatio = 0.16666666666666 * Math.log10(score * 10);
+                } else {
+                    meterRatio = 0.0
+                }
+            }
+            if (meterRatio > 1.0) {
+                meterRatio = 1.0
+            }
+            return meterRatio
+        }
     }
 
     menuBar: MenuBar {
@@ -231,7 +314,6 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     model: ["16MiB", "32MiB", "64MiB", "128MiB", "256MiB", "512MiB", "1GiB", "2GiB", "4GiB", "8GiB", "16GiB", "32GiB", "64GiB"]
                     currentIndex: 6
-                    onCurrentIndexChanged: diskMarkDlg.m_IndexTestSize = m_ComboSize.currentIndex
                     onCurrentValueChanged: diskMarkDlg.m_ValueTestSize = m_ComboSize.currentText
                     ToolTip.visible: hovered
                     ToolTip.text: qsTr("Test Size")
@@ -310,114 +392,19 @@ ApplicationWindow {
 
         Label {
             id: m_TestRead0
-            function scoreToText(score, latency, unit = m_ComboUnit.currentIndex) {
-                switch(unit) {
-                    case CDiskMarkDlg.SCORE_MBS:
-                        console.log("score: " + score)
-                        if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
-                            return score >= 1000.0 ? score.toFixed(0) : score.toFixed(1)
-                        } else {
-                            return score >= 1000000.0 ? score.toFixed(0) : score.toFixed(2)
-                        }
-                        break
-                    case CDiskMarkDlg.SCORE_GBS:
-                        if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
-                            return (score / 1000.0).toFixed(1)
-                        } else {
-                            return (score / 1000).toFixed(3)
-                        }
-                        break
-                    case CDiskMarkDlg.SCORE_IOPS:
-                        if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
-                            return ""
-                        } else {
-                            return ""
-                        }
-                    case CDiskMarkDlg.SCORE_US:
-                        if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
-                            if (latency <= 0.0){
-                                return "0.0"
-                            }
-                            else if (latency >= 1000.0) {
-                                return latency.toFixed(0)
-                            } else {
-                                return latency.toFixed(1)
-                            }
-                        } else {
-                            if (latency <= 0.0){
-                                return "0.00"
-                            }
-                            else if (latency >= 1000000.0) {
-                                return latency.toFixed(0)
-                            } else {
-                                return latency.toFixed(2)
-                            }
-                        }
-                    default:
-                        return ""
-                }
-            }
-            function scoreToToolTipText(score, latency, blocksize) {
-                if (blocksize == -1) {
-                    return score.toFixed(3) + " MB/s\n" + (score / 1000).toFixed(3) + " GB/s"
-                } else if (score <= 0) {
-                    return "0.000 MB/s\n0.000 GB/s\n -- IOPS\n0.000 μs"
-                } else {
-                    return score.toFixed(3) + " MB/s\n" + (score / 1000).toFixed(3) + " GB/s\n -- IOPS\n" + latency.toFixed(3) + " μs"
-                }
-            }
             property int index:
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? 8 :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ? 4 :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ? 6 : 0
             text: 
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ?
-                    scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
+                    diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ?
-                    scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
-                scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+                    diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
+                diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text: 
-                scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            color: "black"
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignVCenter
-            background: Rectangle {
-                gradient: Gradient {
-                    id: gradient
-                    function calcMeter(score, latency) {
-                        let meterRatio = 0.0;
-                        if (m_ComboUnit.currentText == "μs") {
-                            if (latency > 0.0000000001) {
-                                meterRatio = 1 - 0.16666666666666 * Math.log10(latency);
-                            } else {
-                                meterRatio = 0.0
-                            }
-                        }
-                        else {
-                            if (score > 0.1) {
-                                meterRatio = 0.16666666666666 * Math.log10(score * 10);
-                            } else {
-                                meterRatio = 0.0
-                            }
-                        }
-                        if (meterRatio > 1.0) {
-                            meterRatio = 1.0
-                        }
-                        return meterRatio
-                    }
-                    orientation: Gradient.Horizontal
-                    GradientStop { position: 0.0; color: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? "transparent" : "green" }
-                    GradientStop { position: gradient.calcMeter(diskMarkDlg.m_readScoreList[0], diskMarkDlg.m_readLatencyList[0]); color: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? "transparent" : "green" }
-                    GradientStop { position: gradient.calcMeter(diskMarkDlg.m_readScoreList[0], diskMarkDlg.m_readLatencyList[0]) + 0.0001; color: "transparent" }
-                    GradientStop { position: 1.0; color: "transparent" }
-                }
-            }
-            MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-            }
-            ToolTip.visible: mouseArea.containsMouse
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: 192

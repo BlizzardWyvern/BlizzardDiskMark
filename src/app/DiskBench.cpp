@@ -51,6 +51,8 @@ static volatile bool WaitFlag;
 
 int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 {
+	// printf("ExecAndWait: %s\n", pszCmd->toStdString().c_str());
+
 	int Code = 0;
 	int status;
 	pid_t pid;
@@ -116,709 +118,8 @@ int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 			Code = WEXITSTATUS(status);
 		}
 
-		printf("Output: %s\n", output.toStdString().c_str());
+		// printf("Output: %s\n", output.toStdString().c_str());
 
-		/*Sample fio output:
-{
-  "fio version" : "fio-3.39",
-  "timestamp" : 1741208676,
-  "timestamp_ms" : 1741208676700,
-  "time" : "Wed Mar  5 22:04:36 2025",
-  "global options" : {
-    "bs" : "1K",
-    "iodepth" : "8",
-    "numjobs" : "1",
-    "direct" : "1",
-    "rw" : "randwrite",
-    "ioengine" : "posixaio"
-  },
-  "jobs" : [
-    {
-      "jobname" : "/Users/alexander/CrystalDiskMark/CrystalDiskMark195681fd01a/CrystalDiskMark195681fd01a.tmp",
-      "groupid" : 0,
-      "job_start" : 1741208675800,
-      "error" : 0,
-      "eta" : 2147483647,
-      "elapsed" : 2,
-      "job options" : {
-        "name" : "/Users/alexander/CrystalDiskMark/CrystalDiskMark195681fd01a/CrystalDiskMark195681fd01a.tmp",
-        "size" : "16Mi"
-      },
-      "read" : {
-        "io_bytes" : 0,
-        "io_kbytes" : 0,
-        "bw_bytes" : 0,
-        "bw" : 0,
-        "iops" : 0.000000,
-        "runtime" : 0,
-        "total_ios" : 0,
-        "short_ios" : 0,
-        "drop_ios" : 0,
-        "slat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        },
-        "clat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        },
-        "lat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        },
-        "bw_min" : 0,
-        "bw_max" : 0,
-        "bw_agg" : 0.000000,
-        "bw_mean" : 0.000000,
-        "bw_dev" : 0.000000,
-        "bw_samples" : 0,
-        "iops_min" : 0,
-        "iops_max" : 0,
-        "iops_mean" : 0.000000,
-        "iops_stddev" : 0.000000,
-        "iops_samples" : 0
-      },
-      "write" : {
-        "io_bytes" : 16777216,
-        "io_kbytes" : 16384,
-        "bw_bytes" : 20092474,
-        "bw" : 19621,
-        "iops" : 19621.556886,
-        "runtime" : 835,
-        "total_ios" : 16384,
-        "short_ios" : 0,
-        "drop_ios" : 0,
-        "slat_ns" : {
-          "min" : 0,
-          "max" : 35000,
-          "mean" : 400.146484,
-          "stddev" : 848.775545,
-          "N" : 16384
-        },
-        "clat_ns" : {
-          "min" : 2000,
-          "max" : 9112000,
-          "mean" : 406584.472656,
-          "stddev" : 703756.851897,
-          "N" : 16384,
-          "percentile" : {
-            "1.000000" : 22912,
-            "5.000000" : 50944,
-            "10.000000" : 76288,
-            "20.000000" : 112128,
-            "30.000000" : 140288,
-            "40.000000" : 166912,
-            "50.000000" : 189440,
-            "60.000000" : 214016,
-            "70.000000" : 238592,
-            "80.000000" : 296960,
-            "90.000000" : 1482752,
-            "95.000000" : 1859584,
-            "99.000000" : 3489792,
-            "99.500000" : 3719168,
-            "99.900000" : 4816896,
-            "99.950000" : 7503872,
-            "99.990000" : 8978432
-          },
-          "bins" : {
-            "2008" : 1,
-            "4016" : 1,
-            "5984" : 9,
-            "7008" : 5,
-            "8032" : 6,
-            "9024" : 10,
-            "10048" : 12,
-            "10944" : 6,
-            "11968" : 11,
-            "12992" : 10,
-            "14016" : 8,
-            "15040" : 6,
-            "16064" : 9,
-            "17024" : 13,
-            "18048" : 13,
-            "19072" : 5,
-            "20096" : 11,
-            "21120" : 15,
-            "21888" : 11,
-            "22912" : 16,
-            "23936" : 13,
-            "24960" : 20,
-            "25984" : 20,
-            "27008" : 9,
-            "28032" : 13,
-            "29056" : 21,
-            "30080" : 13,
-            "31104" : 16,
-            "32128" : 16,
-            "33024" : 19,
-            "34048" : 22,
-            "35072" : 26,
-            "36096" : 22,
-            "37120" : 25,
-            "38144" : 20,
-            "39168" : 26,
-            "40192" : 32,
-            "41216" : 24,
-            "42240" : 30,
-            "42752" : 37,
-            "43776" : 30,
-            "44800" : 28,
-            "45824" : 38,
-            "46848" : 26,
-            "47872" : 23,
-            "48896" : 37,
-            "49920" : 24,
-            "50944" : 39,
-            "51968" : 33,
-            "52992" : 27,
-            "54016" : 23,
-            "55040" : 31,
-            "56064" : 17,
-            "57088" : 33,
-            "58112" : 27,
-            "59136" : 30,
-            "60160" : 30,
-            "61184" : 20,
-            "62208" : 26,
-            "63232" : 35,
-            "64256" : 33,
-            "64768" : 31,
-            "66048" : 41,
-            "67072" : 44,
-            "68096" : 32,
-            "69120" : 42,
-            "70144" : 38,
-            "71168" : 44,
-            "72192" : 48,
-            "73216" : 33,
-            "74240" : 26,
-            "75264" : 35,
-            "76288" : 37,
-            "77312" : 39,
-            "78336" : 36,
-            "79360" : 38,
-            "80384" : 44,
-            "81408" : 32,
-            "82432" : 34,
-            "83456" : 38,
-            "84480" : 38,
-            "85504" : 98,
-            "86528" : 41,
-            "87552" : 44,
-            "88576" : 38,
-            "89600" : 47,
-            "90624" : 40,
-            "91648" : 49,
-            "92672" : 43,
-            "93696" : 49,
-            "94720" : 39,
-            "95744" : 63,
-            "96768" : 51,
-            "97792" : 52,
-            "98816" : 51,
-            "99840" : 44,
-            "100864" : 44,
-            "101888" : 55,
-            "102912" : 40,
-            "103936" : 60,
-            "104960" : 46,
-            "105984" : 62,
-            "107008" : 49,
-            "108032" : 55,
-            "109056" : 54,
-            "110080" : 46,
-            "111104" : 47,
-            "112128" : 56,
-            "113152" : 57,
-            "114176" : 54,
-            "115200" : 52,
-            "116224" : 56,
-            "117248" : 49,
-            "118272" : 55,
-            "119296" : 64,
-            "120320" : 68,
-            "121344" : 51,
-            "122368" : 63,
-            "123392" : 65,
-            "124416" : 54,
-            "125440" : 71,
-            "126464" : 55,
-            "127488" : 56,
-            "128512" : 108,
-            "129536" : 62,
-            "130560" : 54,
-            "132096" : 107,
-            "134144" : 125,
-            "136192" : 114,
-            "138240" : 131,
-            "140288" : 139,
-            "142336" : 138,
-            "144384" : 125,
-            "146432" : 116,
-            "148480" : 110,
-            "150528" : 98,
-            "152576" : 136,
-            "154624" : 129,
-            "156672" : 114,
-            "158720" : 123,
-            "160768" : 139,
-            "162816" : 128,
-            "164864" : 142,
-            "166912" : 113,
-            "168960" : 134,
-            "171008" : 190,
-            "173056" : 146,
-            "175104" : 142,
-            "177152" : 128,
-            "179200" : 157,
-            "181248" : 148,
-            "183296" : 135,
-            "185344" : 130,
-            "187392" : 121,
-            "189440" : 129,
-            "191488" : 133,
-            "193536" : 148,
-            "195584" : 130,
-            "197632" : 128,
-            "199680" : 129,
-            "201728" : 149,
-            "203776" : 158,
-            "205824" : 131,
-            "207872" : 145,
-            "209920" : 160,
-            "211968" : 138,
-            "214016" : 214,
-            "216064" : 143,
-            "218112" : 156,
-            "220160" : 148,
-            "222208" : 141,
-            "224256" : 118,
-            "226304" : 122,
-            "228352" : 111,
-            "230400" : 137,
-            "232448" : 115,
-            "234496" : 118,
-            "236544" : 120,
-            "238592" : 106,
-            "240640" : 102,
-            "242688" : 120,
-            "244736" : 92,
-            "246784" : 102,
-            "248832" : 64,
-            "250880" : 80,
-            "252928" : 51,
-            "254976" : 87,
-            "257024" : 94,
-            "259072" : 55,
-            "261120" : 71,
-            "264192" : 124,
-            "268288" : 100,
-            "272384" : 88,
-            "276480" : 92,
-            "280576" : 67,
-            "284672" : 63,
-            "288768" : 65,
-            "292864" : 67,
-            "296960" : 58,
-            "301056" : 55,
-            "305152" : 39,
-            "309248" : 51,
-            "313344" : 51,
-            "317440" : 45,
-            "321536" : 35,
-            "325632" : 40,
-            "329728" : 40,
-            "333824" : 41,
-            "337920" : 46,
-            "342016" : 47,
-            "346112" : 37,
-            "350208" : 34,
-            "354304" : 42,
-            "358400" : 31,
-            "362496" : 34,
-            "366592" : 25,
-            "370688" : 30,
-            "374784" : 32,
-            "378880" : 25,
-            "382976" : 30,
-            "387072" : 28,
-            "391168" : 24,
-            "395264" : 28,
-            "399360" : 25,
-            "403456" : 19,
-            "407552" : 16,
-            "411648" : 14,
-            "415744" : 15,
-            "419840" : 23,
-            "423936" : 13,
-            "428032" : 17,
-            "432128" : 17,
-            "436224" : 15,
-            "440320" : 15,
-            "444416" : 10,
-            "448512" : 16,
-            "452608" : 12,
-            "456704" : 11,
-            "460800" : 12,
-            "464896" : 7,
-            "468992" : 10,
-            "473088" : 10,
-            "477184" : 12,
-            "481280" : 8,
-            "485376" : 9,
-            "489472" : 3,
-            "493568" : 5,
-            "497664" : 4,
-            "501760" : 5,
-            "505856" : 9,
-            "509952" : 2,
-            "514048" : 9,
-            "518144" : 6,
-            "522240" : 6,
-            "528384" : 6,
-            "536576" : 11,
-            "544768" : 8,
-            "552960" : 10,
-            "561152" : 7,
-            "569344" : 10,
-            "577536" : 8,
-            "585728" : 8,
-            "593920" : 6,
-            "602112" : 7,
-            "610304" : 4,
-            "618496" : 6,
-            "626688" : 3,
-            "634880" : 3,
-            "643072" : 3,
-            "651264" : 4,
-            "659456" : 3,
-            "667648" : 4,
-            "675840" : 4,
-            "684032" : 2,
-            "692224" : 5,
-            "700416" : 1,
-            "708608" : 3,
-            "716800" : 2,
-            "733184" : 1,
-            "741376" : 1,
-            "765952" : 3,
-            "790528" : 2,
-            "798720" : 2,
-            "806912" : 1,
-            "815104" : 1,
-            "831488" : 2,
-            "856064" : 1,
-            "864256" : 2,
-            "872448" : 1,
-            "897024" : 1,
-            "905216" : 2,
-            "913408" : 3,
-            "929792" : 1,
-            "937984" : 1,
-            "970752" : 1,
-            "987136" : 2,
-            "995328" : 1,
-            "1019904" : 2,
-            "1044480" : 2,
-            "1056768" : 1,
-            "1073152" : 1,
-            "1089536" : 5,
-            "1105920" : 2,
-            "1122304" : 6,
-            "1138688" : 2,
-            "1155072" : 5,
-            "1171456" : 4,
-            "1187840" : 2,
-            "1204224" : 1,
-            "1220608" : 4,
-            "1236992" : 1,
-            "1253376" : 3,
-            "1269760" : 2,
-            "1286144" : 2,
-            "1302528" : 2,
-            "1318912" : 6,
-            "1335296" : 6,
-            "1351680" : 7,
-            "1368064" : 12,
-            "1384448" : 7,
-            "1400832" : 18,
-            "1417216" : 18,
-            "1433600" : 24,
-            "1449984" : 19,
-            "1466368" : 27,
-            "1482752" : 27,
-            "1499136" : 20,
-            "1515520" : 31,
-            "1531904" : 30,
-            "1548288" : 37,
-            "1564672" : 44,
-            "1581056" : 39,
-            "1597440" : 30,
-            "1613824" : 38,
-            "1630208" : 48,
-            "1646592" : 35,
-            "1662976" : 32,
-            "1679360" : 26,
-            "1695744" : 34,
-            "1712128" : 47,
-            "1728512" : 36,
-            "1744896" : 42,
-            "1761280" : 36,
-            "1777664" : 34,
-            "1794048" : 38,
-            "1810432" : 34,
-            "1826816" : 45,
-            "1843200" : 36,
-            "1859584" : 23,
-            "1875968" : 38,
-            "1892352" : 30,
-            "1908736" : 23,
-            "1925120" : 23,
-            "1941504" : 18,
-            "1957888" : 16,
-            "1974272" : 22,
-            "1990656" : 22,
-            "2007040" : 23,
-            "2023424" : 13,
-            "2039808" : 9,
-            "2056192" : 15,
-            "2072576" : 11,
-            "2088960" : 8,
-            "2113536" : 17,
-            "2146304" : 14,
-            "2179072" : 9,
-            "2211840" : 13,
-            "2244608" : 8,
-            "2277376" : 5,
-            "2310144" : 6,
-            "2342912" : 5,
-            "2375680" : 6,
-            "2408448" : 2,
-            "2441216" : 5,
-            "2473984" : 5,
-            "2506752" : 2,
-            "2539520" : 5,
-            "2572288" : 1,
-            "2637824" : 6,
-            "2670592" : 7,
-            "2801664" : 4,
-            "2834432" : 1,
-            "2867200" : 6,
-            "2899968" : 2,
-            "2932736" : 1,
-            "2965504" : 1,
-            "2998272" : 3,
-            "3031040" : 4,
-            "3063808" : 11,
-            "3096576" : 6,
-            "3129344" : 3,
-            "3162112" : 23,
-            "3194880" : 17,
-            "3227648" : 20,
-            "3260416" : 19,
-            "3293184" : 20,
-            "3325952" : 15,
-            "3358720" : 12,
-            "3391488" : 23,
-            "3424256" : 26,
-            "3457024" : 26,
-            "3489792" : 14,
-            "3522560" : 12,
-            "3555328" : 21,
-            "3588096" : 11,
-            "3620864" : 15,
-            "3653632" : 10,
-            "3686400" : 8,
-            "3719168" : 9,
-            "3751936" : 15,
-            "3784704" : 4,
-            "3817472" : 5,
-            "3850240" : 2,
-            "3883008" : 4,
-            "3915776" : 4,
-            "3948544" : 4,
-            "3981312" : 2,
-            "4014080" : 1,
-            "4227072" : 3,
-            "4292608" : 1,
-            "4423680" : 1,
-            "4489216" : 2,
-            "4620288" : 1,
-            "4685824" : 2,
-            "4751360" : 4,
-            "4816896" : 3,
-            "6520832" : 3,
-            "6717440" : 1,
-            "7176192" : 1,
-            "7503872" : 3,
-            "8716288" : 1,
-            "8847360" : 1,
-            "8978432" : 4,
-            "9109504" : 1
-          }
-        },
-        "lat_ns" : {
-          "min" : 4000,
-          "max" : 9113000,
-          "mean" : 406984.619141,
-          "stddev" : 703767.851671,
-          "N" : 16384
-        },
-        "bw_min" : 19205,
-        "bw_max" : 19205,
-        "bw_agg" : 97.877046,
-        "bw_mean" : 19205.000000,
-        "bw_dev" : 0.000000,
-        "bw_samples" : 1,
-        "iops_min" : 19205,
-        "iops_max" : 19205,
-        "iops_mean" : 19205.000000,
-        "iops_stddev" : 0.000000,
-        "iops_samples" : 1
-      },
-      "trim" : {
-        "io_bytes" : 0,
-        "io_kbytes" : 0,
-        "bw_bytes" : 0,
-        "bw" : 0,
-        "iops" : 0.000000,
-        "runtime" : 0,
-        "total_ios" : 0,
-        "short_ios" : 0,
-        "drop_ios" : 0,
-        "slat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        },
-        "clat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        },
-        "lat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        },
-        "bw_min" : 0,
-        "bw_max" : 0,
-        "bw_agg" : 0.000000,
-        "bw_mean" : 0.000000,
-        "bw_dev" : 0.000000,
-        "bw_samples" : 0,
-        "iops_min" : 0,
-        "iops_max" : 0,
-        "iops_mean" : 0.000000,
-        "iops_stddev" : 0.000000,
-        "iops_samples" : 0
-      },
-      "sync" : {
-        "total_ios" : 0,
-        "lat_ns" : {
-          "min" : 0,
-          "max" : 0,
-          "mean" : 0.000000,
-          "stddev" : 0.000000,
-          "N" : 0
-        }
-      },
-      "job_runtime" : 834,
-      "usr_cpu" : 3.477218,
-      "sys_cpu" : 3.836930,
-      "ctx" : 12221,
-      "majf" : 0,
-      "minf" : 6,
-      "iodepth_level" : {
-        "1" : 0.100000,
-        "2" : 0.109863,
-        "4" : 16.723633,
-        "8" : 83.148193,
-        "16" : 0.000000,
-        "32" : 0.000000,
-        ">=64" : 0.000000
-      },
-      "iodepth_submit" : {
-        "0" : 0.000000,
-        "4" : 100.000000,
-        "8" : 0.000000,
-        "16" : 0.000000,
-        "32" : 0.000000,
-        "64" : 0.000000,
-        ">=64" : 0.000000
-      },
-      "iodepth_complete" : {
-        "0" : 0.000000,
-        "4" : 99.863370,
-        "8" : 0.136630,
-        "16" : 0.000000,
-        "32" : 0.000000,
-        "64" : 0.000000,
-        ">=64" : 0.000000
-      },
-      "latency_ns" : {
-        "2" : 0.000000,
-        "4" : 0.000000,
-        "10" : 0.000000,
-        "20" : 0.000000,
-        "50" : 0.000000,
-        "100" : 0.000000,
-        "250" : 0.000000,
-        "500" : 0.000000,
-        "750" : 0.000000,
-        "1000" : 0.000000
-      },
-      "latency_us" : {
-        "2" : 0.000000,
-        "4" : 0.010000,
-        "10" : 0.189209,
-        "20" : 0.567627,
-        "50" : 4.022217,
-        "100" : 11.492920,
-        "250" : 56.866455,
-        "500" : 14.465332,
-        "750" : 1.019287,
-        "1000" : 0.164795
-      },
-      "latency_ms" : {
-        "2" : 7.482910,
-        "4" : 3.521729,
-        "10" : 0.201416,
-        "20" : 0.000000,
-        "50" : 0.000000,
-        "100" : 0.000000,
-        "250" : 0.000000,
-        "500" : 0.000000,
-        "750" : 0.000000,
-        "1000" : 0.000000,
-        "2000" : 0.000000,
-        ">=2000" : 0.000000
-      },
-      "latency_depth" : 8,
-      "latency_target" : 0,
-      "latency_percentile" : 100.000000,
-      "latency_window" : 0
-    }
-  ]
-}
-*/
-
-		//printf("fio output:\n%s\n", output.toStdString().c_str());
 		QJsonDocument jsonResponse = QJsonDocument::fromJson(output.toUtf8());
 		if (!jsonResponse.isNull()) {
 			QJsonObject jsonObject = jsonResponse.object();
@@ -1357,85 +658,156 @@ bool Init(void* dlg)
 	title = QString::asprintf("Preparing... Create Test File");
 	QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateMessage", Qt::QueuedConnection, Q_ARG(QString*, &title));
 	// Prepare Test File
-	int hFile = open(TestFilePath.toStdString().c_str(), O_CREAT | O_RDWR, 0666);
+	int status;
+	pid_t pid;
+	int pipefd[2];
 
-	if (hFile == -1)
-	{
-		perror("open");
-		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
-		return false;
+	if (pipe(pipefd) == -1) {
+		perror("pipe");
+		return -1;
 	}
 
-// Set End Of File to prevent fragmentation of test file
-	if (ftruncate(hFile, 1024 * 1024 * DiskTestSize) == -1) {
-		perror("ftruncate");
-		close(hFile);
-		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
-		return false;
-	}
-	lseek(hFile, 0, SEEK_SET);
-
-// COMPRESSION_FORMAT_NONE
-	// USHORT lpInBuffer = COMPRESSION_FORMAT_NONE;
-	// DWORD lpBytesReturned = 0;
-	// DeviceIoControl(hFile, FSCTL_SET_COMPRESSION, (LPVOID) &lpInBuffer,
-	// 			sizeof(USHORT), NULL, 0, (LPDWORD)&lpBytesReturned, NULL);
-
-// Fill Test Data
-	char* buf = NULL;
-	int BufSize;
-	int Loop;
-	int i;
-	ssize_t writesize;
-	BufSize = 1024 * 1024;
-	Loop = (int)DiskTestSize;
-
-	buf = (char*) malloc(BufSize);
-	if (buf == NULL)
-	{
-		perror("malloc");
-		((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
-		close(hFile);
-		return false;
+	pid = fork();
+	if (pid == -1) {
+		perror("fork");
+		return -1;
 	}
 
-	if (((CDiskMarkDlg*) dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
-	{
-		memset(buf, 0, BufSize);
-	}
-	else
-	{
-		// Compatible with DiskSpd
-		for (i = 0; i < BufSize; i++)
-		{
-			buf[i] = (char) (rand() % 256);
+	if (pid == 0) {
+		// Child process
+		close(pipefd[0]); // Close unused read end
+
+		int fd = open("/dev/null", O_WRONLY);
+		if (fd == -1) {
+			perror("open");
+			exit(EXIT_FAILURE);
 		}
-	}
+		dup2(fd, STDOUT_FILENO);
+		dup2(fd, STDERR_FILENO);
+		close(fd);
 
-	for (i = 0; i < Loop; i++)
-	{
-		if (((CDiskMarkDlg*) dlg)->m_DiskBenchStatus)
-		{
-			writesize = write(hFile, buf, BufSize);
-			if (writesize == -1)
-			{
-				perror("write");
-				free(buf);
-				close(hFile);
-				((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
-				return false;
+		dup2(pipefd[1], STDOUT_FILENO);
+		dup2(pipefd[1], STDERR_FILENO);
+		close(pipefd[1]);
+
+		execlp("fio", "fio", 
+			("--name=" + TestFilePath.toStdString()).c_str(), 
+			("--size=" + std::to_string(DiskTestSize) + "Mi").c_str(), 
+			"--create_only=1", 
+			"--rw=write", 
+			(char *)NULL);
+		perror("execlp");
+		exit(EXIT_FAILURE);
+	} else {
+		// Parent process
+		close(pipefd[1]); // Close unused write end
+
+		char buffer[128];
+		ssize_t count;
+		QString output;
+
+		while ((count = read(pipefd[0], buffer, sizeof(buffer))) != 0) {
+			if (count == -1) {
+				if (errno == EINTR) {
+					continue;
+				} else {
+					perror("read");
+					break;
+				}
 			}
+			output.append(QString::fromUtf8(buffer, count));
 		}
-		else
-		{
-			free(buf);
-			close(hFile);
-			((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
-			return false;
+
+		close(pipefd[0]);
+
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status)) {
+			printf("Exit status: %d\n", WEXITSTATUS(status));
+			// perror(std::to_string(WEXITSTATUS(status)).c_str());
 		}
+
+		printf("Output: %s\n", output.toStdString().c_str());
 	}
-	free(buf);
-	close(hFile);
+
+	// printf("TestFilePath: %s\n", TestFilePath.toStdString().c_str());
+// 	int hFile = open(TestFilePath.toStdString().c_str(), O_CREAT | O_RDWR, 0666);
+// 	if (hFile == -1)
+// 	{
+// 		perror("open");
+// 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
+// 		return false;
+// 	}
+
+// // Set End Of File to prevent fragmentation of test file
+// 	if (ftruncate(hFile, 1024 * 1024 * DiskTestSize) == -1) {
+// 		perror("ftruncate");
+// 		close(hFile);
+// 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
+// 		return false;
+// 	}
+// 	lseek(hFile, 0, SEEK_SET);
+
+// // COMPRESSION_FORMAT_NONE
+// 	// USHORT lpInBuffer = COMPRESSION_FORMAT_NONE;
+// 	// DWORD lpBytesReturned = 0;
+// 	// DeviceIoControl(hFile, FSCTL_SET_COMPRESSION, (LPVOID) &lpInBuffer,
+// 	// 			sizeof(USHORT), NULL, 0, (LPDWORD)&lpBytesReturned, NULL);
+
+// // Fill Test Data
+// 	char* buf = NULL;
+// 	int BufSize;
+// 	int Loop;
+// 	int i;
+// 	ssize_t writesize;
+// 	BufSize = 1024 * 1024;
+// 	Loop = (int)DiskTestSize;
+
+// 	buf = (char*) malloc(BufSize);
+// 	if (buf == NULL)
+// 	{
+// 		perror("malloc");
+// 		((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
+// 		close(hFile);
+// 		return false;
+// 	}
+
+// 	if (((CDiskMarkDlg*) dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
+// 	{
+// 		memset(buf, 0, BufSize);
+// 	}
+// 	else
+// 	{
+// 		// Compatible with DiskSpd
+// 		for (i = 0; i < BufSize; i++)
+// 		{
+// 			buf[i] = (char) (rand() % 256);
+// 		}
+// 	}
+
+// 	for (i = 0; i < Loop; i++)
+// 	{
+// 		if (((CDiskMarkDlg*) dlg)->m_DiskBenchStatus)
+// 		{
+// 			writesize = write(hFile, buf, BufSize);
+// 			if (writesize == -1)
+// 			{
+// 				perror("write");
+// 				free(buf);
+// 				close(hFile);
+// 				((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
+// 				return false;
+// 			}
+// 		}
+// 		else
+// 		{
+// 			free(buf);
+// 			close(hFile);
+// 			((CDiskMarkDlg*) dlg)->m_DiskBenchStatus = false;
+// 			return false;
+// 		}
+// 	}
+// 	free(buf);
+// 	close(hFile);
 
 	return true;
 }
@@ -1555,7 +927,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		else
 		{
 			title = QString::asprintf("Sequential Read");
-			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=read").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
+			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --startdelay=0 --direct=1 --rw=read").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w0").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		maxScore = ((CDiskMarkDlg*) dlg)->m_ReadScore[index];

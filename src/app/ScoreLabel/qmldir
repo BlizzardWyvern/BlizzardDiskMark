@@ -1,0 +1,4 @@
+module ScoreLabel
+Label 1.0 Label.qml
+
+import QtQuick.Controls.Basic auto
