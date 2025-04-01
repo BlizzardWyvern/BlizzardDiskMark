@@ -1,4 +1,5 @@
 #include "ScoreLabel.h"
+#include <QQmlEngine>
 
 ScoreLabel::ScoreLabel(QObject *parent) :
     QObject(parent),
@@ -6,7 +7,7 @@ ScoreLabel::ScoreLabel(QObject *parent) :
 {
 }
 
-ScoreLabel *ScoreLabel::qmlAttachedProperties(QObject *object)
+ScoreLabel* ScoreLabel::qmlAttachedProperties(QObject *object)
 {
     return new ScoreLabel(object);
 }

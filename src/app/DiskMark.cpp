@@ -4,6 +4,8 @@
 #include "DiskMarkDlg.h"
 #include "ScoreLabel.h"
 
+#include "moc_ScoreLabel.cpp"
+
 int main(int argc, char *argv[])
 {
 	QGuiApplication app(argc, argv);

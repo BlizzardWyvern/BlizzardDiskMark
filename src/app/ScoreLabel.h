@@ -12,7 +12,7 @@ class ScoreLabel : public QObject
 public:
     explicit ScoreLabel(QObject *parent = nullptr);
 
-    static ScoreLabel *qmlAttachedProperties(QObject *object);
+    static ScoreLabel* qmlAttachedProperties(QObject *object);
 
 signals:
     void meterChanged();
@@ -21,6 +21,7 @@ private:
     double m_meter;
 };
 
+QML_DECLARE_TYPE(ScoreLabel)
 QML_DECLARE_TYPEINFO(ScoreLabel, QML_HAS_ATTACHED_PROPERTIES)
 
 #endif // SCORELABEL_H

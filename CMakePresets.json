@@ -15,6 +15,99 @@
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
             }
+        },
+        {
+            "name": "Mingw",
+            "displayName": "GCC 14.2.0 x86_64-w64-mingw32 (ucrt64)",
+            "description": "Using compilers: C = C:\\msys64\\ucrt64\\bin\\gcc.exe, CXX = C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.2/mingw_64",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+            }
+        },
+        {
+            "name": "Msys64ClangArm64",
+            "displayName": "Clang 20.1.0 aarch64-w64-windows-gnu (clangarm64)",
+            "description": "Using compilers: C = C:\\msys64\\clangarm64\\bin\\clang.exe, CXX = C:\\msys64\\clangarm64\\bin\\clang++.exe",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.2/msvc2022_arm64",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "C:/msys64/clangarm64/bin/clang.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/clangarm64/bin/clang++.exe",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+            }
+        },
+        {
+            "name": "Msys64Clangx86_64",
+            "displayName": "Clang 20.1.0 x86_64-w64-windows-gnu (clang64)",
+            "description": "Using compilers: C = C:\\msys64\\clang64\\bin\\clang.exe, CXX = C:\\msys64\\clang64\\bin\\clang++.exe",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.2/mingw_64",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "C:/msys64/clang64/bin/clang.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/clang64/bin/clang++.exe",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+            }
+        },
+        {
+            "name": "VCArm64",
+            "displayName": "Visual Studio Build Tools 2022 Release - arm64",
+            "description": "Using compilers for Visual Studio 17 2022 (arm64 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=ARM64",
+            "architecture": "arm64",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.2/msvc2022_arm64",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+            }
+        },
+        {
+            "name": "VCx86_64",
+            "displayName": "Visual Studio Build Tools 2022 Release - arm64_amd64",
+            "description": "Using compilers for Visual Studio 17 2022 (arm64_x64 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=ARM64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.2/msvc2022_64",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "VCArm64-debug",
+            "displayName": "Visual Studio Build Tools 2022 Release - arm64 - Debug",
+            "configurePreset": "VCArm64",
+            "configuration": "Debug"
+        },
+        {
+            "name": "VCx86_64-debug",
+            "displayName": "Visual Studio Build Tools 2022 Release - arm64_amd64 - Debug",
+            "configurePreset": "VCx86_64",
+            "configuration": "Debug"
         }
     ]
 }

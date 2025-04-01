@@ -148,7 +148,7 @@ private:
 	QStringList m_writeScoreToolTipList;
 
 public:
-	int m_IndexTestCount;
+	int m_IndexTestCount = 0;
 	int m_IndexTestDrive;
 	QString m_ValueTestSize;
 	QString m_ValueTestDrive;

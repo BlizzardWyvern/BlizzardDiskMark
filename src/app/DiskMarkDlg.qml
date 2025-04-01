@@ -438,7 +438,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -461,7 +461,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -491,7 +491,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -513,7 +513,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -543,7 +543,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -565,7 +565,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -595,7 +595,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -617,7 +617,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true

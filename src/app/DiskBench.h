@@ -53,15 +53,15 @@ enum DISK_SPD_CMD
 	TEST_MIX_8,
 };
 
-u_int ExecDiskBenchAll(void* dlg);
-u_int ExecDiskBenchAllPeak(void* dlg);
-u_int ExecDiskBenchAllReal(void* dlg);
-u_int ExecDiskBenchAllDemo(void* dlg);
-u_int ExecDiskBench0(void* dlg);
-u_int ExecDiskBench1(void* dlg);
-u_int ExecDiskBench2(void* dlg);
-u_int ExecDiskBench3(void* dlg);
-u_int ExecDiskBench4(void* dlg);
-u_int ExecDiskBench5(void* dlg);
-u_int ExecDiskBench6(void* dlg);
-u_int ExecDiskBench7(void* dlg);
+quint64 ExecDiskBenchAll(void* dlg);
+quint64 ExecDiskBenchAllPeak(void* dlg);
+quint64 ExecDiskBenchAllReal(void* dlg);
+quint64 ExecDiskBenchAllDemo(void* dlg);
+quint64 ExecDiskBench0(void* dlg);
+quint64 ExecDiskBench1(void* dlg);
+quint64 ExecDiskBench2(void* dlg);
+quint64 ExecDiskBench3(void* dlg);
+quint64 ExecDiskBench4(void* dlg);
+quint64 ExecDiskBench5(void* dlg);
+quint64 ExecDiskBench6(void* dlg);
+quint64 ExecDiskBench7(void* dlg);
