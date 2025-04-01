@@ -48,6 +48,8 @@ class CDiskMarkDlg : public QObject
 	Q_PROPERTY(QList<double> m_writeScoreList READ m_writeScoreList NOTIFY m_scoreChanged)
 	Q_PROPERTY(QList<double> m_readLatencyList READ m_readLatencyList NOTIFY m_scoreChanged)
 	Q_PROPERTY(QList<double> m_writeLatencyList READ m_writeLatencyList NOTIFY m_scoreChanged)
+	Q_PROPERTY(QList<double> m_ReadIops MEMBER m_ReadIops NOTIFY m_scoreChanged)
+	Q_PROPERTY(QList<double> m_WriteIops MEMBER m_WriteIops NOTIFY m_scoreChanged)
 
 	Q_PROPERTY(QList<int> m_benchTypeList READ m_benchTypeList NOTIFY m_DiskBenchStatusChanged)
 	Q_PROPERTY(QList<int> m_blockSizeList READ m_blockSizeList NOTIFY m_DiskBenchStatusChanged)
@@ -160,8 +162,10 @@ public:
 	QVector<double*> m_WriteScore;
 	QVector<double*> m_ReadLatency;
 	QVector<double*> m_WriteLatency;
+	QList<double> m_ReadIops;
+	QList<double> m_WriteIops;
 
-	QVector<int*> m_BenchType;
+	int m_BenchType[9];
 	int m_BenchSize[9];
 	int m_BenchQueues[9];
 	int m_BenchThreads[9];
@@ -254,12 +258,6 @@ protected:
 	QString m_TitleTestQSize;
 
 protected:
-	QIcon m_hIcon;
-	QIcon m_hIconMini;
-
-	int m_SizeX;
-	int m_SizeY;
-
 	CAboutDlg*		m_AboutDlg;
 	CSettingsDlg*	m_SettingsDlg;
 
@@ -311,8 +309,6 @@ protected:
 	QLabel* m_WriteUnit;
 	QLabel* m_ReadUnit;
 	QLabel* m_DemoSetting;
-
-	virtual void OnCancel();
 
 public:
 	void ProfileDefault();

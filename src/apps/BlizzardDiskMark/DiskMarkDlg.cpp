@@ -11,45 +11,27 @@
 
 #include <math.h>
 #include <QApplication>
-#include <QWidget>
-#include <QWindow>
-#include <QScreen>
-#include <QMainWindow>
-#include <QMenuBar>
-#include <QLayout>
-#include <QCloseEvent>
-#include <QShowEvent>
 #include <QFileInfoList>
 #include <QDir>
 #include <QStorageInfo>
-#include <QFileDialog>
-
-#define SIZE_X_MIX	680
-#define MAX_METER_LENGTH	192
 
 CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 	: QObject(parent)
 {
-	m_ReadScore = QVector<double*>(9, nullptr);
-	m_WriteScore = QVector<double*>(9, nullptr);
-	m_ReadLatency = QVector<double*>(9, nullptr);
-	m_WriteLatency = QVector<double*>(9, nullptr);
-	for (int i = 0; i < m_ReadScore.size(); ++i) {
+    const int SCORE_SIZE = 9;
+	m_ReadScore = QVector<double*>(SCORE_SIZE, nullptr);
+	m_WriteScore = QVector<double*>(SCORE_SIZE, nullptr);
+	m_ReadLatency = QVector<double*>(SCORE_SIZE, nullptr);
+	m_WriteLatency = QVector<double*>(SCORE_SIZE, nullptr);
+	m_ReadIops = QList<double>(SCORE_SIZE, 0.0);
+	m_WriteIops = QList<double>(SCORE_SIZE, 0.0);
+	for (int i = 0; i < SCORE_SIZE; ++i) {
 		m_ReadScore[i] = new double(0.0);
-	}
-	for (int i = 0; i < m_WriteScore.size(); ++i) {
 		m_WriteScore[i] = new double(0.0);
-	}
-	for (int i = 0; i < m_ReadLatency.size(); ++i) {
 		m_ReadLatency[i] = new double(0.0);
-	}
-	for (int i = 0; i < m_WriteLatency.size(); ++i) {
 		m_WriteLatency[i] = new double(0.0);
-	}
-
-	m_BenchType = QVector<int*>(9, nullptr);
-	for (int i = 0; i < m_BenchType.size(); ++i) {
-		m_BenchType[i] = new int(0);
+		m_ReadIops[i] = 0.0;
+		m_WriteIops[i] = 0.0;
 	}
 
 	m_IndexTestCount = 4;
@@ -65,9 +47,7 @@ CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 		m_Benchmark = BENCH_READ_WRITE;
 	}
 
-	m_SizeX = 480;
-	m_SizeY = 300;
-
+	ProfileDefault();
 	ChangeLang();
 
 	// Drive
@@ -75,16 +55,6 @@ CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 	InitScore();
 	
 	UpdateQueuesThreads();
-	
-// #ifdef MIX_MODE
-// 	m_ComboMix = new QComboBox(this);
-// 	connect(m_ComboMix, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboMix(int)));
-// #endif
-
-// 	m_DemoSetting = new QLabel(this);
-
-// 	m_AboutDlg = nullptr;
-// 	m_SettingsDlg = nullptr;
 }
 CDiskMarkDlg::~CDiskMarkDlg()
 {
@@ -92,13 +62,13 @@ CDiskMarkDlg::~CDiskMarkDlg()
 
 bool CDiskMarkDlg::IsDefaultMode()
 {
-	if (m_BenchSize[0] == 1024 && m_BenchQueues[0] == 8  && m_BenchThreads[0] == 1 && *m_BenchType.at(0) == BENCH_SEQ
-	&&  m_BenchSize[1] == 1024 && m_BenchQueues[1] == 1  && m_BenchThreads[1] == 1 && *m_BenchType.at(1) == BENCH_SEQ
-	&&  m_BenchSize[2] == 4    && m_BenchQueues[2] == 32 && m_BenchThreads[2] == 1 && *m_BenchType.at(2) == BENCH_RND
-	&&  m_BenchSize[3] == 4    && m_BenchQueues[3] == 1  && m_BenchThreads[3] == 1 && *m_BenchType.at(3) == BENCH_RND
-	&&  m_BenchSize[4] == 1024 && m_BenchQueues[4] == 8  && m_BenchThreads[4] == 1 && *m_BenchType.at(4) == BENCH_SEQ
-	&&  m_BenchSize[5] == 4    && m_BenchQueues[5] == 32 && m_BenchThreads[5] == 1 && *m_BenchType.at(5) == BENCH_RND
-	&&  m_BenchSize[8] == 1024 && m_BenchQueues[8] == 8  && m_BenchThreads[8] == 1 && *m_BenchType.at(8) == BENCH_SEQ
+	if (m_BenchSize[0] == 1024 && m_BenchQueues[0] == 8  && m_BenchThreads[0] == 1 && m_BenchType[0] == BENCH_SEQ
+	&&  m_BenchSize[1] == 1024 && m_BenchQueues[1] == 1  && m_BenchThreads[1] == 1 && m_BenchType[1] == BENCH_SEQ
+	&&  m_BenchSize[2] == 4    && m_BenchQueues[2] == 32 && m_BenchThreads[2] == 1 && m_BenchType[2] == BENCH_RND
+	&&  m_BenchSize[3] == 4    && m_BenchQueues[3] == 1  && m_BenchThreads[3] == 1 && m_BenchType[3] == BENCH_RND
+	&&  m_BenchSize[4] == 1024 && m_BenchQueues[4] == 8  && m_BenchThreads[4] == 1 && m_BenchType[4] == BENCH_SEQ
+	&&  m_BenchSize[5] == 4    && m_BenchQueues[5] == 32 && m_BenchThreads[5] == 1 && m_BenchType[5] == BENCH_RND
+	&&  m_BenchSize[8] == 1024 && m_BenchQueues[8] == 8  && m_BenchThreads[8] == 1 && m_BenchType[8] == BENCH_SEQ
 	)
 	{
 		return true;
@@ -107,13 +77,13 @@ bool CDiskMarkDlg::IsDefaultMode()
 }
 bool CDiskMarkDlg::IsNVMe8Mode()
 {
-	if (m_BenchSize[0] == 1024 && m_BenchQueues[0] == 8  && m_BenchThreads[0] == 1  && *m_BenchType[0] == BENCH_SEQ
-	&&  m_BenchSize[1] == 128  && m_BenchQueues[1] == 32 && m_BenchThreads[1] == 1  && *m_BenchType[1] == BENCH_SEQ
-	&&  m_BenchSize[2] == 4    && m_BenchQueues[2] == 32 && m_BenchThreads[2] == 16 && *m_BenchType[2] == BENCH_RND
-	&&  m_BenchSize[3] == 4    && m_BenchQueues[3] == 1  && m_BenchThreads[3] == 1  && *m_BenchType[3] == BENCH_RND
-	&&  m_BenchSize[4] == 1024 && m_BenchQueues[4] == 8  && m_BenchThreads[4] == 1  && *m_BenchType[4] == BENCH_SEQ
-	&&  m_BenchSize[5] == 4    && m_BenchQueues[5] == 32 && m_BenchThreads[5] == 16 && *m_BenchType[5] == BENCH_RND
-	&&  m_BenchSize[8] == 1024 && m_BenchQueues[8] == 8  && m_BenchThreads[8] == 1  && *m_BenchType[8] == BENCH_SEQ
+	if (m_BenchSize[0] == 1024 && m_BenchQueues[0] == 8  && m_BenchThreads[0] == 1  && m_BenchType[0] == BENCH_SEQ
+	&&  m_BenchSize[1] == 128  && m_BenchQueues[1] == 32 && m_BenchThreads[1] == 1  && m_BenchType[1] == BENCH_SEQ
+	&&  m_BenchSize[2] == 4    && m_BenchQueues[2] == 32 && m_BenchThreads[2] == 16 && m_BenchType[2] == BENCH_RND
+	&&  m_BenchSize[3] == 4    && m_BenchQueues[3] == 1  && m_BenchThreads[3] == 1  && m_BenchType[3] == BENCH_RND
+	&&  m_BenchSize[4] == 1024 && m_BenchQueues[4] == 8  && m_BenchThreads[4] == 1  && m_BenchType[4] == BENCH_SEQ
+	&&  m_BenchSize[5] == 4    && m_BenchQueues[5] == 32 && m_BenchThreads[5] == 16 && m_BenchType[5] == BENCH_RND
+	&&  m_BenchSize[8] == 1024 && m_BenchQueues[8] == 8  && m_BenchThreads[8] == 1  && m_BenchType[8] == BENCH_SEQ
 	)
 	{
 		return true;
@@ -149,9 +119,13 @@ void CDiskMarkDlg::UpdateQueuesThreads()
 
 	for (int i = 0; i < 9; i++)
 	{
-		if (*m_BenchType.at(i) < 0 || m_BenchSize[i] > 1) { m_BenchSize[i] = type[i]; }
+		m_BenchType[i] = type[i];
+		if (m_BenchType[i] < 0 || m_BenchType[i] > 1) { m_BenchType[i] = type[i]; }
+		m_BenchSize[i] = size[i];
 		if (m_BenchSize[i] <= 0 || m_BenchSize[i] > 8192) { m_BenchSize[i] = size[i]; }
+		m_BenchQueues[i] = queues[i];
 		if (m_BenchQueues[i] <= 0 || m_BenchQueues[i] > MAX_QUEUES) { m_BenchQueues[i] = queues[i]; }
+		m_BenchThreads[i] = threads[i];
 		if (m_BenchThreads[i] <= 0 || m_BenchThreads[i] > MAX_THREADS) { m_BenchThreads[i] = threads[i]; }
 	}
 	if (m_TestData < 0 || m_TestData > 1)
@@ -258,6 +232,8 @@ void CDiskMarkDlg::InitScore()
 		*m_ReadLatency[i] = 0.0;
 		*m_WriteScore[i] = 0.0;
 		*m_WriteLatency[i] = 0.0;
+		m_ReadIops[i] = 0.0;
+		m_WriteIops[i] = 0.0;
 	}	
 }
 
@@ -267,20 +243,24 @@ void CDiskMarkDlg::OnUpdateScore()
 }
 void CDiskMarkDlg::OnExit()
 {
-	OnCancel();
+	if (m_WinThread != NULL)
+	{
+		m_WinThread->terminate();
+		return;
+	}
+	// Remove test directory
+	if(m_TestTargetPath != "")
+	{
+		QDir dir(m_TestTargetPath);
+		if (dir.exists())
+		{
+			dir.removeRecursively();
+		}
+	}
+	QApplication::quit();
 }
 void CDiskMarkDlg::OnAbout()
 {
-}
-
-void CDiskMarkDlg::OnCancel()
-{
-// 	if (m_WinThread != NULL)
-// 	{
-// 		AfxMessageBox(m_MesStopBenchmark);
-// 		return;
-// 	}
-	QApplication::quit();
 }
 
 void CDiskMarkDlg::OnSequentialPeak()
@@ -291,6 +271,8 @@ void CDiskMarkDlg::OnSequentialPeak()
 		*m_WriteScore[4] = 0.0;
 		*m_ReadLatency[4] = 0.0;
 		*m_WriteLatency[4] = 0.0;
+		m_ReadIops[4] = 0.0;
+		m_WriteIops[4] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench4(this); });
 		m_WinThread->start();
@@ -313,6 +295,8 @@ void CDiskMarkDlg::OnRandomPeak()
 		*m_WriteScore[5] = 0.0;
 		*m_ReadLatency[5] = 0.0;
 		*m_WriteLatency[5] = 0.0;
+		m_ReadIops[5] = 0.0;
+		m_WriteIops[5] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench5(this); });
 		m_WinThread->start();
@@ -335,6 +319,8 @@ void CDiskMarkDlg::OnSequentialReal()
 		*m_WriteScore[6] = 0.0;
 		*m_ReadLatency[6] = 0.0;
 		*m_WriteLatency[6] = 0.0;
+		m_ReadIops[6] = 0.0;
+		m_WriteIops[6] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench6(this); });
 		m_WinThread->start();
@@ -357,6 +343,8 @@ void CDiskMarkDlg::OnRandomReal()
 		*m_WriteScore[7] = 0.0;
 		*m_ReadLatency[7] = 0.0;
 		*m_WriteLatency[7] = 0.0;
+		m_ReadIops[7] = 0.0;
+		m_WriteIops[7] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench7(this); });
 		m_WinThread->start();
@@ -391,6 +379,8 @@ void CDiskMarkDlg::OnTest0()
 		*m_WriteScore[0] = 0.0;
 		*m_ReadLatency[0] = 0.0;
 		*m_WriteLatency[0] = 0.0;
+		m_ReadIops[0] = 0.0;
+		m_WriteIops[0] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench0(this); });
 		m_WinThread->start();
@@ -424,6 +414,8 @@ void CDiskMarkDlg::OnTest1()
 		*m_WriteScore[1] = 0.0;
 		*m_ReadLatency[1] = 0.0;
 		*m_WriteLatency[1] = 0.0;
+		m_ReadIops[1] = 0.0;
+		m_WriteIops[1] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench1(this); });
 		m_WinThread->start();
@@ -457,6 +449,8 @@ void CDiskMarkDlg::OnTest2()
 		*m_WriteScore[2] = 0.0;
 		*m_ReadLatency[2] = 0.0;
 		*m_WriteLatency[2] = 0.0;
+		m_ReadIops[2] = 0.0;
+		m_WriteIops[2] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench2(this); });
 		m_WinThread->start();
@@ -490,6 +484,8 @@ void CDiskMarkDlg::OnTest3()
 		*m_WriteScore[3] = 0.0;
 		*m_ReadLatency[3] = 0.0;
 		*m_WriteLatency[3] = 0.0;
+		m_ReadIops[3] = 0.0;
+		m_WriteIops[3] = 0.0;
 		m_DiskBenchStatus = true;
 		m_WinThread = QThread::create([this]() { ExecDiskBench3(this); });
 		m_WinThread->start();
@@ -1213,6 +1209,21 @@ void CDiskMarkDlg::OnSettings()
 
 void CDiskMarkDlg::OnExitBenchmark()
 {
+	if (m_WinThread != NULL)
+	{
+		m_WinThread->quit();
+		m_WinThread = NULL;
+	}
+	if(m_TestTargetPath != "")
+	{
+		QDir dir(m_TestTargetPath);
+		if (dir.exists())
+		{
+			dir.removeRecursively();
+		}
+	}
+	m_DiskBenchStatus = false;
+	m_DiskBenchStatusChanged();
 }
 
 CDiskMarkDlg::Profile CDiskMarkDlg::m_getProfile() const
@@ -1268,9 +1279,9 @@ QList<double> CDiskMarkDlg::m_writeLatencyList() const
 QList<int> CDiskMarkDlg::m_benchTypeList() const
 {
 	QList<int> list;
-	for (int* size : m_BenchType)
+	for (int size : m_BenchType)
 	{
-		list.append(*size);
+		list.append(size);
 	}
 	return list;
 }

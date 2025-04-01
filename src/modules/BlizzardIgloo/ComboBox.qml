@@ -20,7 +20,7 @@ T.ComboBox {
     // leftPadding: padding + (!control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
     // rightPadding: padding + (control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
 
-    font.pixelSize: 16
+    font.pixelSize: control.height * 16 / 24
     font.family: "Segoe UI"
 
     delegate: ItemDelegate {

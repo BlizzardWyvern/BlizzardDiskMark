@@ -53,10 +53,8 @@ static unsigned int Exit(void* dlg);
 //static void CALLBACK TimerProc(int hwnd, unsigned int uMsg, unsigned int* idEvent, int dwTime);
 static volatile bool WaitFlag;
 
-int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
+int ExecAndWait(QString *pszCmd, double *score, double *latency, double *iops)
 {
-	// printf("ExecAndWait: %s\n", pszCmd->toStdString().c_str());
-
 	int Code = 0;
 	QString output;
 	char buffer[128];
@@ -81,16 +79,14 @@ int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 		// Child process
 		close(pipefd[0]); // Close unused read end
 
-		if (bNoWindow) {
-			int fd = open("/dev/null", O_WRONLY);
-			if (fd == -1) {
-				perror("open");
-				exit(EXIT_FAILURE);
-			}
-			dup2(fd, STDOUT_FILENO);
-			dup2(fd, STDERR_FILENO);
-			close(fd);
+		int fd = open("/dev/null", O_WRONLY);
+		if (fd == -1) {
+			perror("open");
+			exit(EXIT_FAILURE);
 		}
+		dup2(fd, STDOUT_FILENO);
+		dup2(fd, STDERR_FILENO);
+		close(fd);
 
 		dup2(pipefd[1], STDOUT_FILENO);
 		dup2(pipefd[1], STDERR_FILENO);
@@ -203,15 +199,17 @@ int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 			QJsonObject job = jobs[0].toObject();
 			QJsonObject read = job["read"].toObject();
 			QJsonObject lat_ns = read["lat_ns"].toObject();
-			*latency = lat_ns["mean"].toDouble();
-			*score = read["bw_bytes"].toDouble() / 1024.0 / 1024.0;
+			*latency = lat_ns["mean"].toDouble() / 1000.0;
+			*score = read["bw_bytes"].toDouble() / 1000.0 / 1000.0;
+			*iops = read["iops"].toDouble();
 		} else if (rw.contains("write")) {
 			QJsonArray jobs = jsonObject["jobs"].toArray();
 			QJsonObject job = jobs[0].toObject();
 			QJsonObject write = job["write"].toObject();
 			QJsonObject lat_ns = write["lat_ns"].toObject();
-			*latency = lat_ns["mean"].toDouble();
-			*score = write["bw_bytes"].toDouble() / 1024.0 / 1024.0;
+			*latency = lat_ns["mean"].toDouble() / 1000.0;
+			*score = write["bw_bytes"].toDouble() / 1000.0 / 1000.0;
+			*iops = write["iops"].toDouble();
 		}
 	} else {
 		if (Code == 0) {
@@ -656,7 +654,7 @@ bool Init(void* dlg)
 
 	for (int i = 0; i < 9; i++)
 	{
-		BenchType[i] = *((CDiskMarkDlg*)dlg)->m_BenchType[i];
+		BenchType[i] = ((CDiskMarkDlg*)dlg)->m_BenchType[i];
 		BenchSize[i] = ((CDiskMarkDlg*)dlg)->m_BenchSize[i];
 		BenchQueues[i] = ((CDiskMarkDlg*)dlg)->m_BenchQueues[i];
 		BenchThreads[i] = ((CDiskMarkDlg*)dlg)->m_BenchThreads[i];
@@ -832,6 +830,7 @@ bool Init(void* dlg)
 
 		execlp("fio", "fio", 
 			("--name=" + TestFilePath.toStdString()).c_str(), 
+			"--kb_base=1000",
 			("--size=" + std::to_string(DiskTestSize) + "Mi").c_str(), 
 			"--create_only=1", 
 			"--rw=write", 
@@ -870,7 +869,7 @@ bool Init(void* dlg)
 	}
 #elif defined(_WIN32)
 	// Prepare Test File
-	QString command = QString("fio --name=%1 --size=%2Mi --create_only=1 --rw=write --thread").arg(TestFilePath).arg(DiskTestSize);
+	QString command = QString("fio --name=%1 --kb_base=1000 --size=%2Mi --create_only=1 --rw=write --thread").arg(TestFilePath).arg(DiskTestSize);
 	SECURITY_ATTRIBUTES sa;
 	HANDLE hRead, hWrite;
 	STARTUPINFO si;
@@ -1078,6 +1077,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 	static QString cstr;
 	double *maxScore = NULL;
 	double *minLatency = NULL;
+	double *maxIops = NULL;
 	QString command;
 	QString title;
 	QString option;
@@ -1155,6 +1155,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		}
 		maxScore = ((CDiskMarkDlg*) dlg)->m_ReadScore[index];
 		minLatency = ((CDiskMarkDlg*)dlg)->m_ReadLatency[index];
+		maxIops = &((CDiskMarkDlg*)dlg)->m_ReadIops[index];
 		break;
 	case TEST_WRITE_0:
 	case TEST_WRITE_1:
@@ -1181,6 +1182,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		option += bufOption;
 		maxScore = ((CDiskMarkDlg*)dlg)->m_WriteScore[index];
 		minLatency = ((CDiskMarkDlg*)dlg)->m_WriteLatency[index];
+		maxIops = &((CDiskMarkDlg*)dlg)->m_WriteIops[index];
 		break;
 #ifdef MIX_MODE
 	case TEST_MIX_0:
@@ -1210,7 +1212,6 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 #endif
 	}
 	//option += QStringLiteral(" --cpus_allowed_policy=shared");
-	//option += QStringLiteral(" -ag");
 
 #ifdef __APPLE__
 	option += QStringLiteral(" --ioengine=posixaio --output-format=json+");
@@ -1220,13 +1221,15 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 
 	double score = 0.0;
 	double latency = 0.0;
+	double iops = 0.0;
 
-	if (maxScore == NULL || minLatency == NULL)
+	if (maxScore == NULL || minLatency == NULL || maxIops == NULL)
 	{
 		return ;
 	}
 	*maxScore = 0.0;
 	*minLatency = -1.0;
+	*maxIops = 0.0;
 
 	for (j = 0; j < DiskTestCount; j++)
 	{
@@ -1245,8 +1248,8 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
 		
 		//command = QString::asprintf("\"%s\" %s -d%d -A%d -L \"%s\"", DiskSpdExe.toStdString().c_str(), option.toStdString().c_str(), duration, getpid(), TestFilePath.toStdString().c_str());
-		command = QString::asprintf("%s %s --name=%s --size=%lldMi", "fio", option.toStdString().c_str(), TestFilePath.toStdString().c_str(), DiskTestSize);
-		int ret = ExecAndWait(&command, true, &score, &latency);
+		command = QString::asprintf("%s %s --name=%s --kb_base=1000 --size=%lldMi", "fio", option.toStdString().c_str(), TestFilePath.toStdString().c_str(), DiskTestSize);
+		int ret = ExecAndWait(&command, &score, &latency, &iops);
 		if (ret != 0)
 		{
 			ShowErrorMessage(command);
@@ -1262,6 +1265,12 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		if (score > 0.0 && (latency < *minLatency || *minLatency < 0))
 		{
 			*minLatency = latency;
+			QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateScore", Qt::QueuedConnection);
+		}
+
+		if (iops > *maxIops)
+		{
+			*maxIops = iops;
 			QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateScore", Qt::QueuedConnection);
 		}
 
