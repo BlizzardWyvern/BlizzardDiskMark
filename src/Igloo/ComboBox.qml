@@ -3,8 +3,6 @@
 
 pragma ComponentBehavior: Bound
 
-import ScoreLabel
-
 import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Controls

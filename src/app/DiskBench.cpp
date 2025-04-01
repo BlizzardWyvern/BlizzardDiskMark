@@ -678,9 +678,9 @@ bool Init(void* dlg)
 			perror("statvfs");
 			return false;
 		}
-		freeBytesAvailableToCaller = stat.f_bavail * stat.f_frsize;
-		totalNumberOfBytes = stat.f_blocks * stat.f_frsize;
-		totalNumberOfFreeBytes = stat.f_bfree * stat.f_frsize;
+		quint64 freeBytesAvailableToCaller = stat.f_bavail * stat.f_frsize;
+		quint64 totalNumberOfBytes = stat.f_blocks * stat.f_frsize;
+		quint64 totalNumberOfFreeBytes = stat.f_bfree * stat.f_frsize;
 		if (totalNumberOfBytes < ((quint64)8 * 1024 * 1024 * 1024)) // < 8 GB
 		{
 			((CDiskMarkDlg*)dlg)->m_TestDriveInfo = QString("%1: %2.1f%% (%3.1f/%4.1f MiB)")
@@ -698,6 +698,7 @@ bool Init(void* dlg)
 				.arg(totalNumberOfBytes / 1024 / 1024 / 1024.0);
 		}
 		RootPath = QString("/Volumes/%1").arg(drive);
+		RootPath = QDir().tempPath();
 #elif defined(_WIN32)
 		cstr = QString("%1:\\").arg(drive);
 		ULARGE_INTEGER freeBytesAvailableToCaller;
@@ -725,7 +726,6 @@ bool Init(void* dlg)
 		}
 		RootPath = QString("%1:\\").arg(drive);
 #endif
-		// TempPath = QDir().tempPath();
 		TestFileDir = QString("%1/BlizzardDiskMark%2").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
 	}
 	else
@@ -733,7 +733,7 @@ bool Init(void* dlg)
 		RootPath = ((CDiskMarkDlg*)dlg)->m_TestTargetPath;
 		TestFileDir = QString("%1/BlizzardDiskMark%2").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
 	}
-	printf("Test path %s", TestFileDir);
+	printf("Test path %s", TestFileDir.toStdString().c_str());
 #ifdef __APPLE__
 	if (mkdir(TestFileDir.toStdString().c_str(), 0777) != 0) {
 		perror("mkdir");
@@ -762,9 +762,15 @@ bool Init(void* dlg)
 		perror("statvfs");
 		return false;
 	}
-	freeBytesAvailableToCaller = stat.f_bavail * stat.f_frsize;
-	totalNumberOfBytes = stat.f_blocks * stat.f_frsize;
-	totalNumberOfFreeBytes = stat.f_bfree * stat.f_frsize;
+	quint64 freeBytesAvailableToCaller = stat.f_bavail * stat.f_frsize;
+	quint64 totalNumberOfBytes = stat.f_blocks * stat.f_frsize;
+	quint64 totalNumberOfFreeBytes = stat.f_bfree * stat.f_frsize;
+	if(DiskTestSize > totalNumberOfFreeBytes / 1024 / 1024 )
+	{
+		ShowErrorMessage(((CDiskMarkDlg*)dlg)->m_MesDiskCapacityError);
+		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
+		return false;
+	}
 #elif defined(_WIN32)
 	// Check Read Only //
 	DWORD dwAttributes = GetFileAttributes(RootPath.toStdWString().c_str());
@@ -777,14 +783,13 @@ bool Init(void* dlg)
 		perror("GetDiskFreeSpaceEx");
 		return false;
 	}
-#endif
-
 	if(DiskTestSize > totalNumberOfFreeBytes.QuadPart / 1024 / 1024 )
 	{
 		ShowErrorMessage(((CDiskMarkDlg*)dlg)->m_MesDiskCapacityError);
 		((CDiskMarkDlg*)dlg)->m_DiskBenchStatus = false;
 		return false;
 	}
+#endif
 
 	QString title;
 	title = QString::asprintf("Preparing... Create Test File");
@@ -862,7 +867,7 @@ bool Init(void* dlg)
 			// perror(std::to_string(WEXITSTATUS(status)).c_str());
 		}
 
-		printf("Output: %s\n", output.toStdString().c_str());
+		// printf("Output: %s\n", output.toStdString().c_str());
 	}
 #elif defined(_WIN32)
 	// Prepare Test File

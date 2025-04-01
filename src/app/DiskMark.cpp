@@ -2,7 +2,6 @@
 #include <QQmlApplicationEngine>
 
 #include "DiskMarkDlg.h"
-#include "ScoreLabel/ScoreLabel.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,9 +22,7 @@ int main(int argc, char *argv[])
 	palette.setColor(QPalette::Highlight, Qt::blue);
 	palette.setColor(QPalette::HighlightedText, Qt::white);
 	app.setPalette(palette);
-
-	qmlRegisterUncreatableType<ScoreLabel>("ScoreLabel", 1, 0, "ScoreLabel", "ScoreLabel is an attached property");
-
+	
 	QQmlApplicationEngine engine;
 	engine.addImportPath(QStringLiteral("qrc:/"));
 	engine.load(QUrl(QStringLiteral("qrc:/DiskMarkDlg.qml")));

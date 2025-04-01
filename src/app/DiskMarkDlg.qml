@@ -1,12 +1,11 @@
-import ScoreLabel
+import BlizzardIgloo
+import BlizzardDiskMark
 
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Shapes
 import QtQuick.Dialogs
-
-import BlizzardDiskMark
 
 ApplicationWindow {
     id: diskMarkApp
@@ -15,7 +14,16 @@ ApplicationWindow {
     height: 300 + 32
     minimumWidth: 480
     minimumHeight: 300 + 32
-    title: diskMarkDlg.m_WindowTitle
+    title: {
+        var title = ""
+        if (diskMarkDlg.m_WindowTitle == null || diskMarkDlg.m_WindowTitle == "") {
+            title = qsTr("Blizzard DiskMark")
+        }
+        else {
+            title = diskMarkDlg.m_WindowTitle
+        }
+        return title + "<0Fill>"
+    }
 
     CDiskMarkDlg {
         id: diskMarkDlg
@@ -102,7 +110,7 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         enabled: !diskMarkDlg.m_DiskBenchStatus
-        height: 32
+        height: 24
         Menu {
             title: qsTr("&File")
             Action {
@@ -147,11 +155,11 @@ ApplicationWindow {
                 checked: true
                 onTriggered: diskMarkDlg.OnSettingDefault()
             }
-            Action {
-                text: qsTr("&NVMe SSD")
-                checkable: true
-                onTriggered: diskMarkDlg.OnSettingNVMe8()
-            }
+            // Action {
+            //     text: qsTr("&NVMe SSD")
+            //     checkable: true
+            //     onTriggered: diskMarkDlg.OnSettingNVMe8()
+            // }
             MenuSeparator {}
             Action {
                 text: qsTr("&Settings") + "\tCtrl + Q"
@@ -166,59 +174,59 @@ ApplicationWindow {
                 checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEFAULT
                 onTriggered: diskMarkDlg.OnProfileDefault()
             }
-            Action {
-                text: qsTr("&Peak Performance")
-                checkable: true
-                checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK
-                onTriggered: diskMarkDlg.OnProfilePeak()
-            }
-            Action {
-                text: qsTr("&Real World Performance")
-                checkable: true
-                checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL
-                onTriggered: diskMarkDlg.OnProfileReal()
-            }
-            Action {
-                text: qsTr("&Demo")
-                checkable: true
-                checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO
-                onTriggered: diskMarkDlg.OnProfileDemo()
-            }
-            Action {
-                text: qsTr("&Default [+Mix]")
-                checkable: true
-                checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEFAULT_MIX
-                onTriggered: diskMarkDlg.OnProfileDefaultMix()
-            }
-            Action {
-                text: qsTr("&Peak Performance [+Mix]")
-                checkable: true
-                checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX
-                onTriggered: diskMarkDlg.OnProfilePeakMix()
-            }
-            Action {
-                text: qsTr("&Real World Performance [+Mix]")
-                checkable: true
-                checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX
-                onTriggered: diskMarkDlg.OnProfileRealMix()
-            }
-            MenuSeparator {}
-            Action {
-                text: qsTr("&Read&Write [+Mix]")
-                checkable: true
-                checked: true
-                onTriggered: diskMarkDlg.OnBenchmarkReadWrite()
-            }
-            Action {
-                text: qsTr("&Read [+Mix]")
-                checkable: true
-                onTriggered: diskMarkDlg.OnBenchmarkReadOnly()
-            }
-            Action {
-                text: qsTr("&Write [+Mix]")
-                checkable: true
-                onTriggered: diskMarkDlg.OnBenchmarkWriteOnly()
-            }
+            // Action {
+            //     text: qsTr("&Peak Performance")
+            //     checkable: true
+            //     checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK
+            //     onTriggered: diskMarkDlg.OnProfilePeak()
+            // }
+            // Action {
+            //     text: qsTr("&Real World Performance")
+            //     checkable: true
+            //     checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL
+            //     onTriggered: diskMarkDlg.OnProfileReal()
+            // }
+            // Action {
+            //     text: qsTr("&Demo")
+            //     checkable: true
+            //     checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO
+            //     onTriggered: diskMarkDlg.OnProfileDemo()
+            // }
+            // Action {
+            //     text: qsTr("&Default [+Mix]")
+            //     checkable: true
+            //     checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEFAULT_MIX
+            //     onTriggered: diskMarkDlg.OnProfileDefaultMix()
+            // }
+            // Action {
+            //     text: qsTr("&Peak Performance [+Mix]")
+            //     checkable: true
+            //     checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX
+            //     onTriggered: diskMarkDlg.OnProfilePeakMix()
+            // }
+            // Action {
+            //     text: qsTr("&Real World Performance [+Mix]")
+            //     checkable: true
+            //     checked: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX
+            //     onTriggered: diskMarkDlg.OnProfileRealMix()
+            // }
+            // MenuSeparator {}
+            // Action {
+            //     text: qsTr("&Read&Write [+Mix]")
+            //     checkable: true
+            //     checked: true
+            //     onTriggered: diskMarkDlg.OnBenchmarkReadWrite()
+            // }
+            // Action {
+            //     text: qsTr("&Read [+Mix]")
+            //     checkable: true
+            //     onTriggered: diskMarkDlg.OnBenchmarkReadOnly()
+            // }
+            // Action {
+            //     text: qsTr("&Write [+Mix]")
+            //     checkable: true
+            //     onTriggered: diskMarkDlg.OnBenchmarkWriteOnly()
+            // }
         }
         Menu {
             title: qsTr("&Theme")
@@ -231,14 +239,15 @@ ApplicationWindow {
                     onTriggered: console.log("Zoom 100% action triggered")
                 }
             }
-            Action {
-                text: qsTr("&Font Setting") + "\tCtrl + F"
-                onTriggered: diskMarkDlg.OnFontSetting()
-            }
+            // Action {
+            //     text: qsTr("&Font Setting") + "\tCtrl + F"
+            //     onTriggered: diskMarkDlg.OnFontSetting()
+            // }
             MenuSeparator {}
             Action {
                 text: qsTr("&Default")
                 checkable: true
+                checked: true
                 onTriggered: console.log("Default theme action triggered")
             }
         }
@@ -288,7 +297,7 @@ ApplicationWindow {
             text: diskMarkDlg.m_buttonTextList[0]
             font.pixelSize: 16
             onClicked: diskMarkDlg.OnAll()
-            onHoveredChanged: console.log(diskMarkDlg.m_Profile)
+            onHoveredChanged: console.log(m_TestRead0.meter + " " + m_TestWrite0.meter)
             ToolTip.visible: false
         }
 
@@ -314,7 +323,7 @@ ApplicationWindow {
                     id: m_ComboCount
                     enabled: !diskMarkDlg.m_DiskBenchStatus
                     model: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-                    currentIndex: 4
+                    currentIndex: diskMarkDlg.m_IndexTestCount
                     onCurrentIndexChanged: diskMarkDlg.m_IndexTestCount = m_ComboCount.currentIndex
                     onCurrentValueChanged: diskMarkDlg.m_ValueTestCount = m_ComboCount.currentText
                     ToolTip.visible: hovered
@@ -444,6 +453,8 @@ ApplicationWindow {
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? 8 :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ? 4 :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ? 6 : 0
+            property real read_score: diskMarkDlg.m_readScoreList[index]
+            property real read_latency: diskMarkDlg.m_readLatencyList[index]
             text: 
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ?
                     diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
@@ -452,8 +463,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
-            Layout.minimumWidth: 192
+            meter: diskMarkDlg.calcMeter(read_score, read_latency)
             Layout.minimumHeight: 48
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -475,7 +485,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -505,7 +515,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -527,7 +537,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text: 
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -557,7 +567,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -579,7 +589,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -609,7 +619,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true
@@ -631,7 +641,7 @@ ApplicationWindow {
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text:
                 diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            // ScoreLabel.meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
             Layout.fillWidth: true

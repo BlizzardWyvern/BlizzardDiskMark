@@ -104,7 +104,7 @@ public:
 	};
 	Q_ENUM(BENCHMODE)
 
-	QString m_WindowTitle;
+	QString m_WindowTitle = "";
 	QString m_TestTargetPath;
 
 	Profile m_getProfile() const;
@@ -148,7 +148,7 @@ private:
 	QStringList m_writeScoreToolTipList;
 
 public:
-	int m_IndexTestCount = 0;
+	int m_IndexTestCount;
 	int m_IndexTestDrive;
 	QString m_ValueTestSize;
 	QString m_ValueTestDrive;
@@ -172,24 +172,14 @@ public:
 	QThread* m_WinThread;
 	volatile bool m_DiskBenchStatus;
 
-	void UpdateScore();
-
-#ifdef MIX_MODE
-	double m_MixScore[9];
-	double m_MixLatency[9];
-#endif
-
 	void SetMeter(int index, double score, double latency, int blockSize, int unit);
 	void ChangeLang();
-	// void resizeEvent(QResizeEvent* event) override;
 	void ChangeButtonStatus(bool status);
 	void SetScoreToolTip(QLabel* cx, double score, double latency, int blockSize);
-	void UpdateThemeInfo();
 
 	QString m_TestDriveInfo;
 
 	int m_MaxIndexTestDrive;
-
 
 	int m_IntervalTime;
 	int m_MeasureTime;
@@ -253,7 +243,6 @@ public slots:
 	void OnSaveText();
 	void OnSaveImage();
 	void OnSettingsQueuesThreads();
-	void UpdateUnitLabel();
 
 	void OnAll();
 	void OnTest0();
@@ -266,14 +255,12 @@ public slots:
 	void OnSequentialReal();
 	void OnRandomReal();
 
-	void OnUpdateMessage(QString* message);
 	void OnUpdateScore();
 	void OnExitBenchmark();
 
 	void OnExit();
 	void OnAbout();
 	void OnSettings();
-	void OnFontSetting();
 
 	void OnBenchmarkReadWrite();
 	void OnBenchmarkReadOnly();
@@ -298,20 +285,14 @@ protected:
 	CAboutDlg*		m_AboutDlg;
 	CSettingsDlg*	m_SettingsDlg;
 
-	void SetControlFont();
 	void InitDrive();
-	void UpdateDriveToolTip();
 
-	bool CheckRadioZoomType(int id, int value);
-	void CheckRadioZoomType();
 	void CheckRadioPresetMode();
 	void UpdateQueuesThreads();
 
 	void SaveText(QString fileName);
 
 	void UpdateComboTooltip();
-
-	virtual bool CheckThemeEdition(QString name);
 
 	bool IsDefaultMode();
 	bool IsNVMe8Mode();
@@ -353,10 +334,7 @@ protected:
 	QLabel* m_ReadUnit;
 	QLabel* m_DemoSetting;
 
-	// void showEvent(QShowEvent* event) override;
 	virtual void OnCancel();
-	// void paintEvent(QPaintEvent* event) override;
-	// void closeEvent(QCloseEvent* event) override;
 	//LRESULT OnQueryEndSession(WPARAM wParam, LPARAM lParam);
 
 public:
@@ -371,8 +349,6 @@ public:
 	void InitScore();
 
 	void SettingsQueuesThreads(int type);
-
-	//afx_msg void OnCbnSelchangeComboMix();
 
 	void BenchmarkReadWrite();
 	void BenchmarkReadOnly();
