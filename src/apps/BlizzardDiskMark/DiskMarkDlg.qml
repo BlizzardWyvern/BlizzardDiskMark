@@ -17,12 +17,16 @@ ApplicationWindow {
     title: {
         var title = ""
         if (diskMarkDlg.m_WindowTitle == null || diskMarkDlg.m_WindowTitle == "") {
-            title = qsTr("Blizzard DiskMark")
+            title = qsTr("Blizzard DiskMark 1.0.0 x64")
         }
         else {
             title = diskMarkDlg.m_WindowTitle
         }
-        return title + "<0Fill>"
+        if (diskMarkDlg.m_TestData == CDiskMarkDlg.TEST_DATA_ALL0X00) {
+            return title + "<0Fill>"
+        }
+
+        return title
     }
 
     CDiskMarkDlg {

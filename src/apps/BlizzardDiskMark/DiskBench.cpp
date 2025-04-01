@@ -755,9 +755,7 @@ bool Init(void* dlg)
 	}
 #endif
 
-	QString title;
-	title = QString::asprintf("Preparing... Create Test File");
-	((CDiskMarkDlg*)dlg)->m_WindowTitle = title;
+	((CDiskMarkDlg*)dlg)->m_WindowTitle = "Preparing... Create Test File";
 	((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
 
 #ifdef __APPLE__
@@ -915,15 +913,7 @@ bool Init(void* dlg)
 
 uint Exit(void* dlg)
 {
-	static QString cstr;
-	cstr = "";
-
-	if(((CDiskMarkDlg*)dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
-	{
-		cstr = ALL_0X00_0FILL;
-	}
-
-	((CDiskMarkDlg*)dlg)->m_WindowTitle = cstr;
+	((CDiskMarkDlg*)dlg)->m_WindowTitle = "";
 	((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
 
 
@@ -1016,7 +1006,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		if (BenchType[index])
 		{
 			title = QString::asprintf("Random Read");
-			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=randread").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
+			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --startdelay=0 --direct=1 --rw=randread").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		else
 		{
@@ -1040,12 +1030,12 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		if (BenchType[index])
 		{
 			title = QString::asprintf("Random Write");
-			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=randwrite").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
+			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --startdelay=0 --direct=1 --rw=randwrite").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		else
 		{
 			title = QString::asprintf("Sequential Write");
-			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=write").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
+			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --startdelay=0 --direct=1 --rw=write").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		option += bufOption;
 		maxScore = ((CDiskMarkDlg*)dlg)->m_WriteScore[index];
@@ -1114,7 +1104,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		((CDiskMarkDlg*)dlg)->m_WindowTitle = cstr;
 		((CDiskMarkDlg*)dlg)->m_WindowTitleChanged();
 		
-		command = QString::asprintf("%s %s --name=%s --kb_base=1000 --size=%lldMi", "fio", option.toStdString().c_str(), TestFilePath.toStdString().c_str(), DiskTestSize);
+		command = QString::asprintf("%s %s --name=%s --kb_base=1000 --size=%lldMi --time_based --runtime=%d", "fio", option.toStdString().c_str(), TestFilePath.toStdString().c_str(), DiskTestSize, duration);
 		int ret = ExecAndWait(&command, &score, &latency, &iops);
 		if (ret != 0)
 		{
