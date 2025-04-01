@@ -20,9 +20,17 @@ int main(int argc, char *argv[])
 	palette.setColor(QPalette::Button, Qt::lightGray);
 	palette.setColor(QPalette::ButtonText, Qt::black);
 	palette.setColor(QPalette::BrightText, Qt::red);
-	palette.setColor(QPalette::Link, Qt::blue);
-	palette.setColor(QPalette::Highlight, Qt::blue);
+	palette.setColor(QPalette::Light, Qt::lightGray);
+	palette.setColor(QPalette::Midlight, Qt::lightGray);
+	palette.setColor(QPalette::Dark, Qt::darkGray);
+	palette.setColor(QPalette::Mid, Qt::lightGray);
+	palette.setColor(QPalette::Shadow, Qt::darkGray);
+	palette.setColor(QPalette::Highlight, QColor("#965ec6"));
+	palette.setColor(QPalette::Accent, QColor("#965ec6"));
 	palette.setColor(QPalette::HighlightedText, Qt::white);
+	palette.setColor(QPalette::Link, Qt::blue);
+	palette.setColor(QPalette::LinkVisited, Qt::darkBlue);
+	palette.setColor(QPalette::NoRole, Qt::white);
 	app.setPalette(palette);
 	
 	QQmlApplicationEngine engine;

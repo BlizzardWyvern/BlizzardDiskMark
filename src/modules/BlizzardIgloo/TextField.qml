@@ -10,13 +10,6 @@ import BlizzardIgloo
 T.TextField {
     id: control
 
-    // implicitWidth: implicitBackgroundWidth + leftInset + rightInset
-    //                || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
-    // implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-    //                          contentHeight + topPadding + bottomPadding,
-    //                          placeholder.implicitHeight + topPadding + bottomPadding)
-
-    // padding: 6
     leftPadding: padding + 4
 
     color: control.palette.text
@@ -42,8 +35,6 @@ T.TextField {
     }
 
     background: Rectangle {
-        // implicitWidth: 200
-        // implicitHeight: 40
         border.width: 1
         color: "transparent"
         border.color: "lightgray"

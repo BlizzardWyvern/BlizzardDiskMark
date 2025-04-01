@@ -8,20 +8,12 @@ import QtQuick.Controls.impl
 import QtQuick.Controls
 import QtQuick.Templates as T
 
+import BlizzardIgloo
+
 T.ComboBox {
     id: control
 
-    // implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-    //                         implicitContentWidth + leftPadding + rightPadding)
-    // implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-    //                          implicitContentHeight + topPadding + bottomPadding,
-    //                          implicitIndicatorHeight + topPadding + bottomPadding)
-
-    // leftPadding: padding + (!control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
-    // rightPadding: padding + (control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
-
     font.pixelSize: control.height * 16 / 24
-    font.family: "Segoe UI"
 
     delegate: ItemDelegate {
         required property var model
@@ -37,20 +29,17 @@ T.ComboBox {
     }
 
     indicator: ColorImage {
-        x: control.mirrored ? control.padding : control.width - width * scale //- control.padding
+        x: control.mirrored ? control.padding : control.width - width * scale
         y: control.topPadding + (control.availableHeight - height) / 2
-        color: control.palette.dark
+        color: control.enabled ? "#965ec6" : control.palette.dark
         defaultColor: "#353637"
         source: "qrc:/qt-project.org/imports/QtQuick/Controls/Basic/images/double-arrow.png"
         opacity: enabled ? 1 : 0.3
-        scale: 0.75
+        scale: (control.height / height) * 0.75
     }
 
     contentItem: T.TextField {
         leftPadding: 4
-        // rightPadding: control.mirrored ? 12 : control.editable && activeFocus ? 3 : 1
-        // topPadding: 6 - control.padding
-        // bottomPadding: 6 - control.padding
 
         text: control.editable ? control.editText : control.displayText
 
@@ -102,7 +91,7 @@ T.ComboBox {
                 width: parent.width
                 height: parent.height
                 color: "transparent"
-                border.color: control.palette.mid
+                border.color: "lightgray"
             }
 
             T.ScrollIndicator.vertical: ScrollIndicator { }

@@ -13,7 +13,6 @@ T.Button {
     implicitHeight: 48
 
     font.pixelSize: control.height / 4
-    font.family: "Segoe UI"
     font.weight: Font.Bold
 
     T.ToolTip.visible: hovered

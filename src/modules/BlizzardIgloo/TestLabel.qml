@@ -20,7 +20,6 @@ Item {
     Text {
         id:  text
         font.pixelSize: control.height * 35 / 48
-        font.family: "Segoe UI"
         font.weight: Font.Bold
         color: "black"
         linkColor: control.palette.link
