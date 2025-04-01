@@ -5,106 +5,104 @@
 //      License : MIT License
 /*---------------------------------------------------------------------------*/
 
-//#include "stdafx.h"
+#include "../lib/stdafx.h"
 #include "DiskMark.h"
 #include "DiskMarkDlg.h"
 #include "SettingsDlg.h"
 
-IMPLEMENT_DYNCREATE(CSettingsDlg, CDialog)
-
-CSettingsDlg::CSettingsDlg(CWnd* pParent /*=NULL*/)
-	: CDialogFx(CSettingsDlg::IDD, pParent)
+CSettingsDlg::CSettingsDlg(QWidget* parent)
+	: QDialog(parent)
 {
-	CMainDialogFx* p = (CMainDialogFx*)pParent;
+	// CMainDialogFx* p = static_cast<CMainDialogFx*>(parent);
 
-	m_ZoomType = p->GetZoomType();
-	m_FontScale = p->GetFontScale();
-	m_FontRatio = p->GetFontRatio();
-	m_FontFace = p->GetFontFace();
-	m_FontRender = p->GetFontRender();
-	m_CurrentLangPath = p->GetCurrentLangPath();
-	m_DefaultLangPath = p->GetDefaultLangPath();
-	m_ThemeDir = p->GetThemeDir();
-	m_CurrentTheme = p->GetCurrentTheme();
-	m_DefaultTheme = p->GetDefaultTheme();
-	m_Ini = p->GetIniPath();
+	// m_ZoomType = p->GetZoomType();
+	// m_FontScale = p->GetFontScale();
+	// m_FontRatio = p->GetFontRatio();
+	// m_FontFace = p->GetFontFace();
+	// m_FontRender = p->GetFontRender();
+	// m_CurrentLangPath = p->GetCurrentLangPath();
+	// m_DefaultLangPath = p->GetDefaultLangPath();
+	// m_ThemeDir = p->GetThemeDir();
+	// m_CurrentTheme = p->GetCurrentTheme();
+	// m_DefaultTheme = p->GetDefaultTheme();
+	// m_Ini = p->GetIniPath();
 
-	m_Profile = ((CDiskMarkDlg*)pParent)->m_Profile;
-	m_MeasureTime = ((CDiskMarkDlg*)pParent)->m_MeasureTime;
-	m_IntervalTime = ((CDiskMarkDlg*)pParent)->m_IntervalTime;
-	m_TestData = ((CDiskMarkDlg*)pParent)->m_TestData;
+	m_Profile = static_cast<CDiskMarkDlg*>(parent)->m_Profile;
+	m_MeasureTime = static_cast<CDiskMarkDlg*>(parent)->m_MeasureTime;
+	m_IntervalTime = static_cast<CDiskMarkDlg*>(parent)->m_IntervalTime;
+	m_TestData = static_cast<CDiskMarkDlg*>(parent)->m_TestData;
 }
 
 CSettingsDlg::~CSettingsDlg()
 {
 }
 
-void CSettingsDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogFx::DoDataExchange(pDX);
+// void CSettingsDlg::DoDataExchange(CDataExchange* pDX)
+// {
+// 	CDialogFx::DoDataExchange(pDX);
 
-	DDX_Control(pDX, IDC_LABEL_TYPE, m_LabelType);
-	DDX_Control(pDX, IDC_LABEL_SIZE, m_LabelSize);
-	DDX_Control(pDX, IDC_LABEL_QUEUES, m_LabelQueues);
-	DDX_Control(pDX, IDC_LABEL_THREADS, m_LabelThreads);
-	DDX_Control(pDX, IDC_LABEL_DEFAULT, m_LabelDefault);
-	DDX_Control(pDX, IDC_LABEL_PEAK, m_LabelPeak);
-	DDX_Control(pDX, IDC_LABEL_DEMO, m_LabelDemo);
+// 	DDX_Control(pDX, IDC_LABEL_TYPE, m_LabelType);
+// 	DDX_Control(pDX, IDC_LABEL_SIZE, m_LabelSize);
+// 	DDX_Control(pDX, IDC_LABEL_QUEUES, m_LabelQueues);
+// 	DDX_Control(pDX, IDC_LABEL_THREADS, m_LabelThreads);
+// 	DDX_Control(pDX, IDC_LABEL_DEFAULT, m_LabelDefault);
+// 	DDX_Control(pDX, IDC_LABEL_PEAK, m_LabelPeak);
+// 	DDX_Control(pDX, IDC_LABEL_DEMO, m_LabelDemo);
 
-	DDX_Control(pDX, IDC_LABEL_MEASURE_TIME, m_LabelMeasureTime);
-	DDX_Control(pDX, IDC_LABEL_INTERVAL_TIME, m_LabelIntervalTime);
-//	DDX_Control(pDX, IDC_LABEL_AFFINITY, m_LabelAffinity);
-//	DDX_Control(pDX, IDC_LABEL_DATA, m_LabelData);
+// 	DDX_Control(pDX, IDC_LABEL_MEASURE_TIME, m_LabelMeasureTime);
+// 	DDX_Control(pDX, IDC_LABEL_INTERVAL_TIME, m_LabelIntervalTime);
+// //	DDX_Control(pDX, IDC_LABEL_AFFINITY, m_LabelAffinity);
+// //	DDX_Control(pDX, IDC_LABEL_DATA, m_LabelData);
 
-	DDX_Control(pDX, IDC_SET_DEFAULT, m_ButtonSetDefault);
-	DDX_Control(pDX, IDC_SET_NVME_8, m_ButtonSetNVMe8);
-//	DDX_Control(pDX, IDC_SET_NVME_9, m_ButtonSetNVMe9);
+// 	DDX_Control(pDX, IDC_SET_DEFAULT, m_ButtonSetDefault);
+// 	DDX_Control(pDX, IDC_SET_NVME_8, m_ButtonSetNVMe8);
+// //	DDX_Control(pDX, IDC_SET_NVME_9, m_ButtonSetNVMe9);
 
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_0, m_ComboBenchType0);
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_1, m_ComboBenchType1);
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_2, m_ComboBenchType2);
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_3, m_ComboBenchType3);
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_4, m_ComboBenchType4);
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_5, m_ComboBenchType5);
-	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_8, m_ComboBenchType8);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_0, m_ComboBenchType0);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_1, m_ComboBenchType1);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_2, m_ComboBenchType2);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_3, m_ComboBenchType3);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_4, m_ComboBenchType4);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_5, m_ComboBenchType5);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_TYPE_8, m_ComboBenchType8);
 
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_0, m_ComboBenchSize0);
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_1, m_ComboBenchSize1);
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_2, m_ComboBenchSize2);
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_3, m_ComboBenchSize3);
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_4, m_ComboBenchSize4);
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_5, m_ComboBenchSize5);
-	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_8, m_ComboBenchSize8);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_0, m_ComboBenchSize0);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_1, m_ComboBenchSize1);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_2, m_ComboBenchSize2);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_3, m_ComboBenchSize3);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_4, m_ComboBenchSize4);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_5, m_ComboBenchSize5);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_SIZE_8, m_ComboBenchSize8);
 
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_0, m_ComboBenchQueues0);
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_1, m_ComboBenchQueues1);
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_2, m_ComboBenchQueues2);
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_3, m_ComboBenchQueues3);
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_4, m_ComboBenchQueues4);
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_5, m_ComboBenchQueues5);
-	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_8, m_ComboBenchQueues8);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_0, m_ComboBenchQueues0);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_1, m_ComboBenchQueues1);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_2, m_ComboBenchQueues2);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_3, m_ComboBenchQueues3);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_4, m_ComboBenchQueues4);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_5, m_ComboBenchQueues5);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_QUEUE_8, m_ComboBenchQueues8);
 
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_0, m_ComboBenchThreads0);
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_1, m_ComboBenchThreads1);
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_2, m_ComboBenchThreads2);
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_3, m_ComboBenchThreads3);
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_4, m_ComboBenchThreads4);
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_5, m_ComboBenchThreads5);
-	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_8, m_ComboBenchThreads8);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_0, m_ComboBenchThreads0);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_1, m_ComboBenchThreads1);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_2, m_ComboBenchThreads2);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_3, m_ComboBenchThreads3);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_4, m_ComboBenchThreads4);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_5, m_ComboBenchThreads5);
+// 	DDX_Control(pDX, IDC_COMBO_BENCH_THREAD_8, m_ComboBenchThreads8);
 
-//	DDX_Control(pDX, IDC_COMBO_DATA, m_ComboData);
-//	DDX_Control(pDX, IDC_COMBO_AFFINITY, m_ComboAffinity);
-	DDX_Control(pDX, IDC_COMBO_MEASURE_TIME, m_ComboMeasureTime);
-	DDX_Control(pDX, IDC_COMBO_INTERVAL_TIME, m_ComboIntervalTime);
-	DDX_Control(pDX, IDC_OK, m_ButtonOk);
-}
+// //	DDX_Control(pDX, IDC_COMBO_DATA, m_ComboData);
+// //	DDX_Control(pDX, IDC_COMBO_AFFINITY, m_ComboAffinity);
+// 	DDX_Control(pDX, IDC_COMBO_MEASURE_TIME, m_ComboMeasureTime);
+// 	DDX_Control(pDX, IDC_COMBO_INTERVAL_TIME, m_ComboIntervalTime);
+// 	DDX_Control(pDX, IDC_OK, m_ButtonOk);
+// }
 
-BEGIN_MESSAGE_MAP(CSettingsDlg, CDialogFx)
-	ON_BN_CLICKED(IDC_SET_DEFAULT, &CSettingsDlg::OnSetDefault)
-	ON_BN_CLICKED(IDC_SET_NVME_8, &CSettingsDlg::OnSetNVMe8)
-//	ON_BN_CLICKED(IDC_SET_NVME_9, &CSettingsDlg::OnSetNVMe9)
-	ON_BN_CLICKED(IDC_OK, &CSettingsDlg::OnOk)
-END_MESSAGE_MAP()
+// BEGIN_MESSAGE_MAP(CSettingsDlg, CDialogFx)
+// 	ON_BN_CLICKED(IDC_SET_DEFAULT, &CSettingsDlg::OnSetDefault)
+// 	ON_BN_CLICKED(IDC_SET_NVME_8, &CSettingsDlg::OnSetNVMe8)
+// //	ON_BN_CLICKED(IDC_SET_NVME_9, &CSettingsDlg::OnSetNVMe9)
+// 	ON_BN_CLICKED(IDC_OK, &CSettingsDlg::OnOk)
+// END_MESSAGE_MAP()
 
 void CSettingsDlg::OnSetDefault()
 {
@@ -173,11 +171,11 @@ void CSettingsDlg::OnSetNVMe9()
 }
 */
 
-BOOL CSettingsDlg::OnInitDialog()
+void CSettingsDlg::showEvent(QShowEvent* event)
 {
-	CDialogFx::OnInitDialog();
+	// CDialogFx::OnInitDialog();
 
-	CString cstr;
+	QString cstr;
 
 	int type[9] =    {    0,    0,  1, 1,    0,  1,    0, 1,    0 };
 	int size[9] =    { 1024, 1024,  4, 4, 1024,  4, 1024, 4, 1024 };
@@ -186,24 +184,24 @@ BOOL CSettingsDlg::OnInitDialog()
 
 	for (int i = 0; i < 9; i++)
 	{
-		cstr.Format(L"BenchType%d", i);
-		m_BenchType[i] = GetPrivateProfileInt(L"Setting", cstr, type[i], m_Ini);
-		if (m_BenchType[i] < 0 || m_BenchSize[i] > 1) { m_BenchSize[i] = type[i]; }
+		cstr = QString("BenchType%1").arg(i);
+		// m_BenchType[i] = settings.value(cstr, type[i]).toInt();
+		if (m_BenchType[i] < 0 || m_BenchType[i] > 1) { m_BenchType[i] = type[i]; }
 
-		cstr.Format(L"BenchSize%d", i);
-		m_BenchSize[i] = GetPrivateProfileInt(L"Setting", cstr, size[i], m_Ini);
+		cstr = QString("BenchSize%1").arg(i);
+		// m_BenchSize[i] = settings.value(cstr, size[i]).toInt();
 		if (m_BenchSize[i] <= 0 || m_BenchSize[i] > 8192) { m_BenchSize[i] = size[i]; }
 
-		cstr.Format(L"BenchQueues%d", i);
-		m_BenchQueues[i] = GetPrivateProfileInt(L"Setting", cstr, queues[i], m_Ini);
+		cstr = QString("BenchQueues%1").arg(i);
+		// m_BenchQueues[i] = settings.value(cstr, queues[i]).toInt();
 		if (m_BenchQueues[i] <= 0 || m_BenchQueues[i] > MAX_QUEUES) { m_BenchQueues[i] = queues[i]; }
 
-		cstr.Format(L"BenchThreads%d", i);
-		m_BenchThreads[i] = GetPrivateProfileInt(L"Setting", cstr, threads[i], m_Ini);
+		cstr = QString("BenchThreads%1").arg(i);
+		// m_BenchThreads[i] = settings.value(cstr, threads[i]).toInt();
 		if (m_BenchThreads[i] <= 0 || m_BenchThreads[i] > MAX_THREADS) { m_BenchThreads[i] = threads[i]; }
 	}
 
-	m_TestData = GetPrivateProfileInt(L"Setting", L"TestData", 0, m_Ini);
+	// m_TestData = GetPrivateProfileInt(L"Setting", L"TestData", 0, m_Ini);
 	if (m_TestData < 0 || m_TestData > 1)
 	{
 		m_TestData = 0;
@@ -211,151 +209,144 @@ BOOL CSettingsDlg::OnInitDialog()
 
 	InitComboBox();
 
-	m_LabelType.SetWindowTextW(i18n(L"Dialog", L"TYPE"));
-	m_LabelSize.SetWindowTextW(i18n(L"Dialog", L"BLOCK_SIZE"));
-	m_LabelQueues.SetWindowTextW(i18n(L"Dialog", L"QUEUES"));
-	m_LabelThreads.SetWindowTextW(i18n(L"Dialog", L"THREADS"));
-	m_LabelDefault.SetWindowTextW(L" " + i18n(L"Dialog", L"PROFILE_DEFAULT"));
-	m_LabelPeak.SetWindowTextW(L" " + i18n(L"Dialog", L"PROFILE_PEAK_PERFORMANCE"));
-	m_LabelDemo.SetWindowTextW(L" " + i18n(L"Dialog", L"PROFILE_DEMO"));
-	m_LabelMeasureTime.SetWindowTextW(L" " + i18n(L"Dialog", L"MEASURE_TIME"));
-	m_LabelIntervalTime.SetWindowTextW(L" " + i18n(L"Dialog", L"INTERVAL_TIME"));
+	m_LabelType->setText(tr("TYPE"));
+	m_LabelSize->setText(tr("BLOCK_SIZE"));
+	m_LabelQueues->setText(tr("QUEUES"));
+	m_LabelThreads->setText(tr("THREADS"));
+	m_LabelDefault->setText(" " + tr("PROFILE_DEFAULT"));
+	m_LabelPeak->setText(" " + tr("PROFILE_PEAK_PERFORMANCE"));
+	m_LabelDemo->setText(" " + tr("PROFILE_DEMO"));
+	m_LabelMeasureTime->setText(" " + tr("MEASURE_TIME"));
+	m_LabelIntervalTime->setText(" " + tr("INTERVAL_TIME"));
 
-	m_ButtonSetDefault.SetWindowTextW(i18n(L"Dialog", L"DEFAULT"));
-	SetWindowTitle(i18n(L"WindowTitle", L"SETTINGS"));
+	m_ButtonSetDefault->setText(tr("DEFAULT"));
+	setWindowTitle(tr("SETTINGS"));
 
-	UpdateDialogSize();
-
-	return TRUE;
+	resizeEvent(nullptr);
 }
 
 void CSettingsDlg::InitComboBox()
 {
-	m_ComboBenchType0.ResetContent();
-	m_ComboBenchType1.ResetContent();
-	m_ComboBenchType2.ResetContent();
-	m_ComboBenchType3.ResetContent();
-	m_ComboBenchType4.ResetContent();
-	m_ComboBenchType5.ResetContent();
-	m_ComboBenchType8.ResetContent();
+	m_ComboBenchType0->clear();
+	m_ComboBenchType1->clear();
+	m_ComboBenchType2->clear();
+	m_ComboBenchType3->clear();
+	m_ComboBenchType4->clear();
+	m_ComboBenchType5->clear();
+	m_ComboBenchType8->clear();
 
 	for (int i = 0; i < 2; i++)
 	{
-		CString cstr;
+		QString cstr;
 		if (i == 0)
 		{
-			cstr.Format(L"SEQ");
+			cstr = "SEQ";
 		}
 		else
 		{
-			cstr.Format(L"RND");
+			cstr = "RND";
 		}
-		m_ComboBenchType0.AddString(cstr); if (m_BenchType[0] == i) { m_ComboBenchType0.SetCurSel(i); }
-		m_ComboBenchType1.AddString(cstr); if (m_BenchType[1] == i) { m_ComboBenchType1.SetCurSel(i); }
-		m_ComboBenchType2.AddString(cstr); if (m_BenchType[2] == i) { m_ComboBenchType2.SetCurSel(i); }
-		m_ComboBenchType3.AddString(cstr); if (m_BenchType[3] == i) { m_ComboBenchType3.SetCurSel(i); }
-		m_ComboBenchType4.AddString(cstr); if (m_BenchType[4] == i) { m_ComboBenchType4.SetCurSel(i); }
-		m_ComboBenchType5.AddString(cstr); if (m_BenchType[5] == i) { m_ComboBenchType5.SetCurSel(i); }
-		m_ComboBenchType8.AddString(cstr); if (m_BenchType[8] == i) { m_ComboBenchType8.SetCurSel(i); }
+		m_ComboBenchType0->addItem(cstr); if (m_BenchType[0] == i) { m_ComboBenchType0->setCurrentIndex(i); }
+		m_ComboBenchType1->addItem(cstr); if (m_BenchType[1] == i) { m_ComboBenchType1->setCurrentIndex(i); }
+		m_ComboBenchType2->addItem(cstr); if (m_BenchType[2] == i) { m_ComboBenchType2->setCurrentIndex(i); }
+		m_ComboBenchType3->addItem(cstr); if (m_BenchType[3] == i) { m_ComboBenchType3->setCurrentIndex(i); }
+		m_ComboBenchType4->addItem(cstr); if (m_BenchType[4] == i) { m_ComboBenchType4->setCurrentIndex(i); }
+		m_ComboBenchType5->addItem(cstr); if (m_BenchType[5] == i) { m_ComboBenchType5->setCurrentIndex(i); }
+		m_ComboBenchType8->addItem(cstr); if (m_BenchType[8] == i) { m_ComboBenchType8->setCurrentIndex(i); }
 	}
 
-	m_ComboBenchSize0.ResetContent();
-	m_ComboBenchSize1.ResetContent();
-	m_ComboBenchSize2.ResetContent();
-	m_ComboBenchSize3.ResetContent();
-	m_ComboBenchSize4.ResetContent();
-	m_ComboBenchSize5.ResetContent();
-	m_ComboBenchSize8.ResetContent();
+	m_ComboBenchSize0->clear();
+	m_ComboBenchSize1->clear();
+	m_ComboBenchSize2->clear();
+	m_ComboBenchSize3->clear();
+	m_ComboBenchSize4->clear();
+	m_ComboBenchSize5->clear();
+	m_ComboBenchSize8->clear();
 
 	int blockSize[] = { 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 };
 	for (int i = 0; i < 12; i++)
 	{
-		CString cstr;
+		QString cstr;
 		if (blockSize[i] >= 1024)
 		{
-			cstr.Format(L"%dMiB", blockSize[i] / 1024);
+			cstr = QString("%1MiB").arg(blockSize[i] / 1024);
 		}
 		else
 		{
-			cstr.Format(L"%dKiB", blockSize[i]);
+			cstr = QString("%1KiB").arg(blockSize[i]);
 		}
-		m_ComboBenchSize0.AddString(cstr); if (m_BenchSize[0] == blockSize[i]) { m_ComboBenchSize0.SetCurSel(i); }
-		m_ComboBenchSize1.AddString(cstr); if (m_BenchSize[1] == blockSize[i]) { m_ComboBenchSize1.SetCurSel(i); }
-		m_ComboBenchSize2.AddString(cstr); if (m_BenchSize[2] == blockSize[i]) { m_ComboBenchSize2.SetCurSel(i); }
-		m_ComboBenchSize3.AddString(cstr); if (m_BenchSize[3] == blockSize[i]) { m_ComboBenchSize3.SetCurSel(i); }
-		m_ComboBenchSize4.AddString(cstr); if (m_BenchSize[4] == blockSize[i]) { m_ComboBenchSize4.SetCurSel(i); }
-		m_ComboBenchSize5.AddString(cstr); if (m_BenchSize[5] == blockSize[i]) { m_ComboBenchSize5.SetCurSel(i); }
-		m_ComboBenchSize8.AddString(cstr); if (m_BenchSize[8] == blockSize[i]) { m_ComboBenchSize8.SetCurSel(i); }
+		m_ComboBenchSize0->addItem(cstr); if (m_BenchSize[0] == blockSize[i]) { m_ComboBenchSize0->setCurrentIndex(i); }
+		m_ComboBenchSize1->addItem(cstr); if (m_BenchSize[1] == blockSize[i]) { m_ComboBenchSize1->setCurrentIndex(i); }
+		m_ComboBenchSize2->addItem(cstr); if (m_BenchSize[2] == blockSize[i]) { m_ComboBenchSize2->setCurrentIndex(i); }
+		m_ComboBenchSize3->addItem(cstr); if (m_BenchSize[3] == blockSize[i]) { m_ComboBenchSize3->setCurrentIndex(i); }
+		m_ComboBenchSize4->addItem(cstr); if (m_BenchSize[4] == blockSize[i]) { m_ComboBenchSize4->setCurrentIndex(i); }
+		m_ComboBenchSize5->addItem(cstr); if (m_BenchSize[5] == blockSize[i]) { m_ComboBenchSize5->setCurrentIndex(i); }
+		m_ComboBenchSize8->addItem(cstr); if (m_BenchSize[8] == blockSize[i]) { m_ComboBenchSize8->setCurrentIndex(i); }
 	}
 
 	// Queues
-	m_ComboBenchQueues0.ResetContent();
-	m_ComboBenchQueues1.ResetContent();
-	m_ComboBenchQueues2.ResetContent();
-	m_ComboBenchQueues3.ResetContent();
-	m_ComboBenchQueues4.ResetContent();
-	m_ComboBenchQueues5.ResetContent();
-	m_ComboBenchQueues8.ResetContent();
+	m_ComboBenchQueues0->clear();
+	m_ComboBenchQueues1->clear();
+	m_ComboBenchQueues2->clear();
+	m_ComboBenchQueues3->clear();
+	m_ComboBenchQueues4->clear();
+	m_ComboBenchQueues5->clear();
+	m_ComboBenchQueues8->clear();
 
 	int queues[10] = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 };
-	// Sequential
 	for (int i = 0; i < 10; i++)
 	{
-		CString cstr;
-		cstr.Format(L"%d", queues[i]);
-		m_ComboBenchQueues0.AddString(cstr); if (m_BenchQueues[0] == queues[i]) { m_ComboBenchQueues0.SetCurSel(i); }
-		m_ComboBenchQueues1.AddString(cstr); if (m_BenchQueues[1] == queues[i]) { m_ComboBenchQueues1.SetCurSel(i); }
-		m_ComboBenchQueues2.AddString(cstr); if (m_BenchQueues[2] == queues[i]) { m_ComboBenchQueues2.SetCurSel(i); }
-		m_ComboBenchQueues3.AddString(cstr); if (m_BenchQueues[3] == queues[i]) { m_ComboBenchQueues3.SetCurSel(i); }
-		m_ComboBenchQueues4.AddString(cstr); if (m_BenchQueues[4] == queues[i]) { m_ComboBenchQueues4.SetCurSel(i); }
-		m_ComboBenchQueues5.AddString(cstr); if (m_BenchQueues[5] == queues[i]) { m_ComboBenchQueues5.SetCurSel(i); }
-		m_ComboBenchQueues8.AddString(cstr); if (m_BenchQueues[8] == queues[i]) { m_ComboBenchQueues8.SetCurSel(i); }
+		QString cstr = QString::number(queues[i]);
+		m_ComboBenchQueues0->addItem(cstr); if (m_BenchQueues[0] == queues[i]) { m_ComboBenchQueues0->setCurrentIndex(i); }
+		m_ComboBenchQueues1->addItem(cstr); if (m_BenchQueues[1] == queues[i]) { m_ComboBenchQueues1->setCurrentIndex(i); }
+		m_ComboBenchQueues2->addItem(cstr); if (m_BenchQueues[2] == queues[i]) { m_ComboBenchQueues2->setCurrentIndex(i); }
+		m_ComboBenchQueues3->addItem(cstr); if (m_BenchQueues[3] == queues[i]) { m_ComboBenchQueues3->setCurrentIndex(i); }
+		m_ComboBenchQueues4->addItem(cstr); if (m_BenchQueues[4] == queues[i]) { m_ComboBenchQueues4->setCurrentIndex(i); }
+		m_ComboBenchQueues5->addItem(cstr); if (m_BenchQueues[5] == queues[i]) { m_ComboBenchQueues5->setCurrentIndex(i); }
+		m_ComboBenchQueues8->addItem(cstr); if (m_BenchQueues[8] == queues[i]) { m_ComboBenchQueues8->setCurrentIndex(i); }
 	}
 
 	// Threads
-	m_ComboBenchThreads0.ResetContent();
-	m_ComboBenchThreads1.ResetContent();
-	m_ComboBenchThreads2.ResetContent();
-	m_ComboBenchThreads3.ResetContent();
-	m_ComboBenchThreads4.ResetContent();
-	m_ComboBenchThreads5.ResetContent();
-	m_ComboBenchThreads8.ResetContent();
+	m_ComboBenchThreads0->clear();
+	m_ComboBenchThreads1->clear();
+	m_ComboBenchThreads2->clear();
+	m_ComboBenchThreads3->clear();
+	m_ComboBenchThreads4->clear();
+	m_ComboBenchThreads5->clear();
+	m_ComboBenchThreads8->clear();
 
 	for (int i = 1; i <= 64; i++)
 	{
-		CString cstr;
-		cstr.Format(L"%d", i);
-		m_ComboBenchThreads0.AddString(cstr); if (m_BenchThreads[0] == i) { m_ComboBenchThreads0.SetCurSel(i - 1); }
-		m_ComboBenchThreads1.AddString(cstr); if (m_BenchThreads[1] == i) { m_ComboBenchThreads1.SetCurSel(i - 1); }
-		m_ComboBenchThreads2.AddString(cstr); if (m_BenchThreads[2] == i) { m_ComboBenchThreads2.SetCurSel(i - 1); }
-		m_ComboBenchThreads3.AddString(cstr); if (m_BenchThreads[3] == i) { m_ComboBenchThreads3.SetCurSel(i - 1); }
-		m_ComboBenchThreads4.AddString(cstr); if (m_BenchThreads[4] == i) { m_ComboBenchThreads4.SetCurSel(i - 1); }
-		m_ComboBenchThreads5.AddString(cstr); if (m_BenchThreads[5] == i) { m_ComboBenchThreads5.SetCurSel(i - 1); }
-		m_ComboBenchThreads8.AddString(cstr); if (m_BenchThreads[8] == i) { m_ComboBenchThreads8.SetCurSel(i - 1); }
+		QString cstr = QString::number(i);
+		m_ComboBenchThreads0->addItem(cstr); if (m_BenchThreads[0] == i) { m_ComboBenchThreads0->setCurrentIndex(i - 1); }
+		m_ComboBenchThreads1->addItem(cstr); if (m_BenchThreads[1] == i) { m_ComboBenchThreads1->setCurrentIndex(i - 1); }
+		m_ComboBenchThreads2->addItem(cstr); if (m_BenchThreads[2] == i) { m_ComboBenchThreads2->setCurrentIndex(i - 1); }
+		m_ComboBenchThreads3->addItem(cstr); if (m_BenchThreads[3] == i) { m_ComboBenchThreads3->setCurrentIndex(i - 1); }
+		m_ComboBenchThreads4->addItem(cstr); if (m_BenchThreads[4] == i) { m_ComboBenchThreads4->setCurrentIndex(i - 1); }
+		m_ComboBenchThreads5->addItem(cstr); if (m_BenchThreads[5] == i) { m_ComboBenchThreads5->setCurrentIndex(i - 1); }
+		m_ComboBenchThreads8->addItem(cstr); if (m_BenchThreads[8] == i) { m_ComboBenchThreads8->setCurrentIndex(i - 1); }
 	}
 
-	m_ComboMeasureTime.ResetContent();
+	m_ComboMeasureTime->clear();
 	int measureTimes[] = { 5, 10, 20, 30, 60 };
 	for (int i = 0; i < 5; i++)
 	{
-		CString cstr;
-		cstr.Format(L"%d", measureTimes[i]);
-		m_ComboMeasureTime.AddString(cstr); if (m_MeasureTime == measureTimes[i]) { m_ComboMeasureTime.SetCurSel(i); }
+		QString cstr = QString::number(measureTimes[i]);
+		m_ComboMeasureTime->addItem(cstr); if (m_MeasureTime == measureTimes[i]) { m_ComboMeasureTime->setCurrentIndex(i); }
 	}
 
-	m_ComboIntervalTime.ResetContent();
+	m_ComboIntervalTime->clear();
 	int intervalTimes[] = { 0, 1, 3, 5, 10, 30, 60, 180, 300, 600 };
 	for (int i = 0; i < 10; i++)
 	{
-		CString cstr;
-		cstr.Format(L"%d", intervalTimes[i]);
-		m_ComboIntervalTime.AddString(cstr); if (m_IntervalTime == intervalTimes[i]) { m_ComboIntervalTime.SetCurSel(i); }
+		QString cstr = QString::number(intervalTimes[i]);
+		m_ComboIntervalTime->addItem(cstr); if (m_IntervalTime == intervalTimes[i]) { m_ComboIntervalTime->setCurrentIndex(i); }
 	}
 }
 
-int CSettingsDlg::GetType(CString text)
+int CSettingsDlg::GetType(QString text)
 {
-	if (text.FindOneOf(L"SEQ") != -1)
+	if (text.contains("SEQ"))
 	{
 		return 0;
 	}
@@ -365,75 +356,76 @@ int CSettingsDlg::GetType(CString text)
 	}
 }
 
-int CSettingsDlg::GetBlockSize(CString text)
+int CSettingsDlg::GetBlockSize(QString text)
 {
-	if(text.FindOneOf(L"M") != -1)
+	QString numberOnly = text;
+	numberOnly.remove(QRegularExpression("[^0-9]"));
+	if(text.contains("M"))
 	{
-		return _wtoi(text.GetString()) * 1024;
+		return numberOnly.toInt() * 1024;
 	}
 	else
 	{
-		return _wtoi(text.GetString());
+		return numberOnly.toInt();
 	}
 }
 
 void CSettingsDlg::OnOk()
 {
-	CString cstr;
+	QString cstr;
 
-	m_ComboBenchType0.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType0", cstr, m_Ini);
-	m_ComboBenchType1.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType1", cstr, m_Ini);
-	m_ComboBenchType2.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType2", cstr, m_Ini);
-	m_ComboBenchType3.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType3", cstr, m_Ini);
-	m_ComboBenchType4.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType4", cstr, m_Ini);
-	m_ComboBenchType5.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType5", cstr, m_Ini);
-	m_ComboBenchType8.GetWindowTextW(cstr);	cstr.Format(L"%d", GetType(cstr)); WritePrivateProfileString(L"Setting", L"BenchType8", cstr, m_Ini);
+	// m_ComboBenchType0->currentText(); WritePrivateProfileString(L"Setting", L"BenchType0", QString::number(GetType(m_ComboBenchType0->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchType1->currentText(); WritePrivateProfileString(L"Setting", L"BenchType1", QString::number(GetType(m_ComboBenchType1->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchType2->currentText(); WritePrivateProfileString(L"Setting", L"BenchType2", QString::number(GetType(m_ComboBenchType2->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchType3->currentText(); WritePrivateProfileString(L"Setting", L"BenchType3", QString::number(GetType(m_ComboBenchType3->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchType4->currentText(); WritePrivateProfileString(L"Setting", L"BenchType4", QString::number(GetType(m_ComboBenchType4->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchType5->currentText(); WritePrivateProfileString(L"Setting", L"BenchType5", QString::number(GetType(m_ComboBenchType5->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchType8->currentText(); WritePrivateProfileString(L"Setting", L"BenchType8", QString::number(GetType(m_ComboBenchType8->currentText())).toStdWString().c_str(), m_Ini);
 
-	m_ComboBenchSize0.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize0", cstr, m_Ini);
-	m_ComboBenchSize1.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize1", cstr, m_Ini);
-	m_ComboBenchSize2.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize2", cstr, m_Ini);
-	m_ComboBenchSize3.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize3", cstr, m_Ini);
-	m_ComboBenchSize4.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize4", cstr, m_Ini);
-	m_ComboBenchSize5.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize5", cstr, m_Ini);
-	m_ComboBenchSize8.GetWindowTextW(cstr);	cstr.Format(L"%d", GetBlockSize(cstr)); WritePrivateProfileString(L"Setting", L"BenchSize8", cstr, m_Ini);
+	// m_ComboBenchSize0->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize0", QString::number(GetBlockSize(m_ComboBenchSize0->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchSize1->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize1", QString::number(GetBlockSize(m_ComboBenchSize1->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchSize2->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize2", QString::number(GetBlockSize(m_ComboBenchSize2->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchSize3->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize3", QString::number(GetBlockSize(m_ComboBenchSize3->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchSize4->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize4", QString::number(GetBlockSize(m_ComboBenchSize4->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchSize5->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize5", QString::number(GetBlockSize(m_ComboBenchSize5->currentText())).toStdWString().c_str(), m_Ini);
+	// m_ComboBenchSize8->currentText(); WritePrivateProfileString(L"Setting", L"BenchSize8", QString::number(GetBlockSize(m_ComboBenchSize8->currentText())).toStdWString().c_str(), m_Ini);
 
-	m_ComboBenchQueues0.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues0", cstr, m_Ini);
-	m_ComboBenchQueues1.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues1", cstr, m_Ini);
-	m_ComboBenchQueues2.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues2", cstr, m_Ini);
-	m_ComboBenchQueues3.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues3", cstr, m_Ini);
-	m_ComboBenchQueues4.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues4", cstr, m_Ini);
-	m_ComboBenchQueues5.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues5", cstr, m_Ini);
-	m_ComboBenchQueues8.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchQueues8", cstr, m_Ini);
+	// m_ComboBenchQueues0->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues0", m_ComboBenchQueues0->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchQueues1->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues1", m_ComboBenchQueues1->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchQueues2->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues2", m_ComboBenchQueues2->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchQueues3->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues3", m_ComboBenchQueues3->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchQueues4->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues4", m_ComboBenchQueues4->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchQueues5->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues5", m_ComboBenchQueues5->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchQueues8->currentText(); WritePrivateProfileString(L"Setting", L"BenchQueues8", m_ComboBenchQueues8->currentText().toStdWString().c_str(), m_Ini);
 
-	m_ComboBenchThreads0.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads0", cstr, m_Ini);
-	m_ComboBenchThreads1.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads1", cstr, m_Ini);
-	m_ComboBenchThreads2.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads2", cstr, m_Ini);
-	m_ComboBenchThreads3.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads3", cstr, m_Ini);
-	m_ComboBenchThreads4.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads4", cstr, m_Ini);
-	m_ComboBenchThreads5.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads5", cstr, m_Ini);
-	m_ComboBenchThreads8.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"BenchThreads8", cstr, m_Ini);
+	// m_ComboBenchThreads0->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads0", m_ComboBenchThreads0->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchThreads1->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads1", m_ComboBenchThreads1->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchThreads2->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads2", m_ComboBenchThreads2->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchThreads3->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads3", m_ComboBenchThreads3->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchThreads4->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads4", m_ComboBenchThreads4->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchThreads5->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads5", m_ComboBenchThreads5->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboBenchThreads8->currentText(); WritePrivateProfileString(L"Setting", L"BenchThreads8", m_ComboBenchThreads8->currentText().toStdWString().c_str(), m_Ini);
 
-	m_ComboMeasureTime.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"MeasureTime", cstr, m_Ini);
-	m_ComboIntervalTime.GetWindowTextW(cstr); WritePrivateProfileString(L"Setting", L"IntervalTime", cstr, m_Ini);
+	// m_ComboMeasureTime->currentText(); WritePrivateProfileString(L"Setting", L"MeasureTime", m_ComboMeasureTime->currentText().toStdWString().c_str(), m_Ini);
+	// m_ComboIntervalTime->currentText(); WritePrivateProfileString(L"Setting", L"IntervalTime", m_ComboIntervalTime->currentText().toStdWString().c_str(), m_Ini);
 
-	CDialogFx::OnCancel();
+	// CDialogFx::OnCancel();
 }
 
-void CSettingsDlg::OnCancel()
+void CSettingsDlg::closeEvent(QCloseEvent* event)
 {
-	CDialogFx::OnCancel();
+	// CDialogFx::OnCancel();
 }
 
-void CSettingsDlg::UpdateDialogSize()
+void CSettingsDlg::resizeEvent(QResizeEvent* event)
 {
-	CDialogFx::UpdateDialogSize();
+	// CDialogFx::UpdateDialogSize();
 
-	ChangeZoomType(m_ZoomType);
-	SetClientSize(SIZE_X, SIZE_Y, m_ZoomRatio);
-	UpdateBackground(FALSE, m_bDarkMode);
-
-	COLORREF textColor = RGB(0, 0, 0);
-	COLORREF textSelectedColor = RGB(0, 0, 0);
+	// ChangeZoomType(m_ZoomType);
+	resize(SIZE_X, SIZE_Y);
+	// UpdateBackground(FALSE, m_bDarkMode);
+	QColor textColor = QColor(0, 0, 0);
+	QColor textSelectedColor = QColor(0, 0, 0);
 
 #ifdef SUISHO_SHIZUKU_SUPPORT
 	int fontSize = 16;
@@ -443,58 +435,58 @@ void CSettingsDlg::UpdateDialogSize()
 	int comboHeight = 20;
 #endif
 
-	m_LabelType.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelSize.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelQueues.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelThreads.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelDefault.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelPeak.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelDemo.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelMeasureTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-	m_LabelIntervalTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-//	m_LabelAffinity.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
-//	m_LabelData.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelType.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelSize.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelQueues.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelThreads.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelDefault.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelPeak.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelDemo.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelMeasureTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// 	m_LabelIntervalTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// //	m_LabelAffinity.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
+// //	m_LabelData.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, RGB(0, 0, 0), FW_NORMAL, m_FontRender);
 
-	m_ComboBenchType0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchType1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchType2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchType3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchType4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchType5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchType8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchType8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
 
-	m_ComboBenchSize0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchSize1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchSize2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchSize3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchSize4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchSize5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchSize8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchSize8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
 
-	m_ComboBenchQueues0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchQueues1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchQueues2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchQueues3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchQueues4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchQueues5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchQueues8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchQueues8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
 
-	m_ComboBenchThreads0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchThreads1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchThreads2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchThreads3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchThreads4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchThreads5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboBenchThreads8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads0.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads1.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads2.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads3.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads4.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads5.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboBenchThreads8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
 
-//	m_ComboData.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor,  FW_NORMAL, m_FontRender);
-//	m_ComboAffinity.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor,  FW_NORMAL, m_FontRender);
-	m_ComboMeasureTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ComboIntervalTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
-	m_ButtonSetDefault.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
-	m_ButtonSetNVMe8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
-//	m_ButtonSetNVMe9.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
-	m_ButtonOk.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
+// //	m_ComboData.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor,  FW_NORMAL, m_FontRender);
+// //	m_ComboAffinity.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor,  FW_NORMAL, m_FontRender);
+// 	m_ComboMeasureTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ComboIntervalTime.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, textColor, textSelectedColor, FW_NORMAL, m_FontRender);
+// 	m_ButtonSetDefault.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
+// 	m_ButtonSetNVMe8.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
+// //	m_ButtonSetNVMe9.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
+// 	m_ButtonOk.SetFontEx(m_FontFace, fontSize, fontSize, m_ZoomRatio, m_FontRatio, m_MeterText, FW_NORMAL, m_FontRender);
 
 #ifdef SUISHO_SHIZUKU_SUPPORT
 	m_LabelType.InitControl(8, 8, 160, 24, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
@@ -551,59 +543,59 @@ void CSettingsDlg::UpdateDialogSize()
 //	m_ButtonSetNVMe9.InitControl(344, 376, 160, 32, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
 	m_ButtonOk.InitControl(512, 376, 160, 32, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
 #else
-	m_LabelType.InitControl(8, 8, 100, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelSize.InitControl(116, 8, 100, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelQueues.InitControl(224, 8, 100, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelThreads.InitControl(332, 8, 100, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelDefault.InitControl(8, 28, 424, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelPeak.InitControl(8, 148, 424, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelDemo.InitControl(8, 220, 424, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-//	m_LabelAffinity.InitControl(8, 272, 208, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
+	m_LabelType->setGeometry(8, 8, 100, 20);
+	m_LabelSize->setGeometry(116, 8, 100, 20);
+	m_LabelQueues->setGeometry(224, 8, 100, 20);
+	m_LabelThreads->setGeometry(332, 8, 100, 20);
+	m_LabelDefault->setGeometry(8, 28, 424, 20);
+	m_LabelPeak->setGeometry(8, 148, 424, 20);
+	m_LabelDemo->setGeometry(8, 220, 424, 20);
+//	m_LabelAffinity->setGeometry(8, 272, 208, 20);
 //	m_LabelData.InitControl(224, 272, 208, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelMeasureTime.InitControl(8, 272, 208, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-	m_LabelIntervalTime.InitControl(224, 272, 208, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_LEFT, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
+	m_LabelMeasureTime->setGeometry(8, 272, 208, 20);
+	m_LabelIntervalTime->setGeometry(224, 272, 208, 20);
 
-	m_ComboBenchType0.InitControl(8, 52, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchType1.InitControl(8, 76, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchType2.InitControl(8, 100, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchType3.InitControl(8, 124, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchType4.InitControl(8, 172, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchType5.InitControl(8, 196, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchType8.InitControl(8, 244, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
+	m_ComboBenchType0->setGeometry(8, 52, 100, 20);
+	m_ComboBenchType1->setGeometry(8, 76, 100, 20);
+	m_ComboBenchType2->setGeometry(8, 100, 100, 20);
+	m_ComboBenchType3->setGeometry(8, 124, 100, 20);
+	m_ComboBenchType4->setGeometry(8, 172, 100, 20);
+	m_ComboBenchType5->setGeometry(8, 196, 100, 20);
+	m_ComboBenchType8->setGeometry(8, 244, 100, 20);
 
-	m_ComboBenchSize0.InitControl(116, 52, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchSize1.InitControl(116, 76, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchSize2.InitControl(116, 100, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchSize3.InitControl(116, 124, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchSize4.InitControl(116, 172, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchSize5.InitControl(116, 196, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchSize8.InitControl(116, 244, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
+	m_ComboBenchSize0->setGeometry(116, 52, 100, 20);
+	m_ComboBenchSize1->setGeometry(116, 76, 100, 20);
+	m_ComboBenchSize2->setGeometry(116, 100, 100, 20);
+	m_ComboBenchSize3->setGeometry(116, 124, 100, 20);
+	m_ComboBenchSize4->setGeometry(116, 172, 100, 20);
+	m_ComboBenchSize5->setGeometry(116, 196, 100, 20);
+	m_ComboBenchSize8->setGeometry(116, 244, 100, 20);
 
-	m_ComboBenchQueues0.InitControl(224, 52, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchQueues1.InitControl(224, 76, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchQueues2.InitControl(224, 100, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchQueues3.InitControl(224, 124, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchQueues4.InitControl(224, 172, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchQueues5.InitControl(224, 196, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchQueues8.InitControl(224, 244, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
+	m_ComboBenchQueues0->setGeometry(224, 52, 100, 20);
+	m_ComboBenchQueues1->setGeometry(224, 76, 100, 20);
+	m_ComboBenchQueues2->setGeometry(224, 100, 100, 20);
+	m_ComboBenchQueues3->setGeometry(224, 124, 100, 20);
+	m_ComboBenchQueues4->setGeometry(224, 172, 100, 20);
+	m_ComboBenchQueues5->setGeometry(224, 196, 100, 20);
+	m_ComboBenchQueues8->setGeometry(224, 244, 100, 20);
 
-	m_ComboBenchThreads0.InitControl(332, 52, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchThreads1.InitControl(332, 76, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchThreads2.InitControl(332, 100, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchThreads3.InitControl(332, 124, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchThreads4.InitControl(332, 172, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchThreads5.InitControl(332, 196, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboBenchThreads8.InitControl(332, 244, 100, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
+	m_ComboBenchThreads0->setGeometry(332, 52, 100, 20);
+	m_ComboBenchThreads1->setGeometry(332, 76, 100, 20);
+	m_ComboBenchThreads2->setGeometry(332, 100, 100, 20);
+	m_ComboBenchThreads3->setGeometry(332, 124, 100, 20);
+	m_ComboBenchThreads4->setGeometry(332, 172, 100, 20);
+	m_ComboBenchThreads5->setGeometry(332, 196, 100, 20);
+	m_ComboBenchThreads8->setGeometry(332, 244, 100, 20);
 
 //	m_ComboData.InitControl(232, 296, 200, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
 //	m_ComboAffinity.InitControl(16, 296, 200, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboMeasureTime.InitControl(8, 296, 208, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
-	m_ComboIntervalTime.InitControl(224, 296, 208, 200, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, RGB(255, 255, 255), RGB(160, 220, 255), RGB(255, 255, 255), 0);
+	m_ComboMeasureTime->setGeometry(8, 296, 208, 20);
+	m_ComboIntervalTime->setGeometry(224, 296, 208, 20);
 
-	m_ButtonSetDefault.InitControl(8, 324, 100, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-	m_ButtonSetNVMe8.InitControl(116, 324, 100, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
+	m_ButtonSetDefault->setGeometry(8, 324, 100, 24);
+	m_ButtonSetNVMe8->setGeometry(116, 324, 100, 24);
 //	m_ButtonSetNVMe9.InitControl(224, 324, 100, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
-	m_ButtonOk.InitControl(332, 324, 100, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, SystemDraw, m_bHighContrast, m_bDarkMode, FALSE);
+	m_ButtonOk->setGeometry(332, 324, 100, 24);
 #endif
 
 //	m_ButtonSetDefault.SetDrawFrame(TRUE);
@@ -611,92 +603,92 @@ void CSettingsDlg::UpdateDialogSize()
 //	m_ButtonSetNVMe9.SetDrawFrame(TRUE);
 //	m_ButtonOk.SetDrawFrame(TRUE);
 
-	m_ButtonSetDefault.SetHandCursor();
-	m_ButtonSetNVMe8.SetHandCursor();
-//	m_ButtonSetNVMe9.SetHandCursor();
-	m_ButtonOk.SetHandCursor();
+	m_ButtonSetDefault->setCursor(Qt::PointingHandCursor);
+	m_ButtonSetNVMe8->setCursor(Qt::PointingHandCursor);
+//	m_ButtonSetNVMe9->setCursor(Qt::PointingHandCursor);
+	m_ButtonOk->setCursor(Qt::PointingHandCursor);
 
-	SetDarkModeControl(m_ButtonOk.GetSafeHwnd(), m_bDarkMode);
-	SetDarkModeControl(m_ButtonSetDefault.GetSafeHwnd(), m_bDarkMode);
-	SetDarkModeControl(m_ButtonSetNVMe8.GetSafeHwnd(), m_bDarkMode);
-//	SetDarkModeControl(m_ButtonSetNVMe9.GetSafeHwnd(), m_bDarkMode);
+	// SetDarkModeControl(m_ButtonOk.GetSafeHwnd(), m_bDarkMode);
+	// SetDarkModeControl(m_ButtonSetDefault.GetSafeHwnd(), m_bDarkMode);
+	// SetDarkModeControl(m_ButtonSetNVMe8.GetSafeHwnd(), m_bDarkMode);
+	// // SetDarkModeControl(m_ButtonSetNVMe9.GetSafeHwnd(), m_bDarkMode);
 
-	m_ComboBenchType0.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchType1.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchType2.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchType3.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchType4.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchType5.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchType8.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
+	m_ComboBenchType0->setFixedHeight(comboHeight);
+	m_ComboBenchType1->setFixedHeight(comboHeight);
+	m_ComboBenchType2->setFixedHeight(comboHeight);
+	m_ComboBenchType3->setFixedHeight(comboHeight);
+	m_ComboBenchType4->setFixedHeight(comboHeight);
+	m_ComboBenchType5->setFixedHeight(comboHeight);
+	m_ComboBenchType8->setFixedHeight(comboHeight);
 
-	m_ComboBenchSize0.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchSize1.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchSize2.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchSize3.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchSize4.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchSize5.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchSize8.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
+	m_ComboBenchSize0->setFixedHeight(comboHeight);
+	m_ComboBenchSize1->setFixedHeight(comboHeight);
+	m_ComboBenchSize2->setFixedHeight(comboHeight);
+	m_ComboBenchSize3->setFixedHeight(comboHeight);
+	m_ComboBenchSize4->setFixedHeight(comboHeight);
+	m_ComboBenchSize5->setFixedHeight(comboHeight);
+	m_ComboBenchSize8->setFixedHeight(comboHeight);
 
-	m_ComboBenchQueues0.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchQueues1.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchQueues2.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchQueues3.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchQueues4.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchQueues5.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchQueues8.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
+	m_ComboBenchQueues0->setFixedHeight(comboHeight);
+	m_ComboBenchQueues1->setFixedHeight(comboHeight);
+	m_ComboBenchQueues2->setFixedHeight(comboHeight);
+	m_ComboBenchQueues3->setFixedHeight(comboHeight);
+	m_ComboBenchQueues4->setFixedHeight(comboHeight);
+	m_ComboBenchQueues5->setFixedHeight(comboHeight);
+	m_ComboBenchQueues8->setFixedHeight(comboHeight);
 
-	m_ComboBenchThreads0.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchThreads1.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchThreads2.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchThreads3.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchThreads4.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchThreads5.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboBenchThreads8.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
+	m_ComboBenchThreads0->setFixedHeight(comboHeight);
+	m_ComboBenchThreads1->setFixedHeight(comboHeight);
+	m_ComboBenchThreads2->setFixedHeight(comboHeight);
+	m_ComboBenchThreads3->setFixedHeight(comboHeight);
+	m_ComboBenchThreads4->setFixedHeight(comboHeight);
+	m_ComboBenchThreads5->setFixedHeight(comboHeight);
+	m_ComboBenchThreads8->setFixedHeight(comboHeight);
 
 //	m_ComboData.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
 //	m_ComboAffinity.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboMeasureTime.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
-	m_ComboIntervalTime.SetItemHeightAll(comboHeight, m_ZoomRatio, m_FontRatio);
+	m_ComboMeasureTime->setFixedHeight(comboHeight);
+	m_ComboIntervalTime->setFixedHeight(comboHeight);
 
-	m_ComboBenchType0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchType1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchType2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchType3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchType4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchType5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchType8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchType8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
 
-	m_ComboBenchSize0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchSize1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchSize2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchSize3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchSize4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchSize5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchSize8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchSize8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
 
-	m_ComboBenchQueues0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchQueues1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchQueues2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchQueues3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchQueues4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchQueues5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchQueues8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchQueues8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
 
-	m_ComboBenchThreads0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchThreads1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchThreads2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchThreads3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchThreads4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchThreads5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboBenchThreads8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads0.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads1.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads2.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads3.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads4.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads5.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboBenchThreads8.SetMargin(0, 4, 0, 0, m_ZoomRatio);
 
-//	m_ComboData.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-//	m_ComboAffinity.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboMeasureTime.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-	m_ComboIntervalTime.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// //	m_ComboData.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// //	m_ComboAffinity.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboMeasureTime.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// 	m_ComboIntervalTime.SetMargin(0, 4, 0, 0, m_ZoomRatio);
 
-	m_ComboBenchType4.EnableWindow(FALSE);
-	m_ComboBenchType5.EnableWindow(FALSE);
+	m_ComboBenchType4->setEnabled(false);
+	m_ComboBenchType5->setEnabled(false);
 
-	Invalidate();
+	update();
 }

@@ -10,8 +10,6 @@
 #include "DiskMarkDlg.h"
 #include "AboutDlg.h"
 
-IMPLEMENT_DYNCREATE(CAboutDlg, CDialog)
-
 CAboutDlg::CAboutDlg(QWidget* parent)
 	: QDialog(parent)
 {
@@ -20,7 +18,7 @@ CAboutDlg::CAboutDlg(QWidget* parent)
 	// m_ZoomType = p->GetZoomType();
 	// m_FontScale = p->GetFontScale();
 	// m_FontRatio = p->GetFontRatio();
-	m_FontFace = p->GetFontFace();
+	// m_FontFace = p->GetFontFace();
 	// m_FontRender = p->GetFontRender();
 	// m_CurrentLangPath = p->GetCurrentLangPath();
 	// m_DefaultLangPath = p->GetDefaultLangPath();
@@ -29,11 +27,11 @@ CAboutDlg::CAboutDlg(QWidget* parent)
 	// m_DefaultTheme = p->GetDefaultTheme();
 	// m_Ini = p->GetIniPath();
 
-#ifdef SUISHO_SHIZUKU_SUPPORT
-	m_BackgroundName = L"About";
-#else
-	m_BackgroundName = L"";
-#endif
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// 	m_BackgroundName = L"About";
+// #else
+// 	m_BackgroundName = "";
+// #endif
 }
 
 CAboutDlg::~CAboutDlg()
@@ -61,7 +59,7 @@ CAboutDlg::~CAboutDlg()
 
 void CAboutDlg::showEvent(QShowEvent* event)
 {
-	CDialogFx::showEvent(event);
+	// CDialogFx::showEvent(event);
 	// CDialogFx::OnInitDialog();
 
 	// SetWindowTitle(i18n(L"WindowTitle", L"ABOUT"));
@@ -97,115 +95,117 @@ void CAboutDlg::showEvent(QShowEvent* event)
 
 void CAboutDlg::resizeEvent(QResizeEvent* event)
 {
-	CDialogFx::resizeEvent(event);
-// 	CDialogFx::UpdateDialogSize();
-// 	m_bHighContrast = FALSE;
+	// CDialogFx::resizeEvent(event);
+
+	// m_bHighContrast = false;
 
 // 	ChangeZoomType(m_ZoomType);
-// 	SetClientSize(SIZE_X, SIZE_Y, m_ZoomRatio);
+	setFixedSize(SIZE_X, SIZE_Y);
 // 	UpdateBackground(TRUE, m_bDarkMode);
 
-// #ifdef SUISHO_AOI_SUPPORT
-// 	m_CtrlLogo.InitControl(32, 484, 128, 144, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlSecretVoice.InitControl(392, 288, 60, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite1.InitControl(184, 508, 148, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite2.InitControl(244, 540, 108, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite3.InitControl(232, 556, 180, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite4.InitControl(244, 576, 120, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite5.InitControl(0, 0, 0, 0, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlSecretVoice.SetHandCursor();
-// 	m_CtrlProjectSite1.SetHandCursor();
-// 	m_CtrlProjectSite2.SetHandCursor();
-// 	m_CtrlProjectSite3.SetHandCursor();
-// 	m_CtrlProjectSite4.SetHandCursor();
-// 	m_CtrlProjectSite5.SetHandCursor();
+#ifdef SUISHO_AOI_SUPPORT
+	m_CtrlLogo.InitControl(32, 484, 128, 144, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlSecretVoice.InitControl(392, 288, 60, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite1.InitControl(184, 508, 148, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite2.InitControl(244, 540, 108, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite3.InitControl(232, 556, 180, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite4.InitControl(244, 576, 120, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite5.InitControl(0, 0, 0, 0, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlSecretVoice.SetHandCursor();
+	m_CtrlProjectSite1.SetHandCursor();
+	m_CtrlProjectSite2.SetHandCursor();
+	m_CtrlProjectSite3.SetHandCursor();
+	m_CtrlProjectSite4.SetHandCursor();
+	m_CtrlProjectSite5.SetHandCursor();
 
-// #elif MSI_MEI_SUPPORT
-// 	m_CtrlProjectSite1.InitControl(24, 460, 348, 128, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite2.InitControl(168, 604, 36, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite3.InitControl(332, 604, 104, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite4.InitControl(20, 20, 120, 40, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite5.InitControl(464, 604, 168, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlLogo.InitControl(80, 64, 128, 128, m_ZoomRatio, &m_BkDC, IP(L"Logo"), 1, BS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite1.SetHandCursor();
-// 	m_CtrlProjectSite2.SetHandCursor();
-// 	m_CtrlProjectSite3.SetHandCursor();
-// 	m_CtrlProjectSite4.SetHandCursor();
-// 	m_CtrlProjectSite5.SetHandCursor();
+#elif MSI_MEI_SUPPORT
+	m_CtrlProjectSite1.InitControl(24, 460, 348, 128, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite2.InitControl(168, 604, 36, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite3.InitControl(332, 604, 104, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite4.InitControl(20, 20, 120, 40, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite5.InitControl(464, 604, 168, 24, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlLogo.InitControl(80, 64, 128, 128, m_ZoomRatio, &m_BkDC, IP(L"Logo"), 1, BS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite1.SetHandCursor();
+	m_CtrlProjectSite2.SetHandCursor();
+	m_CtrlProjectSite3.SetHandCursor();
+	m_CtrlProjectSite4.SetHandCursor();
+	m_CtrlProjectSite5.SetHandCursor();
 
-// #elif SUISHO_SHIZUKU_SUPPORT
-// 	m_CtrlProjectSite1.InitControl(64, 372, 140, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite2.InitControl(64, 416, 148, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite3.InitControl(64, 432, 184, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite4.InitControl(40, 460, 208, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite5.InitControl(92, 504, 432, 124, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlLogo.InitControl(80, 12, 128, 128, m_ZoomRatio, &m_BkDC, IP(L"Logo"), 1, BS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite1.SetHandCursor();
-// 	m_CtrlProjectSite2.SetHandCursor();
-// 	m_CtrlProjectSite3.SetHandCursor();
-// 	m_CtrlProjectSite4.SetHandCursor();
-// 	m_CtrlProjectSite5.SetHandCursor();
-// #else
-// 	m_CtrlLogo.InitControl(12, 12, 128, 128, m_ZoomRatio, &m_BkDC, IP(L"Logo"), 1, BS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 	m_CtrlProjectSite1.ShowWindow(SW_HIDE);
-// 	m_CtrlProjectSite2.ShowWindow(SW_HIDE);
-// 	m_CtrlProjectSite3.ShowWindow(SW_HIDE);
-// 	m_CtrlProjectSite4.ShowWindow(SW_HIDE);
-// 	m_CtrlProjectSite5.ShowWindow(SW_HIDE); 
-// #endif
+#elif SUISHO_SHIZUKU_SUPPORT
+	m_CtrlProjectSite1.InitControl(64, 372, 140, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite2.InitControl(64, 416, 148, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite3.InitControl(64, 432, 184, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite4.InitControl(40, 460, 208, 16, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite5.InitControl(92, 504, 432, 124, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlLogo.InitControl(80, 12, 128, 128, m_ZoomRatio, &m_BkDC, IP(L"Logo"), 1, BS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
+	m_CtrlProjectSite1.SetHandCursor();
+	m_CtrlProjectSite2.SetHandCursor();
+	m_CtrlProjectSite3.SetHandCursor();
+	m_CtrlProjectSite4.SetHandCursor();
+	m_CtrlProjectSite5.SetHandCursor();
+#else
+	m_CtrlLogo->setGeometry(12, 12, 128, 128);
+	// m_CtrlLogo->setPixmap(QPixmap(":/resources/Logo.png"));
+	// m_CtrlLogo->setScaledContents(true);
+	m_CtrlProjectSite1->hide();
+	m_CtrlProjectSite2->hide();
+	m_CtrlProjectSite3->hide();
+	m_CtrlProjectSite4->hide();
+	m_CtrlProjectSite5->hide();
+#endif
 
-// 	m_CtrlLogo.SetHandCursor();
+	m_CtrlLogo->setCursor(Qt::PointingHandCursor);
 
-// #ifdef MSI_MEI_SUPPORT
-// 	COLORREF fontColor = RGB(255, 255, 255);
-// #else
-// 	COLORREF fontColor = RGB(0, 0, 0);
-// #endif
+#ifdef MSI_MEI_SUPPORT
+	QColor fontColor = QColor(255, 255, 255);
+#else
+	QColor fontColor = QColor(0, 0, 0);
+#endif
 
-// 	m_CtrlVersion.SetFontEx(m_FontFace, 22, 22, m_ZoomRatio, m_FontRatio, fontColor, FW_BOLD, m_FontRender);
-// 	m_CtrlEdition.SetFontEx(m_FontFace, 18, 18, m_ZoomRatio, m_FontRatio, fontColor, FW_BOLD, m_FontRender);
-// 	m_CtrlRelease.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
-// 	m_CtrlCopyright1.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
-// 	m_CtrlCopyright2.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
-// 	m_CtrlLicense.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
+	// m_CtrlVersion.SetFontEx(m_FontFace, 22, 22, m_ZoomRatio, m_FontRatio, fontColor, FW_BOLD, m_FontRender);
+	// m_CtrlEdition.SetFontEx(m_FontFace, 18, 18, m_ZoomRatio, m_FontRatio, fontColor, FW_BOLD, m_FontRender);
+	// m_CtrlRelease.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
+	// m_CtrlCopyright1.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
+	// m_CtrlCopyright2.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
+	// m_CtrlLicense.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, fontColor, FW_NORMAL, m_FontRender);
 
-// 	m_CtrlVersion.SetHandCursor();
-// 	m_CtrlLicense.SetHandCursor();
+	m_CtrlVersion->setCursor(Qt::PointingHandCursor);
+	m_CtrlLicense->setCursor(Qt::PointingHandCursor);
 
-// #ifdef SUISHO_AOI_SUPPORT
-// 	m_CtrlVersion.InitControl(0, 152, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlEdition.InitControl(0, 180, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlRelease.InitControl(0, 216, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlCopyright1.InitControl(0, 236, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlCopyright2.InitControl(0, 256, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlLicense.InitControl(0, 276, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+#ifdef SUISHO_AOI_SUPPORT
+	m_CtrlVersion.InitControl(0, 152, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlEdition.InitControl(0, 180, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlRelease.InitControl(0, 216, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlCopyright1.InitControl(0, 236, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlCopyright2.InitControl(0, 256, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlLicense.InitControl(0, 276, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
 
-// #elif MSI_MEI_SUPPORT
-// 	m_CtrlVersion.InitControl(0, 204, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlEdition.InitControl(0, 232, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlRelease.InitControl(0, 268, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlCopyright1.InitControl(0, 288, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlCopyright2.InitControl(0, 308, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlLicense.InitControl(0, 0, 0, 0, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+#elif MSI_MEI_SUPPORT
+	m_CtrlVersion.InitControl(0, 204, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlEdition.InitControl(0, 232, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlRelease.InitControl(0, 268, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlCopyright1.InitControl(0, 288, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlCopyright2.InitControl(0, 308, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlLicense.InitControl(0, 0, 0, 0, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
 
-// #elif SUISHO_SHIZUKU_SUPPORT
-// 	m_CtrlVersion.InitControl(0, 152, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlEdition.InitControl(0, 180, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlRelease.InitControl(0, 216, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlCopyright1.InitControl(0, 236, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlCopyright2.InitControl(0, 256, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
-// 	m_CtrlLicense.InitControl(0, 276, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+#elif SUISHO_SHIZUKU_SUPPORT
+	m_CtrlVersion.InitControl(0, 152, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlEdition.InitControl(0, 180, 288, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlRelease.InitControl(0, 216, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlCopyright1.InitControl(0, 236, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlCopyright2.InitControl(0, 256, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
+	m_CtrlLicense.InitControl(0, 276, 288, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, FALSE, FALSE, FALSE);
 
-// #else
-// 	m_CtrlVersion.InitControl(140, 12, 340, 28, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-// 	m_CtrlEdition.InitControl(140, 40, 340, 28, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-// 	m_CtrlRelease.InitControl(140, 76, 340, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-// 	m_CtrlCopyright1.InitControl(140, 100, 340, 20, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-// 	m_CtrlLicense.InitControl(140, 120, 340, 20, m_ZoomRatio, &m_BkDC, NULL, 0, BS_CENTER, OwnerDrawTransparent, m_bHighContrast, m_bDarkMode, FALSE);
-// 	m_CtrlCopyright2.ShowWindow(SW_HIDE);
-// #endif
+#else
+	m_CtrlVersion->setGeometry(140, 12, 340, 28);
+	m_CtrlEdition->setGeometry(140, 40, 340, 28);
+	m_CtrlRelease->setGeometry(140, 76, 340, 20);
+	m_CtrlCopyright1->setGeometry(140, 100, 340, 20);
+	m_CtrlLicense->setGeometry(140, 120, 340, 20);
+	m_CtrlCopyright2->hide();
+#endif
 
-// 	Invalidate();
+	update();
 }
 
 void CAboutDlg::OnLogo()

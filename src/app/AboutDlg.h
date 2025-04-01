@@ -6,9 +6,6 @@
 /*---------------------------------------------------------------------------*/
 
 #pragma once
-//#include "DialogFx.h"
-//#include "StaticFx.h"
-//#include "ButtonFx.h"
 
 #include <QDialog>
 #include <QPushButton>
@@ -42,9 +39,9 @@ protected:
 	void resizeEvent(QResizeEvent* event) override;
 
 	// DECLARE_MESSAGE_MAP()
-	// afx_msg void OnLogo();
-	// afx_msg void OnVersion();
-	// afx_msg void OnLicense();
+	void OnLogo();
+	void OnVersion();
+	void OnLicense();
 	// afx_msg void OnProjectSite1();
 	// afx_msg void OnProjectSite2();
 	// afx_msg void OnProjectSite3();
@@ -66,4 +63,4 @@ private:
 	QLabel* m_CtrlRelease;
 	QLabel* m_CtrlCopyright1;
 	QLabel* m_CtrlCopyright2;
-};;
+};

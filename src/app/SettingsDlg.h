@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include "DialogFx.h"
-#include "StaticFx.h"
-#include "ButtonFx.h"
-#include "ComboBoxFx.h"
+#include <QDialog>
+#include <QLabel>
+#include <QComboBox>
+#include <QPushButton>
 
-class CSettingsDlg : public CDialogFx
+class CSettingsDlg : public QDialog
 {
-	DECLARE_DYNCREATE(CSettingsDlg)
+	Q_OBJECT
 
 #ifdef SUISHO_SHIZUKU_SUPPORT
 	static const int SIZE_X = 680;
@@ -25,75 +25,73 @@ class CSettingsDlg : public CDialogFx
 #endif
 
 public:
-	CSettingsDlg(CWnd* pParent = NULL);
+	CSettingsDlg(QWidget* parent = nullptr);
 	virtual ~CSettingsDlg();
 
-	enum { IDD = IDD_SETTINGS };
+	void showEvent(QShowEvent* event) override;
+	void resizeEvent(QResizeEvent* event) override;
+	void closeEvent(QCloseEvent* event) override;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX); 
-	virtual BOOL OnInitDialog();
-	virtual void OnCancel();
+	// void DoDataExchange(); 
+	bool OnInitDialog();
 
-	void UpdateDialogSize();
-	int GetBlockSize(CString text);
-	int GetType(CString text);
+	int GetBlockSize(QString text);
+	int GetType(QString text);
 
-	CStaticFx m_LabelType;
-	CStaticFx m_LabelSize;
-	CStaticFx m_LabelQueues;
-	CStaticFx m_LabelThreads;
-	CStaticFx m_LabelDefault;
-	CStaticFx m_LabelPeak;
-	CStaticFx m_LabelDemo;
-	CStaticFx m_LabelMeasureTime;
-	CStaticFx m_LabelIntervalTime;
+	QLabel* m_LabelType;
+	QLabel* m_LabelSize;
+	QLabel* m_LabelQueues;
+	QLabel* m_LabelThreads;
+	QLabel* m_LabelDefault;
+	QLabel* m_LabelPeak;
+	QLabel* m_LabelDemo;
+	QLabel* m_LabelMeasureTime;
+	QLabel* m_LabelIntervalTime;
 
-	CComboBoxFx m_ComboBenchType0;
-	CComboBoxFx m_ComboBenchType1;
-	CComboBoxFx m_ComboBenchType2;
-	CComboBoxFx m_ComboBenchType3;
-	CComboBoxFx m_ComboBenchType4;
-	CComboBoxFx m_ComboBenchType5;
-	CComboBoxFx m_ComboBenchType8;
-	CComboBoxFx m_ComboBenchSize0;
-	CComboBoxFx m_ComboBenchSize1;
-	CComboBoxFx m_ComboBenchSize2;
-	CComboBoxFx m_ComboBenchSize3;
-	CComboBoxFx m_ComboBenchSize4;
-	CComboBoxFx m_ComboBenchSize5;
-	CComboBoxFx m_ComboBenchSize8;
-	CComboBoxFx m_ComboBenchQueues0;
-	CComboBoxFx m_ComboBenchQueues1;
-	CComboBoxFx m_ComboBenchQueues2;
-	CComboBoxFx m_ComboBenchQueues3;
-	CComboBoxFx m_ComboBenchQueues4;
-	CComboBoxFx m_ComboBenchQueues5;
-	CComboBoxFx m_ComboBenchQueues8;
-	CComboBoxFx m_ComboBenchThreads0;
-	CComboBoxFx m_ComboBenchThreads1;
-	CComboBoxFx m_ComboBenchThreads2;
-	CComboBoxFx m_ComboBenchThreads3;
-	CComboBoxFx m_ComboBenchThreads4;
-	CComboBoxFx m_ComboBenchThreads5;
-	CComboBoxFx m_ComboBenchThreads8;
+	QComboBox* m_ComboBenchType0;
+	QComboBox* m_ComboBenchType1;
+	QComboBox* m_ComboBenchType2;
+	QComboBox* m_ComboBenchType3;
+	QComboBox* m_ComboBenchType4;
+	QComboBox* m_ComboBenchType5;
+	QComboBox* m_ComboBenchType8;
+	QComboBox* m_ComboBenchSize0;
+	QComboBox* m_ComboBenchSize1;
+	QComboBox* m_ComboBenchSize2;
+	QComboBox* m_ComboBenchSize3;
+	QComboBox* m_ComboBenchSize4;
+	QComboBox* m_ComboBenchSize5;
+	QComboBox* m_ComboBenchSize8;
+	QComboBox* m_ComboBenchQueues0;
+	QComboBox* m_ComboBenchQueues1;
+	QComboBox* m_ComboBenchQueues2;
+	QComboBox* m_ComboBenchQueues3;
+	QComboBox* m_ComboBenchQueues4;
+	QComboBox* m_ComboBenchQueues5;
+	QComboBox* m_ComboBenchQueues8;
+	QComboBox* m_ComboBenchThreads0;
+	QComboBox* m_ComboBenchThreads1;
+	QComboBox* m_ComboBenchThreads2;
+	QComboBox* m_ComboBenchThreads3;
+	QComboBox* m_ComboBenchThreads4;
+	QComboBox* m_ComboBenchThreads5;
+	QComboBox* m_ComboBenchThreads8;
 
-//	CComboBoxFx m_ComboAffinity;
-//	CComboBoxFx m_ComboData;
-	CComboBoxFx m_ComboMeasureTime;
-	CComboBoxFx m_ComboIntervalTime;
+	QComboBox* m_ComboMeasureTime;
+	QComboBox* m_ComboIntervalTime;
 
-	CButtonFx m_ButtonSetDefault;
-	CButtonFx m_ButtonSetNVMe8;
-//	CButtonFx m_ButtonSetNVMe9;
-	CButtonFx m_ButtonOk;
+	QPushButton* m_ButtonSetDefault;
+	QPushButton* m_ButtonSetNVMe8;
+	QPushButton* m_ButtonOk;
 
+private slots:
 	void OnSetDefault();
 	void OnSetNVMe8();
-//	void OnSetNVMe9();
 	void OnOk();
 	void InitComboBox();
 
+private:
 	int m_BenchType[9];
 	int m_BenchSize[9];
 	int m_BenchQueues[9];
@@ -102,7 +100,5 @@ protected:
 	int m_TestData;
 	int m_MeasureTime;
 	int m_IntervalTime;
-	DWORD m_Profile;
-
-	DECLARE_MESSAGE_MAP()
+	int m_Profile;
 };

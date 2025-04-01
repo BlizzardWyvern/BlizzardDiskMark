@@ -74,7 +74,7 @@ public:
 #endif
 
 	void SetMeter(QLabel* control, double score, double latency, int blockSize, int unit);
-	void ChangeLang(QString LangName);
+	void ChangeLang();
 	void resizeEvent(QResizeEvent* event) override;
 	void ChangeButtonStatus(bool status);
 	void SetScoreToolTip(QLabel* cx, double score, double latency, int blockSize);
@@ -262,8 +262,8 @@ public:
 	//afx_msg void OnCopy();
 	//afx_msg void OnHelp();
 	//afx_msg void OnCrystalDewWorld();
-	//afx_msg void OnModeDefault();
-	//afx_msg void OnModeAll0x00();
+	void OnModeDefault();
+	void OnModeAll0x00();
 	//afx_msg void OnSettingDefault();
 	//afx_msg void OnSettingNVMe8();
 //	afx_msg void OnSettingNVMe9();

@@ -17,6 +17,7 @@
 #include <QWindow>
 #include <QScreen>
 #include <QMainWindow>
+#include <QMenuBar>
 #include <QLayout>
 #include <QCloseEvent>
 #include <QShowEvent>
@@ -47,6 +48,106 @@
 CDiskMarkDlg::CDiskMarkDlg(QWidget* pParent /*=NULL*/)
 	: QMainWindow(pParent)
 {
+	QMenuBar *menuBar = this->menuBar();
+	QMenu *menu = nullptr;
+
+	menu = new QMenu(tr("File"), this);
+	menuBar->addMenu(menu);
+	menu = new QMenu(tr("Settings"), this);
+	menuBar->addMenu(menu);
+	menu = new QMenu(tr("Profile"), this);
+	menuBar->addMenu(menu);
+	menu = new QMenu(tr("Theme"), this);
+	menuBar->addMenu(menu);
+	menu = new QMenu(tr("Help"), this);
+	menuBar->addMenu(menu);
+	menu = new QMenu(tr("Language"), this);
+	menuBar->addMenu(menu);
+
+	menuBar->setNativeMenuBar(false);
+
+	QAction *action = nullptr;
+
+	action = new QAction(tr("Exit") + "\tAlt + F4", this);
+	action->setObjectName("actionExit");
+	menuBar->actions().at(0)->menu()->addAction(action);
+	action = new QAction(tr("Save Text") + "\tCtrl + T", this);
+	action->setObjectName("actionSaveText");
+	menuBar->actions().at(0)->menu()->addAction(action);
+	action = new QAction(tr("Save Image") + "\tCtrl + S", this);
+	action->setObjectName("actionSaveImage");
+	menuBar->actions().at(0)->menu()->addAction(action);
+	action = new QAction(tr("Copy") + "\tCtrl + Shift + C", this);
+	action->setObjectName("actionCopy");
+	menuBar->actions().at(0)->menu()->addAction(action);
+	menu = menuBar->actions().at(1)->menu();
+	action = new QAction(tr("Test Data"), this);
+	menu->addAction(action);
+	action = new QAction(tr("Default Random"), this);
+	action->setObjectName("actionModeDefault");
+	menu->addAction(action);
+	action = new QAction(tr("All Zero"), this);
+	action->setObjectName("actionModeAllZero");
+	menu->addAction(action);
+	menu = menuBar->actions().at(2)->menu();
+	action = new QAction(tr("Profile Default"), this);
+	menu->addAction(action);
+	menu = menuBar->actions().at(1)->menu();
+	action = new QAction(tr("Settings") + "\tCtrl + Q", this);
+	menu->addAction(action);
+	menu = menuBar->actions().at(2)->menu();
+	action = new QAction(tr("Profile Default"), this);
+	menu->addAction(action);
+	action = new QAction(tr("Profile Peak"), this);
+	menu->addAction(action);
+	action = new QAction(tr("Profile Real"), this);
+	menu->addAction(action);
+	action = new QAction(tr("Profile Demo"), this);
+	menu->addAction(action);
+
+	#ifdef MIX_MODE
+	action = new QAction(tr("Profile Default") + " [+Mix]", this);
+	menu->addAction(action);
+	action = new QAction(tr("Profile Peak") + " [+Mix]", this);
+	menu->addAction(action);
+	action = new QAction(tr("Profile Real") + " [+Mix]", this);
+	menu->addAction(action);
+	#endif
+
+	menu = menuBar->actions().at(4)->menu();
+	action = new QAction(tr("Help") + " [Web]" + "\tF1", this);
+	menu->addAction(action);
+	action = new QAction(tr("About"), this);
+	menu->addAction(action);
+	menu = menuBar->actions().at(3)->menu();
+	action = new QAction(tr("Zoom"), this);
+	menu->addAction(action);
+	action = new QAction(tr("Auto"), this);
+	menu->addAction(action);
+	action = new QAction(tr("Font Setting") + "\tCtrl + F", this);
+	menu->addAction(action);
+
+	connect(menuBar->actions().at(0)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnExit()));
+	connect(menuBar->actions().at(0)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnSaveText()));
+	connect(menuBar->actions().at(0)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnSaveImage()));
+	connect(menuBar->actions().at(0)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnCopy()));
+	connect(menuBar->actions().at(1)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnTestData()));
+	connect(menuBar->actions().at(1)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnModeDefault()));
+	connect(menuBar->actions().at(1)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnModeAll0x00()));
+	connect(menuBar->actions().at(1)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnSettings()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnSettingsQueuesThreads()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnProfileDefault()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnProfilePeak()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnProfileReal()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(4), SIGNAL(triggered()), this, SLOT(OnProfileDemo()));
+	#ifdef MIX_MODE
+	connect(menuBar->actions().at(2)->menu()->actions().at(5), SIGNAL(triggered()), this, SLOT(OnProfileDefaultMix()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(6), SIGNAL(triggered()), this, SLOT(OnProfilePeakMix()));
+	connect(menuBar->actions().at(2)->menu()->actions().at(7), SIGNAL(triggered()), this, SLOT(OnProfileRealMix()));
+	#endif
+	connect(menuBar->actions().at(4)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnHelp()));
+	connect(menuBar->actions().at(4)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnAbout()));
+
 	m_hIcon = QIcon(":/resources/mainframe.ico");
 	m_hIconMini = QIcon(":/resources/tray_icon.ico");
 
@@ -552,10 +653,10 @@ void CDiskMarkDlg::showEvent(QShowEvent* event)
 	m_WinThread = NULL;
 	m_DiskBenchStatus = false;
 
-// 	// InitThemeLang();
-// 	// InitMenu();
-// 	// UpdateThemeInfo();
-// 	// ChangeLang(m_CurrentLang);
+	// InitThemeLang();
+	// InitMenu();
+	// UpdateThemeInfo();
+	ChangeLang();
 
 	UpdateQueuesThreads();
 
@@ -1598,134 +1699,138 @@ void CDiskMarkDlg::SetScoreToolTip(QLabel* control, double score, double latency
 
 void CDiskMarkDlg::OnSequentialPeak()
 {
-// 	if (m_WinThread == NULL)
-// 	{
-// 		UpdateData(TRUE);
+	if (m_WinThread == NULL)
+	{
+		// UpdateData(TRUE);
 
-// 		m_ReadScore[4] = 0.0;
-// 		m_WriteScore[4] = 0.0;
-// 		m_ReadLatency[4] = 0.0;
-// 		m_WriteLatency[4] = 0.0;
-// #ifdef MIX_MODE
-// 		m_MixScore[4] = 0.0;
-// 		m_MixLatency[4] = 0.0;
-// #endif
-// 		UpdateScore();
-// 		m_DiskBenchStatus = TRUE;
-// 		m_WinThread = AfxBeginThread(ExecDiskBench4, (void*)this);
-// 		if (m_WinThread == NULL)
-// 		{
-// 			m_DiskBenchStatus = FALSE;
-// 		}
-// 		else
-// 		{
-// 			ChangeButtonStatus(FALSE);
-// 		}
-// 		DisableMenus();
-// 	}
-// 	else
-// 	{
-// 		Stop();
-// 	}
+		m_ReadScore[4] = 0.0;
+		m_WriteScore[4] = 0.0;
+		m_ReadLatency[4] = 0.0;
+		m_WriteLatency[4] = 0.0;
+#ifdef MIX_MODE
+		m_MixScore[4] = 0.0;
+		m_MixLatency[4] = 0.0;
+#endif
+		UpdateScore();
+		m_DiskBenchStatus = true;
+		m_WinThread = QThread::create([this]() { ExecDiskBench4(this); });
+		m_WinThread->start();
+		if (m_WinThread == NULL)
+		{
+			m_DiskBenchStatus = false;
+		}
+		else
+		{
+			ChangeButtonStatus(false);
+		}
+		DisableMenus();
+	}
+	else
+	{
+		Stop();
+	}
 }
 
 void CDiskMarkDlg::OnRandomPeak()
 {
-// 	if (m_WinThread == NULL)
-// 	{
-// 		UpdateData(TRUE);
+	if (m_WinThread == NULL)
+	{
+		// UpdateData(TRUE);
 
-// 		m_ReadScore[5] = 0.0;
-// 		m_WriteScore[5] = 0.0;
-// 		m_ReadLatency[5] = 0.0;
-// 		m_WriteLatency[5] = 0.0;
-// #ifdef MIX_MODE
-// 		m_MixScore[5] = 0.0;
-// 		m_MixLatency[5] = 0.0;
-// #endif
-// 		UpdateScore();
-// 		m_DiskBenchStatus = TRUE;
-// 		m_WinThread = AfxBeginThread(ExecDiskBench5, (void*)this);
-// 		if (m_WinThread == NULL)
-// 		{
-// 			m_DiskBenchStatus = FALSE;
-// 		}
-// 		else
-// 		{
-// 			ChangeButtonStatus(FALSE);
-// 		}
-// 		DisableMenus();
-// 	}
-// 	else
-// 	{
-// 		Stop();
-// 	}
+		m_ReadScore[5] = 0.0;
+		m_WriteScore[5] = 0.0;
+		m_ReadLatency[5] = 0.0;
+		m_WriteLatency[5] = 0.0;
+#ifdef MIX_MODE
+		m_MixScore[5] = 0.0;
+		m_MixLatency[5] = 0.0;
+#endif
+		UpdateScore();
+		m_DiskBenchStatus = true;
+		m_WinThread = QThread::create([this]() { ExecDiskBench5(this); });
+		m_WinThread->start();
+		if (m_WinThread == NULL)
+		{
+			m_DiskBenchStatus = false;
+		}
+		else
+		{
+			ChangeButtonStatus(false);
+		}
+		DisableMenus();
+	}
+	else
+	{
+		Stop();
+	}
 }
 
 void CDiskMarkDlg::OnSequentialReal()
 {
-// 	if (m_WinThread == NULL)
-// 	{
-// 		UpdateData(TRUE);
+	if (m_WinThread == NULL)
+	{
+		// UpdateData(TRUE);
 
-// 		m_ReadScore[6] = 0.0;
-// 		m_WriteScore[6] = 0.0;
-// 		m_ReadLatency[6] = 0.0;
-// 		m_WriteLatency[6] = 0.0;
-// #ifdef MIX_MODE
-// 		m_MixScore[6] = 0.0;
-// 		m_MixLatency[6] = 0.0;
-// #endif
-// 		UpdateScore();
-// 		m_DiskBenchStatus = TRUE;
-// 		m_WinThread = AfxBeginThread(ExecDiskBench6, (void*)this);
-// 		if (m_WinThread == NULL)
-// 		{
-// 			m_DiskBenchStatus = FALSE;
-// 		}
-// 		else
-// 		{
-// 			ChangeButtonStatus(FALSE);
-// 		}
-// 		DisableMenus();
-// 	}
-// 	else
-// 	{
-// 		Stop();
-// 	}
+		m_ReadScore[6] = 0.0;
+		m_WriteScore[6] = 0.0;
+		m_ReadLatency[6] = 0.0;
+		m_WriteLatency[6] = 0.0;
+#ifdef MIX_MODE
+		m_MixScore[6] = 0.0;
+		m_MixLatency[6] = 0.0;
+#endif
+		UpdateScore();
+		m_DiskBenchStatus = true;
+		m_WinThread = QThread::create([this]() { ExecDiskBench6(this); });
+		m_WinThread->start();
+		if (m_WinThread == NULL)
+		{
+			m_DiskBenchStatus = false;
+		}
+		else
+		{
+			ChangeButtonStatus(false);
+		}
+		DisableMenus();
+	}
+	else
+	{
+		Stop();
+	}
 }
 
 void CDiskMarkDlg::OnRandomReal()
 {
-// 	if (m_WinThread == NULL)
-// 	{
-// 		UpdateData(TRUE);
+	if (m_WinThread == NULL)
+	{
+		// UpdateData(TRUE);
 
-// 		m_ReadScore[7] = 0.0;
-// 		m_WriteScore[7] = 0.0;
-// 		m_ReadLatency[7] = 0.0;
-// 		m_WriteLatency[7] = 0.0;
-// #ifdef MIX_MODE
-// 		m_MixScore[7] = 0.0;
-// 		m_MixLatency[7] = 0.0;
-// #endif
-// 		UpdateScore();
-// 		m_DiskBenchStatus = TRUE;
-// 		m_WinThread = AfxBeginThread(ExecDiskBench7, (void*)this);
-// 		if (m_WinThread == NULL)
-// 		{
-// 			m_DiskBenchStatus = FALSE;
-// 		}
-// 		else
-// 		{
-// 			ChangeButtonStatus(FALSE);
-// 		}
-// 		DisableMenus();
-// 	}
-// 	else
-// 	{
-// 		Stop();
-// 	}
+		m_ReadScore[7] = 0.0;
+		m_WriteScore[7] = 0.0;
+		m_ReadLatency[7] = 0.0;
+		m_WriteLatency[7] = 0.0;
+#ifdef MIX_MODE
+		m_MixScore[7] = 0.0;
+		m_MixLatency[7] = 0.0;
+#endif
+		UpdateScore();
+		m_DiskBenchStatus = true;
+		m_WinThread = QThread::create([this]() { ExecDiskBench7(this); });
+		m_WinThread->start();
+		if (m_WinThread == NULL)
+		{
+			m_DiskBenchStatus = false;
+		}
+		else
+		{
+			ChangeButtonStatus(false);
+		}
+		DisableMenus();
+	}
+	else
+	{
+		Stop();
+	}
 }
 
 void CDiskMarkDlg::OnTest0()
@@ -1969,126 +2074,112 @@ void CDiskMarkDlg::Stop()
 
 void CDiskMarkDlg::EnableMenus()
 {
-	// CMenu *menu = GetMenu();
-	// menu->EnableMenuItem(0, MF_BYPOSITION | MF_ENABLED);
-	// menu->EnableMenuItem(1, MF_BYPOSITION | MF_ENABLED);
-	// menu->EnableMenuItem(2, MF_BYPOSITION | MF_ENABLED);
-	// menu->EnableMenuItem(3, MF_BYPOSITION | MF_ENABLED);
-	// menu->EnableMenuItem(4, MF_BYPOSITION | MF_ENABLED);
-	// menu->EnableMenuItem(5, MF_BYPOSITION | MF_ENABLED);
-	// SetMenu(menu);
+	menuBar()->setEnabled(true);
 }
 
 void CDiskMarkDlg::DisableMenus()
 {
-	// CMenu *menu = GetMenu();
-	// menu->EnableMenuItem(0, MF_BYPOSITION | MF_GRAYED);
-	// menu->EnableMenuItem(1, MF_BYPOSITION | MF_GRAYED);
-	// menu->EnableMenuItem(2, MF_BYPOSITION | MF_GRAYED);
-	// menu->EnableMenuItem(3, MF_BYPOSITION | MF_GRAYED);
-	// menu->EnableMenuItem(4, MF_BYPOSITION | MF_GRAYED);
-	// menu->EnableMenuItem(5, MF_BYPOSITION | MF_GRAYED);
-	// SetMenu(menu);
+	menuBar()->setEnabled(false);
 }
 
 QString CDiskMarkDlg::GetButtonText(int type, int size, int queues, int threads, int unit)
 {
 	QString text;
 
-	// if (size >= 1024)
-	// {
-	// 	if (type == BENCH_RND)
-	// 	{
-	// 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-	// 		{
-	// 			if (unit == SCORE_IOPS)
-	// 			{
-	// 				text.Format(L"RND%dM\r\n(IOPS)", size / 1024);
-	// 			}
-	// 			else if (unit == SCORE_US)
-	// 			{
-	// 				text.Format(L"RND%dM\r\n(μs)", size / 1024);
-	// 			}
-	// 			else if (unit == SCORE_GBS)
-	// 			{
-	// 				text.Format(L"RND%dM\r\nQ%dT%d", size / 1024, queues, threads);
-	// 			}
-	// 			else
-	// 			{
-	// 				text.Format(L"RND%dM\r\nQ%dT%d", size / 1024, queues, threads);
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			if (unit == SCORE_GBS)
-	// 			{
-	// 				text.Format(L"RND%dM\r\nQ%dT%d", size / 1024, queues, threads);
-	// 			}
-	// 			else
-	// 			{
-	// 				text.Format(L"RND%dM\r\nQ%dT%d", size / 1024, queues, threads);
-	// 			}
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		if (unit == SCORE_GBS)
-	// 		{
-	// 			text.Format(L"SEQ%dM\r\nQ%dT%d", size / 1024, queues, threads);
-	// 		}
-	// 		else
-	// 		{
-	// 			text.Format(L"SEQ%dM\r\nQ%dT%d", size / 1024, queues, threads);
-	// 		}
-	// 	}
-	// }
-	// else
-	// {
-	// 	if (type == BENCH_RND)
-	// 	{
-	// 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-	// 		{
-	// 			if (unit == SCORE_IOPS)
-	// 			{
-	// 				text.Format(L"RND%dK\r\n(IOPS)", size);
-	// 			}
-	// 			else if (unit == SCORE_US)
-	// 			{
-	// 				text.Format(L"RND%dK\r\n(μs)", size);
-	// 			}
-	// 			else if (unit == SCORE_GBS)
-	// 			{
-	// 				text.Format(L"RND%dK\r\nQ%dT%d", size, queues, threads);
-	// 			}
-	// 			else
-	// 			{
-	// 				text.Format(L"RND%dK\r\nQ%dT%d", size, queues, threads);
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			if (unit == SCORE_GBS)
-	// 			{
-	// 				text.Format(L"RND%dK\r\nQ%dT%d", size, queues, threads);
-	// 			}
-	// 			else
-	// 			{
-	// 				text.Format(L"RND%dK\r\nQ%dT%d", size, queues, threads);
-	// 			}
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		if (unit == SCORE_GBS)
-	// 		{
-	// 			text.Format(L"SEQ%dK\r\nQ%dT%d", size, queues, threads);
-	// 		}
-	// 		else
-	// 		{
-	// 			text.Format(L"SEQ%dK\r\nQ%dT%d", size, queues, threads);
-	// 		}
-	// 	}
-	// }
+	if (size >= 1024)
+	{
+		if (type == BENCH_RND)
+		{
+			if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
+			{
+				if (unit == SCORE_IOPS)
+				{
+					text = QString("RND%1M\n(IOPS)").arg(size / 1024);
+				}
+				else if (unit == SCORE_US)
+				{
+					text = QString("RND%1M\n(μs)").arg(size / 1024);
+				}
+				else if (unit == SCORE_GBS)
+				{
+					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
+				}
+				else
+				{
+					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
+				}
+			}
+			else
+			{
+				if (unit == SCORE_GBS)
+				{
+					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
+				}
+				else
+				{
+					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
+				}
+			}
+		}
+		else
+		{
+			if (unit == SCORE_GBS)
+			{
+				text = QString("SEQ%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
+			}
+			else
+			{
+				text = QString("SEQ%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
+			}
+		}
+	}
+	else
+	{
+		if (type == BENCH_RND)
+		{
+			if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
+			{
+				if (unit == SCORE_IOPS)
+				{
+					text = QString("RND%1K\n(IOPS)").arg(size);
+				}
+				else if (unit == SCORE_US)
+				{
+					text = QString("RND%1K\n(μs)").arg(size);
+				}
+				else if (unit == SCORE_GBS)
+				{
+					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
+				}
+				else
+				{
+					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
+				}
+			}
+			else
+			{
+				if (unit == SCORE_GBS)
+				{
+					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
+				}
+				else
+				{
+					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
+				}
+			}
+		}
+		else
+		{
+			if (unit == SCORE_GBS)
+			{
+				text = QString("SEQ%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
+			}
+			else
+			{
+				text = QString("SEQ%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
+			}
+		}
+	}
 
 	return text;
 }
@@ -2532,54 +2623,75 @@ void CDiskMarkDlg::UpdateDriveToolTip()
 	}
 }
 
-void CDiskMarkDlg::ChangeLang(QString LangName)
+void CDiskMarkDlg::ChangeLang()
 {
 // 	m_CurrentLangPath.Format(L"%s\\%s.lang", (LPTSTR)m_LangDir.GetString(), (LPTSTR)LangName.GetString());
 
-// 	CString cstr;
-// 	CMenu *menu = GetMenu();
-// 	CMenu subMenu;
+	// QString cstr;
+	// QMenuBar *menuBar = this->menuBar();
+	// QMenu *menu;
 
-// 	cstr = i18n(L"Menu", L"FILE");
-// 	menu->ModifyMenu(0, MF_BYPOSITION | MF_STRING, 0, cstr);
-// 	cstr = i18n(L"Menu", L"SETTINGS");
-// 	menu->ModifyMenu(1, MF_BYPOSITION | MF_STRING, 1, cstr);
-// 	cstr = i18n(L"Menu", L"PROFILE");
-// 	menu->ModifyMenu(2, MF_BYPOSITION | MF_STRING, 2, cstr);
-// 	cstr = i18n(L"Menu", L"THEME");
-// 	menu->ModifyMenu(3, MF_BYPOSITION | MF_STRING, 3, cstr);
-// 	cstr = i18n(L"Menu", L"HELP");
-// 	menu->ModifyMenu(4, MF_BYPOSITION | MF_STRING, 4, cstr);
-// 	cstr = i18n(L"Menu", L"LANGUAGE");
-// 	if(cstr.Find(L"Language") >= 0)
-// 	{
-// 		cstr = L"&Language";
-// 		menu->ModifyMenu(5, MF_BYPOSITION | MF_STRING, 5, cstr);
-// 	}
-// 	else
-// 	{
-// 		menu->ModifyMenu(5, MF_BYPOSITION | MF_STRING, 5, cstr + L"(&Language)");
-// 	}
+	// menu = menuBar->actions().at(0)->menu();
+	// cstr = tr("FILE");
+	// menu->setTitle(cstr);
 
-// 	cstr = i18n(L"Menu", L"FILE_EXIT") + L"\tAlt + F4";
-// 	menu->ModifyMenu(ID_EXIT, MF_STRING, ID_EXIT, cstr);
-// 	cstr = i18n(L"Menu", L"SAVE_TEXT") + L"\tCtrl + T";
-// 	menu->ModifyMenu(ID_SAVE_TEXT, MF_STRING, ID_SAVE_TEXT, cstr);
-// 	cstr = i18n(L"Menu", L"SAVE_IMAGE") + L"\tCtrl + S";
-// 	menu->ModifyMenu(ID_SAVE_IMAGE, MF_STRING, ID_SAVE_IMAGE, cstr);
+	// menu = menuBar->actions().at(1)->menu();
+	// cstr = tr("SETTINGS");
+	// menu->setTitle(cstr);
 
-// 	cstr = i18n(L"Menu", L"EDIT_COPY") + L"\tCtrl + Shift + C";
-// 	menu->ModifyMenu(ID_COPY, MF_STRING, ID_COPY, cstr);
+	// menu = menuBar->actions().at(2)->menu();
+	// cstr = tr("PROFILE");
+	// menu->setTitle(cstr);
 
-// 	subMenu.Attach(menu->GetSubMenu(1)->GetSafeHmenu());
-// 	cstr = i18n(L"Menu", L"TEST_DATA");
-// 	subMenu.ModifyMenu(0, MF_BYPOSITION, 0, cstr);
-// 	subMenu.Detach();
+	// menu = menuBar->actions().at(3)->menu();
+	// cstr = tr("THEME");
+	// menu->setTitle(cstr);
 
-// 	cstr = i18n(L"Menu", L"DEFAULT_RANDOM");
-// 	menu->ModifyMenu(ID_MODE_DEFAULT, MF_STRING, ID_MODE_DEFAULT, cstr);
-// 	cstr = i18n(L"Menu", L"ALL_ZERO");
-// 	menu->ModifyMenu(ID_MODE_ALL0X00, MF_STRING, ID_MODE_ALL0X00, cstr);
+	// menu = menuBar->actions().at(4)->menu();
+	// cstr = tr("HELP");
+	// menu->setTitle(cstr);
+
+	// menu = menuBar->actions().at(5)->menu();
+	// cstr = tr("LANGUAGE");
+	// if (cstr.contains("Language"))
+	// {
+	// 	cstr = "&Language";
+	// 	menu->setTitle(cstr);
+	// }
+	// else
+	// {
+	// 	menu->setTitle(cstr + "(&Language)");
+	// }
+
+// 	QAction *action;
+
+// 	action = menuBar->findChild<QAction*>("ID_EXIT");
+// 	cstr = tr("FILE_EXIT") + "\tAlt + F4";
+// 	action->setText(cstr);
+
+// 	action = menuBar->findChild<QAction*>("ID_SAVE_TEXT");
+// 	cstr = tr("SAVE_TEXT") + "\tCtrl + T";
+// 	action->setText(cstr);
+
+// 	action = menuBar->findChild<QAction*>("ID_SAVE_IMAGE");
+// 	cstr = tr("SAVE_IMAGE") + "\tCtrl + S";
+// 	action->setText(cstr);
+
+// 	action = menuBar->findChild<QAction*>("ID_COPY");
+// 	cstr = tr("EDIT_COPY") + "\tCtrl + Shift + C";
+// 	action->setText(cstr);
+
+// 	menu = menuBar->actions().at(1)->menu();
+// 	cstr = tr("TEST_DATA");
+// 	menu->actions().at(0)->setText(cstr);
+
+// 	action = menuBar->findChild<QAction*>("ID_MODE_DEFAULT");
+// 	cstr = tr("DEFAULT_RANDOM");
+// 	action->setText(cstr);
+
+// 	action = menuBar->findChild<QAction*>("ID_MODE_ALL0X00");
+// 	cstr = tr("ALL_ZERO");
+// 	action->setText(cstr);
 
 // 	if (m_TestData == TEST_DATA_ALL0X00)
 // 	{
@@ -2590,22 +2702,22 @@ void CDiskMarkDlg::ChangeLang(QString LangName)
 // 		OnModeDefault();
 // 	}
 
-// 	cstr = i18n(L"Dialog", L"DEFAULT");
-// 	menu->ModifyMenu(ID_SETTING_DEFAULT, MF_STRING, ID_SETTING_DEFAULT, cstr);
+// 	cstr = tr("DEFAULT");
+// 	menu->actions().at(1)->menu()->actions().at(0)->setText(cstr);
 
 // 	CheckRadioPresetMode();
 
-// 	cstr = i18n(L"Menu", L"SETTINGS") + L"\tCtrl + Q";
-// 	menu->ModifyMenu(ID_SETTINGS_QUEUESTHREADS, MF_STRING, ID_SETTINGS_QUEUESTHREADS, cstr);
+// 	cstr = tr("SETTINGS") + "\tCtrl + Q";
+// 	menu->actions().at(1)->menu()->actions().at(1)->setText(cstr);
 
-// 	cstr = i18n(L"Menu", L"PROFILE_DEFAULT");
-// 	menu->ModifyMenu(ID_PROFILE_DEFAULT, MF_STRING, ID_PROFILE_DEFAULT, cstr);
-// 	cstr = i18n(L"Menu", L"PROFILE_PEAK");
-// 	menu->ModifyMenu(ID_PROFILE_PEAK, MF_STRING, ID_PROFILE_PEAK, cstr);
-// 	cstr = i18n(L"Menu", L"PROFILE_REAL");
-// 	menu->ModifyMenu(ID_PROFILE_REAL, MF_STRING, ID_PROFILE_REAL, cstr);
-// 	cstr = i18n(L"Menu", L"PROFILE_DEMO");
-// 	menu->ModifyMenu(ID_PROFILE_DEMO, MF_STRING, ID_PROFILE_DEMO, cstr);
+// 	cstr = tr("PROFILE_DEFAULT");
+// 	menu->actions().at(2)->menu()->actions().at(0)->setText(cstr);
+// 	cstr = tr("PROFILE_PEAK");
+// 	menu->actions().at(2)->menu()->actions().at(1)->setText(cstr);
+// 	cstr = tr("PROFILE_REAL");
+// 	menu->actions().at(2)->menu()->actions().at(2)->setText(cstr);
+// 	cstr = tr("PROFILE_DEMO");
+// 	menu->actions().at(2)->menu()->actions().at(3)->setText(cstr);
 
 // #ifdef MIX_MODE
 // 	cstr = i18n(L"Menu", L"PROFILE_DEFAULT") + L" [+Mix]";
@@ -2616,22 +2728,21 @@ void CDiskMarkDlg::ChangeLang(QString LangName)
 // 	menu->ModifyMenu(ID_PROFILE_REAL_MIX, MF_STRING, ID_PROFILE_REAL_MIX, cstr);
 // #endif
 
-// 	cstr = i18n(L"Menu", L"HELP") + L" [Web]" + L"\tF1";
-// 	menu->ModifyMenu(ID_HELP, MF_STRING, ID_HELP, cstr);
-// 	cstr = i18n(L"Menu", L"HELP_ABOUT");
-// 	menu->ModifyMenu(ID_ABOUT, MF_STRING, ID_ABOUT, cstr);
+// 	cstr = tr("HELP") + " [Web]" + "\tF1";
+// 	menu->actions().at(4)->setText(cstr);
+// 	cstr = tr("HELP_ABOUT");
+// 	menu->actions().at(4)->menu()->actions().at(0)->setText(cstr);
 
 // 	// Theme
-// 	subMenu.Attach(menu->GetSubMenu(3)->GetSafeHmenu());
-// 	cstr = i18n(L"Menu", L"ZOOM");
-// 	subMenu.ModifyMenu(0, MF_BYPOSITION, 0, cstr);
-// 	subMenu.Detach();
+// 	menu = menuBar->actions().at(3)->menu();
+// 	cstr = tr("ZOOM");
+// 	menu->actions().at(0)->setText(cstr);
 
-// 	cstr = i18n(L"Menu", L"AUTO");
-// 	menu->ModifyMenu(ID_ZOOM_AUTO, MF_STRING, ID_ZOOM_AUTO, cstr);
+// 	cstr = tr("AUTO");
+// 	menu->actions().at(1)->setText(cstr);
 
-// 	cstr = i18n(L"Menu", L"FONT_SETTING") + L"\tCtrl + F";
-// 	menu->ModifyMenu(ID_FONT_SETTING, MF_STRING, ID_FONT_SETTING, cstr);
+// 	cstr = tr("FONT_SETTING") + "\tCtrl + F";
+// 	menu->actions().at(2)->setText(cstr);
 
 // 	CheckRadioZoomType();
 
@@ -2681,14 +2792,12 @@ void CDiskMarkDlg::ChangeLang(QString LangName)
 // 		break;
 // 	}
 
-// 	SetMenu(menu);
-
-// 	m_MesStopBenchmark = i18n(L"Message", L"STOP_BENCHMARK");
-// 	m_MesDiskCapacityError = i18n(L"Message", L"DISK_CAPACITY_ERROR");
-// 	m_MesDiskCreateFileError = i18n(L"Message", L"DISK_CREATE_FILE_ERROR");
-// 	m_MesDiskWriteError = i18n(L"Message", L"DISK_WRITE_ERROR");
-// 	m_MesDiskReadError = i18n(L"Message", L"DISK_READ_ERROR");
-// 	m_MesDiskSpdNotFound = i18n(L"Message", L"DISK_SPD_NOT_FOUND");
+// 	m_MesStopBenchmark = tr("STOP_BENCHMARK");
+// 	m_MesDiskCapacityError = tr("DISK_CAPACITY_ERROR");
+// 	m_MesDiskCreateFileError = tr("DISK_CREATE_FILE_ERROR");
+// 	m_MesDiskWriteError = tr("DISK_WRITE_ERROR");
+// 	m_MesDiskReadError = tr("DISK_READ_ERROR");
+// 	m_MesDiskSpdNotFound = tr("DISK_SPD_NOT_FOUND");
 
 // 	UpdateDriveToolTip();
 
@@ -2802,36 +2911,60 @@ void CDiskMarkDlg::ChangeLang(QString LangName)
 QString CDiskMarkDlg::GetResultString(int type, double score, double latency, int size, int queues, int threads)
 {
 	QString result;
-	// double iops = 0.0;
+	double iops = 0.0;
 
-	// iops = score * 1000 * 1000 / ((double)size * 1024);
-	// if (latency < 0.0)
-	// {
-	// 	latency = 0.0;
-	// }
+	iops = score * 1000 * 1000 / ((double)size * 1024);
+	if (latency < 0.0)
+	{
+		latency = 0.0;
+	}
 
-	// if (type == BENCH_RND)
-	// {
-	// 	if (size >= 1024)
-	// 	{
-	// 		result.Format(L"  RND %4dMiB (Q=%3d, T=%2d): %9.3f MB/s [%9.1f IOPS] <%9.2f us>", size / 1024, queues, threads, score, iops, latency);
-	// 	}
-	// 	else
-	// 	{
-	// 		result.Format(L"  RND %4dKiB (Q=%3d, T=%2d): %9.3f MB/s [%9.1f IOPS] <%9.2f us>", size, queues, threads, score, iops, latency);
-	// 	}
-	// }
-	// else
-	// {
-	// 	if (size >= 1024)
-	// 	{
-	// 		result.Format(L"  SEQ %4dMiB (Q=%3d, T=%2d): %9.3f MB/s [%9.1f IOPS] <%9.2f us>", size / 1024, queues, threads, score, iops, latency);
-	// 	}
-	// 	else
-	// 	{
-	// 		result.Format(L"  SEQ %4dKiB (Q=%3d, T=%2d): %9.3f MB/s [%9.1f IOPS] <%9.2f us>", size, queues, threads, score, iops, latency);
-	// 	}
-	// }
+	if (type == BENCH_RND)
+	{
+		if (size >= 1024)
+		{
+			result = QString("  RND %1MiB (Q=%2, T=%3): %4 MB/s [%5 IOPS] <%6 us>")
+				.arg(size / 1024)
+				.arg(queues)
+				.arg(threads)
+				.arg(score, 0, 'f', 3)
+				.arg(iops, 0, 'f', 1)
+				.arg(latency, 0, 'f', 2);
+		}
+		else
+		{
+			result = QString("  RND %1KiB (Q=%2, T=%3): %4 MB/s [%5 IOPS] <%6 us>")
+				.arg(size)
+				.arg(queues)
+				.arg(threads)
+				.arg(score, 0, 'f', 3)
+				.arg(iops, 0, 'f', 1)
+				.arg(latency, 0, 'f', 2);
+		}
+	}
+	else
+	{
+		if (size >= 1024)
+		{
+			result = QString("  SEQ %1MiB (Q=%2, T=%3): %4 MB/s [%5 IOPS] <%6 us>")
+				.arg(size / 1024)
+				.arg(queues)
+				.arg(threads)
+				.arg(score, 0, 'f', 3)
+				.arg(iops, 0, 'f', 1)
+				.arg(latency, 0, 'f', 2);
+		}
+		else
+		{
+			result = QString("  SEQ %1KiB (Q=%2, T=%3): %4 MB/s [%5 IOPS] <%6 us>")
+				.arg(size)
+				.arg(queues)
+				.arg(threads)
+				.arg(score, 0, 'f', 3)
+				.arg(iops, 0, 'f', 1)
+				.arg(latency, 0, 'f', 2);
+		}
+	}
 
 	return result;
 }
@@ -3134,36 +3267,40 @@ void CDiskMarkDlg::SaveText(QString fileName)
 
 void CDiskMarkDlg::CheckRadioPresetMode()
 {
-// 	if (IsDefaultMode())
-// 	{
-// 		CMenu* menu = GetMenu();
-// 		menu->CheckMenuRadioItem(ID_SETTING_DEFAULT, ID_SETTING_NVME_8, ID_SETTING_DEFAULT, MF_BYCOMMAND);
-// 		SetMenu(menu);
-// 		DrawMenuBar();
-// 	}
-// 	else if (IsNVMe8Mode())
-// 	{
-// 		CMenu* menu = GetMenu();
-// 		menu->CheckMenuRadioItem(ID_SETTING_DEFAULT, ID_SETTING_NVME_8, ID_SETTING_NVME_8, MF_BYCOMMAND);
-// 		SetMenu(menu);
-// 		DrawMenuBar();
-// 	}
-// 	/*
-// 	else if (IsNVMe9Mode())
-// 	{
-// 		CMenu* menu = GetMenu();
-// 		menu->CheckMenuRadioItem(ID_SETTING_DEFAULT, ID_SETTING_NVME_9, ID_SETTING_NVME_9, MF_BYCOMMAND);
-// 		SetMenu(menu);
-// 		DrawMenuBar();
-// 	}
-// 	*/
-// 	else
-// 	{
-// 		CMenu* menu = GetMenu();
-// 		menu->CheckMenuRadioItem(ID_SETTING_DEFAULT, ID_SETTING_NVME_8, 0, MF_BYCOMMAND);
-// 		SetMenu(menu);
-// 		DrawMenuBar();
-// 	}
+	if (IsDefaultMode())
+	{
+		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_DEFAULT");
+		if (action) {
+			action->setChecked(true);
+		}
+	}
+	else if (IsNVMe8Mode())
+	{
+		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_8");
+		if (action) {
+			action->setChecked(true);
+		}
+	}
+	/*
+	else if (IsNVMe9Mode())
+	{
+		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_9");
+		if (action) {
+			action->setChecked(true);
+		}
+	}
+	*/
+	else
+	{
+		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_DEFAULT");
+		if (action) {
+			action->setChecked(false);
+		}
+		action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_8");
+		if (action) {
+			action->setChecked(false);
+		}
+	}
 }
 
 bool CDiskMarkDlg::CheckRadioZoomType(int id, int value)
@@ -3272,29 +3409,29 @@ void CDiskMarkDlg::CheckRadioZoomType()
 // }
 // */
 
-// void CDiskMarkDlg::OnModeDefault()
-// {
-// 	// CMenu *menu = GetMenu();
-// 	// menu->CheckMenuRadioItem(ID_MODE_DEFAULT, ID_MODE_ALL0X00, ID_MODE_DEFAULT, MF_BYCOMMAND);
-// 	// SetMenu(menu);
-// 	// DrawMenuBar();
+void CDiskMarkDlg::OnModeDefault()
+{
+	QAction *action = menuBar()->findChild<QAction*>("ID_MODE_DEFAULT");
+	if (action) {
+		action->setChecked(true);
+	}
 
-// 	// m_TestData = TEST_DATA_RANDOM;
-// 	// WritePrivateProfileString(L"Setting", L"TestData", L"0", m_Ini);
-// 	// SetWindowTitle(L"");
-// }
+	m_TestData = TEST_DATA_RANDOM;
+	// WritePrivateProfileString(L"Setting", L"TestData", L"0", m_Ini);
+	SetWindowTitle("");
+}
 
-// void CDiskMarkDlg::OnModeAll0x00()
-// {
-// 	// CMenu *menu = GetMenu();
-// 	// menu->CheckMenuRadioItem(ID_MODE_DEFAULT, ID_MODE_ALL0X00, ID_MODE_ALL0X00, MF_BYCOMMAND);
-// 	// SetMenu(menu);
-// 	// DrawMenuBar();
+void CDiskMarkDlg::OnModeAll0x00()
+{
+	QAction *action = menuBar()->findChild<QAction*>("ID_MODE_ALL0X00");
+	if (action) {
+		action->setChecked(true);
+	}
 
-// 	// m_TestData = TEST_DATA_ALL0X00;
-// 	// WritePrivateProfileString(L"Setting", L"TestData", L"1", m_Ini);
-// 	// SetWindowTitle(L"");
-// }
+	m_TestData = TEST_DATA_ALL0X00;
+	// WritePrivateProfileString(L"Setting", L"TestData", L"1", m_Ini);
+	SetWindowTitle("");
+}
 
 // void CDiskMarkDlg::OnProfileDefault()
 // {
@@ -3309,15 +3446,15 @@ void CDiskMarkDlg::CheckRadioZoomType()
 
 void CDiskMarkDlg::ProfileDefault()
 {
-	// CMenu* menu = GetMenu();
-	// menu->CheckMenuRadioItem(ID_PROFILE_DEFAULT, ID_PROFILE_MAX, ID_PROFILE_DEFAULT, MF_BYCOMMAND);
-	// SetMenu(menu);
-	// DrawMenuBar();
+	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_DEFAULT");
+	if (action) {
+		action->setChecked(true);
+	}
 
-	// m_Profile = PROFILE_DEFAULT;
-	// m_MixMode = FALSE;
+	m_Profile = PROFILE_DEFAULT;
+	m_MixMode = false;
 	// WritePrivateProfileString(L"Setting", L"Profile", L"0", m_Ini);
-	// m_BackgroundName = L"Background";
+	// m_BackgroundName = "Background";
 }
 
 // void CDiskMarkDlg::OnProfilePeak()
@@ -3333,13 +3470,13 @@ void CDiskMarkDlg::ProfileDefault()
 
 void CDiskMarkDlg::ProfilePeak()
 {
-	// CMenu* menu = GetMenu();
-	// menu->CheckMenuRadioItem(ID_PROFILE_DEFAULT, ID_PROFILE_MAX, ID_PROFILE_PEAK, MF_BYCOMMAND);
-	// SetMenu(menu);
-	// DrawMenuBar();
+	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_PEAK");
+	if (action) {
+		action->setChecked(true);
+	}
 
-	// m_Profile = PROFILE_PEAK;
-	// m_MixMode = FALSE;
+	m_Profile = PROFILE_PEAK;
+	m_MixMode = false;
 	// WritePrivateProfileString(L"Setting", L"Profile", L"1", m_Ini);
 	// m_BackgroundName = L"Background";
 }
@@ -3357,13 +3494,13 @@ void CDiskMarkDlg::ProfilePeak()
 
 void CDiskMarkDlg::ProfileReal()
 {
-	// CMenu* menu = GetMenu();
-	// menu->CheckMenuRadioItem(ID_PROFILE_DEFAULT, ID_PROFILE_MAX, ID_PROFILE_REAL, MF_BYCOMMAND);
-	// SetMenu(menu);
-	// DrawMenuBar();
+	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_REAL");
+	if (action) {
+		action->setChecked(true);
+	}
 
-	// m_Profile = PROFILE_REAL;
-	// m_MixMode = FALSE;
+	m_Profile = PROFILE_REAL;
+	m_MixMode = false;
 	// WritePrivateProfileString(L"Setting", L"Profile", L"2", m_Ini);
 	// m_BackgroundName = L"Background";
 }
@@ -3381,13 +3518,13 @@ void CDiskMarkDlg::ProfileReal()
 
 void CDiskMarkDlg::ProfileDemo()
 {
-	// CMenu* menu = GetMenu();
-	// menu->CheckMenuRadioItem(ID_PROFILE_DEFAULT, ID_PROFILE_MAX, ID_PROFILE_DEMO, MF_BYCOMMAND);
-	// SetMenu(menu);
-	// DrawMenuBar();
+	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_DEMO");
+	if (action) {
+		action->setChecked(true);
+	}
 
-	// m_Profile = PROFILE_DEMO;
-	// m_MixMode = FALSE;
+	m_Profile = PROFILE_DEMO;
+	m_MixMode = false;
 	// WritePrivateProfileString(L"Setting", L"Profile", L"3", m_Ini);
 
 	// if (IsFileExist(m_ThemeDir + m_CurrentTheme + L"\\BackgroundDemo-300.png"))
