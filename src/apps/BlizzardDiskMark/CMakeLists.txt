@@ -1,3 +1,5 @@
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/res/DiskMark.rc")
+
 add_executable(BlizzardDiskMark
     application.qrc
     DiskMark.cpp 
@@ -5,6 +7,7 @@ add_executable(BlizzardDiskMark
     DiskMarkDlg.cpp 
     # FontSelectionDlg.cpp 
     # SettingsDlg.cpp
+    ${app_icon_resource_windows}
 )
 
 qt_add_qml_module(BlizzardDiskMark

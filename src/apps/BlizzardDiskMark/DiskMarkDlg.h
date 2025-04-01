@@ -35,8 +35,8 @@ class CDiskMarkDlg : public QObject
 	Q_PROPERTY(CDiskMarkDlg::BENCHMODE m_Benchmark READ m_getBenchmark NOTIFY m_BenchmarkChanged)
 
 	Q_PROPERTY(QStringList m_DriveList MEMBER m_DriveList NOTIFY m_DriveListChanged)
-	Q_PROPERTY(int m_IndexTestCount MEMBER m_IndexTestCount)
-	Q_PROPERTY(int m_IndexTestDrive MEMBER m_IndexTestDrive)
+	Q_PROPERTY(int m_IndexTestCount MEMBER m_IndexTestCount NOTIFY m_ValueTestCountChanged)
+	Q_PROPERTY(int m_IndexTestDrive MEMBER m_IndexTestDrive NOTIFY m_ValueTestDriveChanged)
 	Q_PROPERTY(QString m_TestTargetPath MEMBER m_TestTargetPath NOTIFY m_TestTargetPathChanged)
 	Q_PROPERTY(QString m_ValueTestCount MEMBER m_ValueTestCount NOTIFY m_ValueTestCountChanged)
 	Q_PROPERTY(QString m_ValueTestSize MEMBER m_ValueTestSize NOTIFY m_ValueTestSizeChanged)
