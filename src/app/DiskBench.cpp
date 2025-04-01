@@ -883,18 +883,18 @@ uint ExecDiskBenchAll(void* dlg)
 
 	if(Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_0); Interval(dlg);
 			DiskSpd(dlg, TEST_READ_1); Interval(dlg);
 			DiskSpd(dlg, TEST_READ_2); Interval(dlg);
 			DiskSpd(dlg, TEST_READ_3);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_0); Interval(dlg);
 			DiskSpd(dlg, TEST_WRITE_1); Interval(dlg);
@@ -923,16 +923,16 @@ uint ExecDiskBenchAllPeak(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_4); Interval(dlg);
 			DiskSpd(dlg, TEST_READ_5);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_4); Interval(dlg);
 			DiskSpd(dlg, TEST_WRITE_5);
@@ -957,16 +957,16 @@ uint ExecDiskBenchAllReal(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_6); Interval(dlg);
 			DiskSpd(dlg, TEST_READ_7);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_6); Interval(dlg);
 			DiskSpd(dlg, TEST_WRITE_7);
@@ -991,15 +991,15 @@ uint ExecDiskBenchAllDemo(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_8);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_8);
 		}
@@ -1014,15 +1014,15 @@ u_int ExecDiskBench0(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_0);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_0);
 		}
@@ -1044,15 +1044,15 @@ uint ExecDiskBench1(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_1);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_1);
 		}
@@ -1073,15 +1073,15 @@ uint ExecDiskBench2(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_2);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_2);
 		}
@@ -1102,15 +1102,15 @@ uint ExecDiskBench3(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_3);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_3);
 		}
@@ -1131,15 +1131,15 @@ uint ExecDiskBench4(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_4);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_4);
 		}
@@ -1160,15 +1160,15 @@ uint ExecDiskBench5(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_5);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_5);
 		}
@@ -1189,15 +1189,15 @@ uint ExecDiskBench6(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_6);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_6);
 		}
@@ -1218,15 +1218,15 @@ uint ExecDiskBench7(void* dlg)
 
 	if (Init(dlg))
 	{
-		if (benchmark & BENCHMARK_READ)
+		if (benchmark & CDiskMarkDlg::BENCH_READ)
 		{
 			DiskSpd(dlg, TEST_READ_7);
 		}
-		if ((benchmark & BENCHMARK_READ) && (benchmark & BENCHMARK_WRITE))
+		if ((benchmark & CDiskMarkDlg::BENCH_READ) && (benchmark & CDiskMarkDlg::BENCH_WRITE))
 		{
 			Interval(dlg);
 		}
-		if (benchmark & BENCHMARK_WRITE)
+		if (benchmark & CDiskMarkDlg::BENCH_WRITE)
 		{
 			DiskSpd(dlg, TEST_WRITE_7);
 		}
@@ -1277,7 +1277,7 @@ bool Init(void* dlg)
 
 	for (int i = 0; i < 9; i++)
 	{
-		BenchType[i] = ((CDiskMarkDlg*)dlg)->m_BenchType[i];
+		BenchType[i] = *((CDiskMarkDlg*)dlg)->m_BenchType[i];
 		BenchSize[i] = ((CDiskMarkDlg*)dlg)->m_BenchSize[i];
 		BenchQueues[i] = ((CDiskMarkDlg*)dlg)->m_BenchQueues[i];
 		BenchThreads[i] = ((CDiskMarkDlg*)dlg)->m_BenchThreads[i];
@@ -1399,7 +1399,7 @@ bool Init(void* dlg)
 		return false;
 	}
 
-	if (((CDiskMarkDlg*) dlg)->m_TestData == TEST_DATA_ALL0X00)
+	if (((CDiskMarkDlg*) dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
 	{
 		memset(buf, 0, BufSize);
 	}
@@ -1461,7 +1461,10 @@ uint Exit(void* dlg)
 	static QString cstr;
 	cstr = "";
 
-	if(((CDiskMarkDlg*)dlg)->m_TestData == TEST_DATA_ALL0X00)
+	if(((CDiskMarkDlg*)dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
+	{
+		cstr = ALL_0X00_0FILL;
+	}
 	{
 		cstr = ALL_0X00_0FILL;
 	}
@@ -1494,7 +1497,7 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		return;
 	}
 
-	if (((CDiskMarkDlg*) dlg)->m_TestData == TEST_DATA_ALL0X00)
+	if (((CDiskMarkDlg*) dlg)->m_TestData == CDiskMarkDlg::TEST_DATA_ALL0X00)
 	{
 		bufOption.append(" --zero_buffers");
 	}
@@ -1653,15 +1656,13 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		if (score > *maxScore)
 		{
 			*maxScore = score;
-			((CDiskMarkDlg*)dlg)->m_ReadScoreChanged();
-			((CDiskMarkDlg*)dlg)->m_WriteScoreChanged();
+			QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateScore", Qt::QueuedConnection);
 		}
 
 		if (score > 0.0 && (latency < *minLatency || *minLatency < 0))
 		{
 			*minLatency = latency;
-			((CDiskMarkDlg*)dlg)->m_ReadLatencyChanged();
-			((CDiskMarkDlg*)dlg)->m_WriteLatencyChanged();
+			QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateScore", Qt::QueuedConnection);
 		}
 
 		if (!((CDiskMarkDlg*) dlg)->m_DiskBenchStatus)
@@ -1669,8 +1670,5 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 			return;
 		}
 	}
-	((CDiskMarkDlg*)dlg)->m_ReadScoreChanged();
-	((CDiskMarkDlg*)dlg)->m_WriteScoreChanged();
-	((CDiskMarkDlg*)dlg)->m_ReadLatencyChanged();
-	((CDiskMarkDlg*)dlg)->m_WriteLatencyChanged();
+	QMetaObject::invokeMethod(((CDiskMarkDlg*)dlg), "OnUpdateScore", Qt::QueuedConnection);
 }

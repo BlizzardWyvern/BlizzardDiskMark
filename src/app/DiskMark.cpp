@@ -1,5 +1,6 @@
 ﻿#include <QApplication>
 #include <QQmlApplicationEngine>
+#include "DiskMarkDlg.h"
 
 int main(int argc, char *argv[])
 {

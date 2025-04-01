@@ -20,6 +20,7 @@
 #include <QVector>
 #include <QtQml/qqmlregistration.h>
 #include <QQmlListProperty>
+#include <QQmlEngine>
 
 #include "../lib/resource.h"
 
@@ -40,66 +41,100 @@
 class CDiskMarkDlg : public QObject
 {
 	Q_OBJECT
+	Q_PROPERTY(QString m_WindowTitle MEMBER m_WindowTitle NOTIFY m_WindowTitleChanged)
+	Q_PROPERTY(CDiskMarkDlg::Profile m_Profile READ m_getProfile NOTIFY m_ProfileChanged)
+	Q_PROPERTY(CDiskMarkDlg::TEST_DATA_TYPE m_TestData READ m_getTestData NOTIFY m_TestDataChanged)
+	Q_PROPERTY(CDiskMarkDlg::BENCHMODE m_Benchmark READ m_getBenchmark NOTIFY m_BenchmarkChanged)
+
 	Q_PROPERTY(QStringList m_DriveList MEMBER m_DriveList)
 	Q_PROPERTY(int m_IndexTestCount MEMBER m_IndexTestCount)
 	Q_PROPERTY(int m_IndexTestDrive MEMBER m_IndexTestDrive)
+	Q_PROPERTY(long m_TestDriveLetter MEMBER m_TestDriveLetter)
+	Q_PROPERTY(QString m_TestTargetPath MEMBER m_TestTargetPath)
 	Q_PROPERTY(QString m_ValueTestCount MEMBER m_ValueTestCount NOTIFY m_ValueTestCountChanged)
 	Q_PROPERTY(QString m_ValueTestSize MEMBER m_ValueTestSize NOTIFY m_ValueTestSizeChanged)
 	Q_PROPERTY(QString m_ValueTestDrive MEMBER m_ValueTestDrive NOTIFY m_ValueTestDriveChanged)
 	Q_PROPERTY(QString m_ValueTestUnit MEMBER m_ValueTestUnit NOTIFY m_ValueTestUnitChanged)
-	//Q_PROPERTY(QVector<double*> m_ReadScore MEMBER m_ReadScore)
-	Q_PROPERTY(double m_ReadScore0 READ m_ReadScore0 NOTIFY m_ReadScoreChanged)
-	Q_PROPERTY(double m_ReadScore1 READ m_ReadScore1 NOTIFY m_ReadScoreChanged)
-	Q_PROPERTY(double m_ReadScore2 READ m_ReadScore2 NOTIFY m_ReadScoreChanged)
-	Q_PROPERTY(double m_ReadScore3 READ m_ReadScore3 NOTIFY m_ReadScoreChanged)
-	Q_PROPERTY(double m_WriteScore0 READ m_WriteScore0 NOTIFY m_WriteScoreChanged)
-	Q_PROPERTY(double m_WriteScore1 READ m_WriteScore1 NOTIFY m_WriteScoreChanged)
-	Q_PROPERTY(double m_WriteScore2 READ m_WriteScore2 NOTIFY m_WriteScoreChanged)
-	Q_PROPERTY(double m_WriteScore3 READ m_WriteScore3 NOTIFY m_WriteScoreChanged)
-	Q_PROPERTY(double m_ReadLatency0 READ m_ReadLatency0 NOTIFY m_ReadLatencyChanged)
-	Q_PROPERTY(double m_ReadLatency1 READ m_ReadLatency1 NOTIFY m_ReadLatencyChanged)
-	Q_PROPERTY(double m_ReadLatency2 READ m_ReadLatency2 NOTIFY m_ReadLatencyChanged)
-	Q_PROPERTY(double m_ReadLatency3 READ m_ReadLatency3 NOTIFY m_ReadLatencyChanged)
-	Q_PROPERTY(double m_WriteLatency0 READ m_WriteLatency0 NOTIFY m_WriteLatencyChanged)
-	Q_PROPERTY(double m_WriteLatency1 READ m_WriteLatency1 NOTIFY m_WriteLatencyChanged)
-	Q_PROPERTY(double m_WriteLatency2 READ m_WriteLatency2 NOTIFY m_WriteLatencyChanged)
-	Q_PROPERTY(double m_WriteLatency3 READ m_WriteLatency3 NOTIFY m_WriteLatencyChanged)
+
+	Q_PROPERTY(QList<double> m_readScoreList READ m_readScoreList NOTIFY m_scoreChanged)
+	Q_PROPERTY(QList<double> m_writeScoreList READ m_writeScoreList NOTIFY m_scoreChanged)
+	Q_PROPERTY(QList<double> m_readLatencyList READ m_readLatencyList NOTIFY m_scoreChanged)
+	Q_PROPERTY(QList<double> m_writeLatencyList READ m_writeLatencyList NOTIFY m_scoreChanged)
+	Q_PROPERTY(QList<int> m_blockSizeList READ m_blockSizeList NOTIFY m_scoreChanged)
+
+	Q_PROPERTY(QStringList m_buttonTextList MEMBER m_buttonTextList NOTIFY m_buttonsChanged)
+	Q_PROPERTY(QStringList m_buttonToolTipList MEMBER m_buttonToolTipList NOTIFY m_buttonsChanged)
+	Q_PROPERTY(bool m_DiskBenchStatus MEMBER m_DiskBenchStatus NOTIFY m_DiskBenchStatusChanged)
 	QML_ELEMENT
 
 public:
 	CDiskMarkDlg(QObject* parent = nullptr);
 	~CDiskMarkDlg();
 
-	double m_ReadScore0() const { return *m_ReadScore.at(0); }
-	double m_ReadScore1() const { return *m_ReadScore.at(1); }
-	double m_ReadScore2() const { return *m_ReadScore.at(2); }
-	double m_ReadScore3() const { return *m_ReadScore.at(3); }
-	double m_WriteScore0() const { return *m_WriteScore.at(0); }
-	double m_WriteScore1() const { return *m_WriteScore.at(1); }
-	double m_WriteScore2() const { return *m_WriteScore.at(2); }
-	double m_WriteScore3() const { return *m_WriteScore.at(3); }
-	double m_ReadLatency0() const { return *m_ReadLatency.at(0); }
-	double m_ReadLatency1() const { return *m_ReadLatency.at(1); }
-	double m_ReadLatency2() const { return *m_ReadLatency.at(2); }
-	double m_ReadLatency3() const { return *m_ReadLatency.at(3); }
-	double m_WriteLatency0() const { return *m_WriteLatency.at(0); }
-	double m_WriteLatency1() const { return *m_WriteLatency.at(1); }
-	double m_WriteLatency2() const { return *m_WriteLatency.at(2); }
-	double m_WriteLatency3() const { return *m_WriteLatency.at(3); }
+	enum Profile
+	{
+		PROFILE_DEFAULT = 0,
+		PROFILE_PEAK,
+		PROFILE_REAL,
+		PROFILE_DEMO,
+		PROFILE_DEFAULT_MIX,
+		PROFILE_PEAK_MIX,
+		PROFILE_REAL_MIX,
+	};
+	Q_ENUM(Profile)
+	enum TEST_DATA_TYPE
+	{
+		TEST_DATA_RANDOM = 0,
+		TEST_DATA_ALL0X00,
+		TEST_DATA_ALL0XFF,
+	};
+	Q_ENUM(TEST_DATA_TYPE)
+	enum SCORE_UNIT
+	{
+		SCORE_MBS = 0,
+		SCORE_GBS,
+		SCORE_IOPS,
+		SCORE_US,
+	};
+	Q_ENUM(SCORE_UNIT)
+	enum BENCHMODE
+	{
+		BENCH_READ = 1,
+		BENCH_WRITE,
+		BENCH_READ_WRITE,
+	};
+	Q_ENUM(BENCHMODE)
+
+	QString m_WindowTitle;
+	QString m_TestTargetPath;
+
+	Profile m_getProfile() const;
+	TEST_DATA_TYPE m_getTestData() const;
+	BENCHMODE m_getBenchmark() const;
+
+	QList<double> m_readScoreList() const;
+	QList<double> m_writeScoreList() const;
+	QList<double> m_readLatencyList() const;
+	QList<double> m_writeLatencyList() const;
+	QList<int> m_blockSizeList() const;
 
 	void OnCbnSelchangeComboDrive();
 
 signals:
+	void m_WindowTitleChanged();
+	void m_ProfileChanged();
+	void m_TestDataChanged();
+	void m_BenchmarkChanged();
+
 	void m_ValueTestCountChanged();
 	void m_ValueTestSizeChanged();
 	void m_ValueTestDriveChanged();
 	void m_ValueTestUnitChanged();
 
-	void m_ReadScoreChanged();
-	void m_WriteScoreChanged();
-	void m_ReadLatencyChanged();
-	void m_WriteLatencyChanged();
-
+	void m_buttonsChanged();
+	void m_scoreChanged();
+	
+	void m_DiskBenchStatusChanged();
 private:
 	QString m_ValueTestCount;
 	QString m_ValueTestUnit;
@@ -107,6 +142,10 @@ private:
 	int m_IndexTestUnit;
 
 	QStringList m_DriveList;
+	QStringList m_buttonTextList;
+	QStringList m_buttonToolTipList;
+	QStringList m_readScoreToolTipList;
+	QStringList m_writeScoreToolTipList;
 
 public:
 	int m_IndexTestCount;
@@ -119,15 +158,10 @@ public:
 	QVector<double*> m_ReadLatency;
 	QVector<double*> m_WriteLatency;
 
-	enum { IDD = IDD_DISKMARK_DIALOG };
-
-	enum SCORE_UNIT
-	{
-		SCORE_MBS = 0,
-		SCORE_GBS,
-		SCORE_IOPS,
-		SCORE_US,
-	};
+	QVector<int*> m_BenchType;
+	int m_BenchSize[9];
+	int m_BenchQueues[9];
+	int m_BenchThreads[9];
 
 	enum BENCH_TYPE
 	{
@@ -145,7 +179,7 @@ public:
 	double m_MixLatency[9];
 #endif
 
-	void SetMeter(QLabel* control, double score, double latency, int blockSize, int unit);
+	void SetMeter(int index, double score, double latency, int blockSize, int unit);
 	void ChangeLang();
 	// void resizeEvent(QResizeEvent* event) override;
 	void ChangeButtonStatus(bool status);
@@ -153,15 +187,11 @@ public:
 	void UpdateThemeInfo();
 
 	QString m_TestDriveInfo;
-	QString m_TestTargetPath;
 	long m_TestDriveLetter;
 
 	int m_MaxIndexTestDrive;
 
-	int m_BenchType[9];
-	int m_BenchSize[9];
-	int m_BenchQueues[9];
-	int m_BenchThreads[9];
+
 	int m_IntervalTime;
 	int m_MeasureTime;
 
@@ -204,7 +234,27 @@ public:
 	void SetWindowTitle(QString message);
 
 public slots:
-	//virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+	void OnCopy();
+	void OnHelp();
+	void OnBlizzardWorld();
+	void OnModeDefault();
+	void OnModeAll0x00();
+	void OnSettingDefault();
+	void OnSettingNVMe8();
+	// void OnSettingNVMe9();
+
+	void OnProfileDefault();
+	void OnProfilePeak();
+	void OnProfileReal();
+	void OnProfileDemo();
+	void OnProfileDefaultMix();
+	void OnProfilePeakMix();
+	void OnProfileRealMix();
+
+	void OnSaveText();
+	void OnSaveImage();
+	void OnSettingsQueuesThreads();
+	void UpdateUnitLabel();
 
 	void OnAll();
 	void OnTest0();
@@ -224,11 +274,16 @@ public slots:
 	void OnExit();
 	void OnAbout();
 	void OnSettings();
+	void OnFontSetting();
+
+	void OnBenchmarkReadWrite();
+	void OnBenchmarkReadOnly();
+	void OnBenchmarkWriteOnly();
 protected:
 	void SelectDrive();
 	QString GetResultString(int type, double score, double latency, int size, int queues, int threads);
-	QString GetButtonText(int type, int size, int queues, int threads, int unit);
-	QString GetButtonToolTipText(int type, int size, int queues, int threads, int unit);
+	QString GetButtonText(int type, int size, int queues, int threads, int unit) const;
+	QString GetButtonToolTipText(int type, int size, int queues, int threads, int unit) const;
 	
 	QString m_TitleTestDrive;
 	QString m_TitleTestCount;
@@ -238,7 +293,6 @@ protected:
 protected:
 	QIcon m_hIcon;
 	QIcon m_hIconMini;
-	//HACCEL m_hAccelerator;
 
 	int m_SizeX;
 	int m_SizeY;
@@ -255,12 +309,8 @@ protected:
 	void CheckRadioPresetMode();
 	void UpdateQueuesThreads();
 
-	void EnableMenus();
-	void DisableMenus();
-
 	void SaveText(QString fileName);
 
-	//void SetLayeredWindow(HWND hWnd, BYTE alpha);
 	void UpdateComboTooltip();
 
 	virtual bool CheckThemeEdition(QString name);
@@ -306,59 +356,26 @@ protected:
 	QLabel* m_DemoSetting;
 
 	// void showEvent(QShowEvent* event) override;
-	virtual void OnOK();
 	virtual void OnCancel();
-	//virtual bool OnCommand(WPARAM wParam, LPARAM lParam);
-	//virtual bool PreTranslateMessage(MSG* pMsg);
-
 	// void paintEvent(QPaintEvent* event) override;
-	//afx_msg QCursor OnQueryDragIcon();
-	
 	// void closeEvent(QCloseEvent* event) override;
-	//afx_msg void OnFontSetting();
-
 	//LRESULT OnQueryEndSession(WPARAM wParam, LPARAM lParam);
 
 public:
-	//afx_msg void OnCopy();
-	//afx_msg void OnHelp();
-	//afx_msg void OnCrystalDewWorld();
-	void OnModeDefault();
-	void OnModeAll0x00();
-	//afx_msg void OnSettingDefault();
-	//afx_msg void OnSettingNVMe8();
-//	afx_msg void OnSettingNVMe9();
-
-	//afx_msg void OnProfileDefault();
-	//afx_msg void OnProfilePeak();
-	//afx_msg void OnProfileReal();
-	//afx_msg void OnProfileDemo();
-	//afx_msg void OnSaveText();
-	//afx_msg void OnSaveImage();
-	//afx_msg void OnSettingsQueuesThreads();
-	void UpdateUnitLabel();
-	//afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-
 	void ProfileDefault();
 	void ProfilePeak();
 	void ProfileReal();
 	void ProfileDemo();
-
-	void SettingsQueuesThreads(int type);
-
-#ifdef MIX_MODE
-	//afx_msg void OnProfileDefaultMix();
-	//afx_msg void OnProfilePeakMix();
-	//afx_msg void OnProfileRealMix();
 	void ProfileDefaultMix();
 	void ProfilePeakMix();
 	void ProfileRealMix();
-	//afx_msg void OnCbnSelchangeComboMix();
-#endif
 
-	//afx_msg void OnBenchmarkReadWrite();
-	//afx_msg void OnBenchmarkReadOnly();
-	//afx_msg void OnBenchmarkWriteOnly();
+	void InitScore();
+
+	void SettingsQueuesThreads(int type);
+
+	//afx_msg void OnCbnSelchangeComboMix();
+
 	void BenchmarkReadWrite();
 	void BenchmarkReadOnly();
 	void BenchmarkWriteOnly();
