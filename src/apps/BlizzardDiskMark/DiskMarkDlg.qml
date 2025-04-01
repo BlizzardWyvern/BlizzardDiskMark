@@ -444,15 +444,15 @@ ApplicationWindow {
         }
         Menu {
             title: qsTr("Help")
-            // Action {
-            //     text: qsTr("&Help") + " [Web]" + "\tF1"
-            //     onTriggered: diskMarkDlg.OnHelp()
-            // }
-            // Action {
-            //     text: qsTr("Blizzard World [Web]")
-            //     onTriggered: diskMarkDlg.OnBlizzardWorld()
-            // }
-            // MenuSeparator {}
+            Action {
+                text: qsTr("&Help") + " [Web]" + "\tF1"
+                onTriggered: Qt.openUrlExternally("https://github.com/BlizzardWyvern/BlizzardDiskMark")
+            }
+            Action {
+                text: qsTr("Blizzard [Web]")
+                onTriggered: Qt.openUrlExternally("https://github.com/BlizzardWyvern")
+            }
+            MenuSeparator {}
             Action {
                 text: qsTr("About")
                 onTriggered: {
@@ -770,7 +770,7 @@ ApplicationWindow {
 
         TextField {
             id: m_Comment
-            text: qsTr("Result")
+            text: ""
             readOnly: true
             font.pixelSize: height * 16 / 24
             font.weight: Font.Bold
@@ -804,7 +804,6 @@ ApplicationWindow {
     Connections {
         target: diskMarkDlg
         function onError (msg){
-            console.log("Error:", msg)
             errorDialog.close()
             errorDialog.text = msg
             errorDialog.open()

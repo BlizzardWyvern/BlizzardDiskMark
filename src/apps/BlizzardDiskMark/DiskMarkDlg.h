@@ -209,8 +209,6 @@ public:
 
 public slots:
 	void OnCopy();
-	void OnHelp();
-	void OnBlizzardWorld();
 	void OnModeDefault();
 	void OnModeAll0x00();
 	void OnSettingDefault();

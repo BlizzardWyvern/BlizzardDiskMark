@@ -4,8 +4,7 @@ add_executable(BlizzardDiskMark
     application.qrc
     DiskMark.cpp 
     DiskBench.cpp 
-    DiskMarkDlg.cpp 
-    # FontSelectionDlg.cpp 
+    DiskMarkDlg.cpp
     # SettingsDlg.cpp
     ${app_icon_resource_windows}
 )

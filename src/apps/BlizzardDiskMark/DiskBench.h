@@ -9,9 +9,6 @@
 
 #include "DiskMarkDlg.h"
 
-#define TIMER_ID 5963
-
-// Common Message
 #define ALL_0X00_0FILL "<0Fill>"
 
 enum AFFINITY_MODE

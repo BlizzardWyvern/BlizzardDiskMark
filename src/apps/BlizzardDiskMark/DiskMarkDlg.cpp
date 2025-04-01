@@ -262,11 +262,13 @@ void CDiskMarkDlg::OnSequentialPeak()
 		m_ReadIops[4] = 0.0;
 		m_WriteIops[4] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench4(this); });
 		m_WinThread->start();
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -286,11 +288,13 @@ void CDiskMarkDlg::OnRandomPeak()
 		m_ReadIops[5] = 0.0;
 		m_WriteIops[5] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench5(this); });
 		m_WinThread->start();
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -310,11 +314,13 @@ void CDiskMarkDlg::OnSequentialReal()
 		m_ReadIops[6] = 0.0;
 		m_WriteIops[6] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench6(this); });
 		m_WinThread->start();
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -334,11 +340,13 @@ void CDiskMarkDlg::OnRandomReal()
 		m_ReadIops[7] = 0.0;
 		m_WriteIops[7] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench7(this); });
 		m_WinThread->start();
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -370,11 +378,13 @@ void CDiskMarkDlg::OnTest0()
 		m_ReadIops[0] = 0.0;
 		m_WriteIops[0] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench0(this); });
 		m_WinThread->start();
 		if(m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -405,11 +415,13 @@ void CDiskMarkDlg::OnTest1()
 		m_ReadIops[1] = 0.0;
 		m_WriteIops[1] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench1(this); });
 		m_WinThread->start();
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -440,11 +452,13 @@ void CDiskMarkDlg::OnTest2()
 		m_ReadIops[2] = 0.0;
 		m_WriteIops[2] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench2(this); });
 		m_WinThread->start();
 		if(m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -475,11 +489,13 @@ void CDiskMarkDlg::OnTest3()
 		m_ReadIops[3] = 0.0;
 		m_WriteIops[3] = 0.0;
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		m_WinThread = QThread::create([this]() { ExecDiskBench3(this); });
 		m_WinThread->start();
 		if(m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -494,6 +510,7 @@ void CDiskMarkDlg::OnAll()
 	if(m_WinThread == NULL)
 	{
 		m_DiskBenchStatus = true;
+		m_DiskBenchStatusChanged();
 		if (m_Profile == PROFILE_DEMO)
 		{
 			m_WinThread = QThread::create([this]() { ExecDiskBenchAllDemo(this); });
@@ -518,6 +535,7 @@ void CDiskMarkDlg::OnAll()
 		if(m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
+			m_DiskBenchStatusChanged();
 		}
 		;
 	}
@@ -534,6 +552,7 @@ void CDiskMarkDlg::Stop()
 
 		if (m_WinThread != NULL)
 		{
+			// TODO: Remove test file bevor ending thread
 			m_WinThread->terminate();
 			m_WinThread = NULL;
 		}
@@ -1025,13 +1044,6 @@ void CDiskMarkDlg::CheckRadioPresetMode()
 		// 	action->setChecked(false);
 		// }
 	}
-}
-
-void CDiskMarkDlg::OnHelp()
-{
-}
-void CDiskMarkDlg::OnBlizzardWorld()
-{
 }
 
 void CDiskMarkDlg::OnSettingDefault()
