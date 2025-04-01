@@ -1,3 +1,7 @@
+/*  
+ * Copyright (c) 2025  BlizzardWyvern, All rights reserved.
+ */
+
 import QtQuick.Layouts
 import QtQuick.Controls
 

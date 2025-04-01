@@ -28,6 +28,7 @@ qt_add_qml_module(BlizzardDiskMark
 target_link_libraries(BlizzardDiskMark PRIVATE
     Qt6::Widgets
     Qt6::Quick
+    Qt6::WebView
     BlizzardIglooplugin
 )
 target_compile_definitions(BlizzardDiskMark PRIVATE

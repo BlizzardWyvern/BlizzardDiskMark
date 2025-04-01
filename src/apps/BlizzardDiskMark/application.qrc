@@ -4,4 +4,8 @@
         <file>res/DiskMark16.ico</file>
         <file>res/DiskMark128.png</file>
     </qresource>
+    <qresource prefix="/licenses">
+        <file>res/LGPL3License.html</file>
+        <file>res/MITLicense.txt</file>
+    </qresource>
 </RCC>

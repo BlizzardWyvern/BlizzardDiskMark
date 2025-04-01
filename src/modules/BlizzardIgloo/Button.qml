@@ -1,5 +1,13 @@
-// Copyright (C) 2017 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+/*  
+ * Copyright (c) 2025  BlizzardWyvern, Licensed under the LGPL-3.0-only license.
+ *   
+ * This file incorporates work covered by the following copyright and  
+ * license notice:
+ *
+ *     Copyright (C) 2017 The Qt Company Ltd.
+ *
+ *     LGPL-3.0-only
+ */
 
 import QtQuick
 import QtQuick.Layouts
