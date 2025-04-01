@@ -6,7 +6,6 @@
 /*---------------------------------------------------------------------------*/
 
 #include "../lib/stdafx.h"
-#include "DiskMark.h"
 #include "DiskMarkDlg.h"
 #include "SettingsDlg.h"
 
@@ -69,10 +68,10 @@ CSettingsDlg::CSettingsDlg(QWidget* parent)
 	// m_DefaultTheme = p->GetDefaultTheme();
 	// m_Ini = p->GetIniPath();
 
-	m_Profile = static_cast<CDiskMarkDlg*>(parent)->m_Profile;
-	m_MeasureTime = static_cast<CDiskMarkDlg*>(parent)->m_MeasureTime;
-	m_IntervalTime = static_cast<CDiskMarkDlg*>(parent)->m_IntervalTime;
-	m_TestData = static_cast<CDiskMarkDlg*>(parent)->m_TestData;
+	// m_Profile = static_cast<CDiskMarkDlg*>(parent)->m_Profile;
+	// m_MeasureTime = static_cast<CDiskMarkDlg*>(parent)->m_MeasureTime;
+	// m_IntervalTime = static_cast<CDiskMarkDlg*>(parent)->m_IntervalTime;
+	// m_TestData = static_cast<CDiskMarkDlg*>(parent)->m_TestData;
 }
 
 CSettingsDlg::~CSettingsDlg()

@@ -17,6 +17,7 @@
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QResizeEvent>
+#include <QtQml/qqmlregistration.h>
 
 #include "../lib/resource.h"
 
@@ -34,11 +35,13 @@
 //#include "UtilityFx.h"
 //#include "OsInfoFx.h"
 
-class CDiskMarkDlg : public QMainWindow
+class CDiskMarkDlg : public QObject
 {
 	Q_OBJECT
+	QML_ELEMENT
+
 public:
-	CDiskMarkDlg(QWidget* pParent = nullptr);
+	CDiskMarkDlg(QObject* pParent = nullptr);
 	~CDiskMarkDlg();
 
 	enum { IDD = IDD_DISKMARK_DIALOG };
@@ -75,7 +78,7 @@ public:
 
 	void SetMeter(QLabel* control, double score, double latency, int blockSize, int unit);
 	void ChangeLang();
-	void resizeEvent(QResizeEvent* event) override;
+	// void resizeEvent(QResizeEvent* event) override;
 	void ChangeButtonStatus(bool status);
 	void SetScoreToolTip(QLabel* cx, double score, double latency, int blockSize);
 	void UpdateThemeInfo();
@@ -247,16 +250,16 @@ protected:
 	QLabel* m_ReadUnit;
 	QLabel* m_DemoSetting;
 
-	void showEvent(QShowEvent* event) override;
+	// void showEvent(QShowEvent* event) override;
 	virtual void OnOK();
 	virtual void OnCancel();
 	//virtual bool OnCommand(WPARAM wParam, LPARAM lParam);
 	//virtual bool PreTranslateMessage(MSG* pMsg);
 
-	void paintEvent(QPaintEvent* event) override;
+	// void paintEvent(QPaintEvent* event) override;
 	//afx_msg QCursor OnQueryDragIcon();
 	
-	void closeEvent(QCloseEvent* event) override;
+	// void closeEvent(QCloseEvent* event) override;
 	//afx_msg void OnFontSetting();
 
 	//LRESULT OnQueryEndSession(WPARAM wParam, LPARAM lParam);

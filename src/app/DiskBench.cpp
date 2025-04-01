@@ -6,10 +6,9 @@
 /*---------------------------------------------------------------------------*/
 
 //#include "stdafx.h"
-#include "DiskMark.h"
 #include "DiskMarkDlg.h"
-#include "DiskMark.h"
 #include "DiskBench.h"
+
 #include <unistd.h>
 #include <mach-o/dyld.h>
 #include <fcntl.h>
@@ -853,10 +852,10 @@ int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 
 void ShowErrorMessage(QString message)
 {
-	QString errorMessage = QString("Error: %1\n%2").arg(message).arg(strerror(errno));
-	QMetaObject::invokeMethod(QApplication::instance(), [errorMessage]() {
-		QMessageBox::critical(nullptr, QObject::tr("Error"), errorMessage);
-	}, Qt::QueuedConnection);
+	// QString errorMessage = QString("Error: %1\n%2").arg(message).arg(strerror(errno));
+	// QMetaObject::invokeMethod(QApplication::instance(), [errorMessage]() {
+	// 	QMessageBox::critical(nullptr, QObject::tr("Error"), errorMessage);
+	// }, Qt::QueuedConnection);
 }
 
 void Interval(void* dlg)

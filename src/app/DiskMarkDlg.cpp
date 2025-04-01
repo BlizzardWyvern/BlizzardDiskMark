@@ -5,11 +5,9 @@
 //      License : MIT License
 /*---------------------------------------------------------------------------*/
 
-#include "DiskMark.h"
 #include "DiskMarkDlg.h"
 #include "DiskBench.h"
 #include "../lib/stdafx.h"
-//#include "../Priscilla/DialogFx.h"
 
 #include <math.h>
 #include <QApplication>
@@ -41,245 +39,241 @@
 #define MAX_METER_LENGTH	192
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-CDiskMarkDlg::CDiskMarkDlg(QWidget* pParent /*=NULL*/)
-	: QMainWindow(pParent)
+CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
+	: QObject(parent)
 {
-	QMenuBar *menuBar = this->menuBar();
-	QMenu *menu = nullptr;
+// 	QMenuBar *menuBar = this->menuBar();
+// 	QMenu *menu = nullptr;
 
-	menu = new QMenu(tr("File"), this);
-	menuBar->addMenu(menu);
-	menu = new QMenu(tr("Settings"), this);
-	menuBar->addMenu(menu);
-	menu = new QMenu(tr("Profile"), this);
-	menuBar->addMenu(menu);
-	menu = new QMenu(tr("Theme"), this);
-	menuBar->addMenu(menu);
-	menu = new QMenu(tr("Help"), this);
-	menuBar->addMenu(menu);
-	menu = new QMenu(tr("Language"), this);
-	menuBar->addMenu(menu);
+// 	menu = new QMenu(tr("File"), this);
+// 	menuBar->addMenu(menu);
+// 	menu = new QMenu(tr("Settings"), this);
+// 	menuBar->addMenu(menu);
+// 	menu = new QMenu(tr("Profile"), this);
+// 	menuBar->addMenu(menu);
+// 	menu = new QMenu(tr("Theme"), this);
+// 	menuBar->addMenu(menu);
+// 	menu = new QMenu(tr("Help"), this);
+// 	menuBar->addMenu(menu);
+// 	menu = new QMenu(tr("Language"), this);
+// 	menuBar->addMenu(menu);
 
-	menuBar->setNativeMenuBar(false);
+// 	menuBar->setNativeMenuBar(false);
 
-	QAction *action = nullptr;
+// 	QAction *action = nullptr;
 
-	action = new QAction(tr("Exit") + "\tAlt + F4", this);
-	action->setObjectName("actionExit");
-	menuBar->actions().at(0)->menu()->addAction(action);
-	action = new QAction(tr("Save Text") + "\tCtrl + T", this);
-	action->setObjectName("actionSaveText");
-	menuBar->actions().at(0)->menu()->addAction(action);
-	action = new QAction(tr("Save Image") + "\tCtrl + S", this);
-	action->setObjectName("actionSaveImage");
-	menuBar->actions().at(0)->menu()->addAction(action);
-	action = new QAction(tr("Copy") + "\tCtrl + Shift + C", this);
-	action->setObjectName("actionCopy");
-	menuBar->actions().at(0)->menu()->addAction(action);
-	menu = menuBar->actions().at(1)->menu();
-	action = new QAction(tr("Test Data"), this);
-	menu->addAction(action);
-	action = new QAction(tr("Default Random"), this);
-	action->setObjectName("actionModeDefault");
-	menu->addAction(action);
-	action = new QAction(tr("All Zero"), this);
-	action->setObjectName("actionModeAllZero");
-	menu->addAction(action);
-	menu = menuBar->actions().at(2)->menu();
-	action = new QAction(tr("Profile Default"), this);
-	menu->addAction(action);
-	menu = menuBar->actions().at(1)->menu();
-	action = new QAction(tr("Settings") + "\tCtrl + Q", this);
-	menu->addAction(action);
-	menu = menuBar->actions().at(2)->menu();
-	action = new QAction(tr("Profile Default"), this);
-	menu->addAction(action);
-	action = new QAction(tr("Profile Peak"), this);
-	menu->addAction(action);
-	action = new QAction(tr("Profile Real"), this);
-	menu->addAction(action);
-	action = new QAction(tr("Profile Demo"), this);
-	menu->addAction(action);
+// 	action = new QAction(tr("Exit") + "\tAlt + F4", this);
+// 	action->setObjectName("actionExit");
+// 	menuBar->actions().at(0)->menu()->addAction(action);
+// 	action = new QAction(tr("Save Text") + "\tCtrl + T", this);
+// 	action->setObjectName("actionSaveText");
+// 	menuBar->actions().at(0)->menu()->addAction(action);
+// 	action = new QAction(tr("Save Image") + "\tCtrl + S", this);
+// 	action->setObjectName("actionSaveImage");
+// 	menuBar->actions().at(0)->menu()->addAction(action);
+// 	action = new QAction(tr("Copy") + "\tCtrl + Shift + C", this);
+// 	action->setObjectName("actionCopy");
+// 	menuBar->actions().at(0)->menu()->addAction(action);
+// 	menu = menuBar->actions().at(1)->menu();
+// 	action = new QAction(tr("Test Data"), this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Default Random"), this);
+// 	action->setObjectName("actionModeDefault");
+// 	menu->addAction(action);
+// 	action = new QAction(tr("All Zero"), this);
+// 	action->setObjectName("actionModeAllZero");
+// 	menu->addAction(action);
+// 	menu = menuBar->actions().at(2)->menu();
+// 	action = new QAction(tr("Profile Default"), this);
+// 	menu->addAction(action);
+// 	menu = menuBar->actions().at(1)->menu();
+// 	action = new QAction(tr("Settings") + "\tCtrl + Q", this);
+// 	menu->addAction(action);
+// 	menu = menuBar->actions().at(2)->menu();
+// 	action = new QAction(tr("Profile Default"), this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Profile Peak"), this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Profile Real"), this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Profile Demo"), this);
+// 	menu->addAction(action);
 
-	#ifdef MIX_MODE
-	action = new QAction(tr("Profile Default") + " [+Mix]", this);
-	menu->addAction(action);
-	action = new QAction(tr("Profile Peak") + " [+Mix]", this);
-	menu->addAction(action);
-	action = new QAction(tr("Profile Real") + " [+Mix]", this);
-	menu->addAction(action);
-	#endif
+// 	#ifdef MIX_MODE
+// 	action = new QAction(tr("Profile Default") + " [+Mix]", this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Profile Peak") + " [+Mix]", this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Profile Real") + " [+Mix]", this);
+// 	menu->addAction(action);
+// 	#endif
 
-	menu = menuBar->actions().at(4)->menu();
-	action = new QAction(tr("Help") + " [Web]" + "\tF1", this);
-	menu->addAction(action);
-	action = new QAction(tr("About"), this);
-	menu->addAction(action);
-	menu = menuBar->actions().at(3)->menu();
-	action = new QAction(tr("Zoom"), this);
-	menu->addAction(action);
-	action = new QAction(tr("Auto"), this);
-	menu->addAction(action);
-	action = new QAction(tr("Font Setting") + "\tCtrl + F", this);
-	menu->addAction(action);
+// 	menu = menuBar->actions().at(4)->menu();
+// 	action = new QAction(tr("Help") + " [Web]" + "\tF1", this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("About"), this);
+// 	menu->addAction(action);
+// 	menu = menuBar->actions().at(3)->menu();
+// 	action = new QAction(tr("Zoom"), this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Auto"), this);
+// 	menu->addAction(action);
+// 	action = new QAction(tr("Font Setting") + "\tCtrl + F", this);
+// 	menu->addAction(action);
 
-	connect(menuBar->actions().at(0)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnExit()));
-	connect(menuBar->actions().at(0)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnSaveText()));
-	connect(menuBar->actions().at(0)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnSaveImage()));
-	connect(menuBar->actions().at(0)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnCopy()));
-	connect(menuBar->actions().at(1)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnTestData()));
-	connect(menuBar->actions().at(1)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnModeDefault()));
-	connect(menuBar->actions().at(1)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnModeAll0x00()));
-	connect(menuBar->actions().at(1)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnSettings()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnSettingsQueuesThreads()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnProfileDefault()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnProfilePeak()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnProfileReal()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(4), SIGNAL(triggered()), this, SLOT(OnProfileDemo()));
-	#ifdef MIX_MODE
-	connect(menuBar->actions().at(2)->menu()->actions().at(5), SIGNAL(triggered()), this, SLOT(OnProfileDefaultMix()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(6), SIGNAL(triggered()), this, SLOT(OnProfilePeakMix()));
-	connect(menuBar->actions().at(2)->menu()->actions().at(7), SIGNAL(triggered()), this, SLOT(OnProfileRealMix()));
-	#endif
-	connect(menuBar->actions().at(4)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnHelp()));
-	connect(menuBar->actions().at(4)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnAbout()));
+// 	connect(menuBar->actions().at(0)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnExit()));
+// 	connect(menuBar->actions().at(0)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnSaveText()));
+// 	connect(menuBar->actions().at(0)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnSaveImage()));
+// 	connect(menuBar->actions().at(0)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnCopy()));
+// 	connect(menuBar->actions().at(1)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnTestData()));
+// 	connect(menuBar->actions().at(1)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnModeDefault()));
+// 	connect(menuBar->actions().at(1)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnModeAll0x00()));
+// 	connect(menuBar->actions().at(1)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnSettings()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnSettingsQueuesThreads()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnProfileDefault()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(2), SIGNAL(triggered()), this, SLOT(OnProfilePeak()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(3), SIGNAL(triggered()), this, SLOT(OnProfileReal()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(4), SIGNAL(triggered()), this, SLOT(OnProfileDemo()));
+// 	#ifdef MIX_MODE
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(5), SIGNAL(triggered()), this, SLOT(OnProfileDefaultMix()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(6), SIGNAL(triggered()), this, SLOT(OnProfilePeakMix()));
+// 	connect(menuBar->actions().at(2)->menu()->actions().at(7), SIGNAL(triggered()), this, SLOT(OnProfileRealMix()));
+// 	#endif
+// 	connect(menuBar->actions().at(4)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnHelp()));
+// 	connect(menuBar->actions().at(4)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnAbout()));
 
-	m_hIcon = QIcon(":/resources/mainframe.ico");
-	m_hIconMini = QIcon(":/resources/tray_icon.ico");
+// 	m_hIcon = QIcon(":/resources/mainframe.ico");
+// 	m_hIconMini = QIcon(":/resources/tray_icon.ico");
 
-	m_ButtonAll = new QPushButton(this);
-	m_ButtonTest0 = new QPushButton(this);
-	m_ButtonTest1 = new QPushButton(this);
-	m_ButtonTest2 = new QPushButton(this);
-	m_ButtonTest3 = new QPushButton(this);
+// 	m_ButtonAll = new QPushButton(this);
+// 	m_ButtonTest0 = new QPushButton(this);
+// 	m_ButtonTest1 = new QPushButton(this);
+// 	m_ButtonTest2 = new QPushButton(this);
+// 	m_ButtonTest3 = new QPushButton(this);
 
-	connect(m_ButtonAll, SIGNAL(clicked()), this, SLOT(OnAll()));
-	connect(m_ButtonTest0, SIGNAL(clicked()), this, SLOT(OnTest0()));
-	connect(m_ButtonTest1, SIGNAL(clicked()), this, SLOT(OnTest1()));
-	connect(m_ButtonTest2, SIGNAL(clicked()), this, SLOT(OnTest2()));
-	connect(m_ButtonTest3, SIGNAL(clicked()), this, SLOT(OnTest3()));
+// 	connect(m_ButtonAll, SIGNAL(clicked()), this, SLOT(OnAll()));
+// 	connect(m_ButtonTest0, SIGNAL(clicked()), this, SLOT(OnTest0()));
+// 	connect(m_ButtonTest1, SIGNAL(clicked()), this, SLOT(OnTest1()));
+// 	connect(m_ButtonTest2, SIGNAL(clicked()), this, SLOT(OnTest2()));
+// 	connect(m_ButtonTest3, SIGNAL(clicked()), this, SLOT(OnTest3()));
 
-	m_TestRead0 = new QLabel(this);
-	m_TestRead1 = new QLabel(this);
-	m_TestRead2 = new QLabel(this);
-	m_TestRead3 = new QLabel(this);
+// 	m_TestRead0 = new QLabel(this);
+// 	m_TestRead1 = new QLabel(this);
+// 	m_TestRead2 = new QLabel(this);
+// 	m_TestRead3 = new QLabel(this);
 
-	m_TestWrite0 = new QLabel(this);
-	m_TestWrite1 = new QLabel(this);
-	m_TestWrite2 = new QLabel(this);
-	m_TestWrite3 = new QLabel(this);
+// 	m_TestWrite0 = new QLabel(this);
+// 	m_TestWrite1 = new QLabel(this);
+// 	m_TestWrite2 = new QLabel(this);
+// 	m_TestWrite3 = new QLabel(this);
 
-	m_Comment = new QLineEdit(this);
+// 	m_Comment = new QLineEdit(this);
 
-	m_ComboCount = new QComboBox(this);
-	m_ComboSize = new QComboBox(this);
-	m_ComboDrive = new QComboBox(this);
-	m_ComboUnit = new QComboBox(this);
+// 	m_ComboCount = new QComboBox(this);
+// 	m_ComboSize = new QComboBox(this);
+// 	m_ComboDrive = new QComboBox(this);
+// 	m_ComboUnit = new QComboBox(this);
 
-	connect(m_ComboCount, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboCount(int)));
-	connect(m_ComboSize, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboSize(int)));
-	connect(m_ComboDrive, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboDrive(int)));
-	connect(m_ComboUnit, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboUnit(int)));
-#ifdef MIX_MODE
-	m_ComboMix = new QComboBox(this);
-	connect(m_ComboMix, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboMix(int)));
-#endif
+// 	connect(m_ComboCount, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboCount(int)));
+// 	connect(m_ComboSize, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboSize(int)));
+// 	connect(m_ComboDrive, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboDrive(int)));
+// 	connect(m_ComboUnit, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboUnit(int)));
+// #ifdef MIX_MODE
+// 	m_ComboMix = new QComboBox(this);
+// 	connect(m_ComboMix, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboMix(int)));
+// #endif
 
-	m_WriteUnit = new QLabel(this);
-	m_ReadUnit = new QLabel(this);
-	m_DemoSetting = new QLabel(this);
+// 	m_WriteUnit = new QLabel(this);
+// 	m_ReadUnit = new QLabel(this);
+// 	m_DemoSetting = new QLabel(this);
 
-	m_AboutDlg = nullptr;
-	m_SettingsDlg = nullptr;
+// 	m_AboutDlg = nullptr;
+// 	m_SettingsDlg = nullptr;
 
-#ifdef SUISHO_AOI_SUPPORT
-	m_DefaultTheme = L"Aoi";
-	m_RecommendTheme = L"Aoi";
-	m_ThemeKeyName = L"ThemeAoi";
+// #ifdef SUISHO_AOI_SUPPORT
+// 	m_DefaultTheme = L"Aoi";
+// 	m_RecommendTheme = L"Aoi";
+// 	m_ThemeKeyName = L"ThemeAoi";
 
-	m_MarginButtonTop = 16;
-	m_MarginButtonLeft = 0;
-	m_MarginButtonBottom = 16;
-	m_MarginButtonRight = 0;
-	m_MarginMeterTop = 0;
-	m_MarginMeterLeft = 0;
-	m_MarginMeterBottom = 0;
-	m_MarginMeterRight = 16;
-	m_MarginCommentTop = 0;
-	m_MarginCommentLeft = 16;
-	m_MarginCommentBottom = 0;
-	m_MarginCommentRight = 16;
-	m_MarginDemoTop = 24;
-	m_MarginDemoLeft = 24;
-	m_MarginDemoBottom = 24;
-	m_MarginDemoRight = 24;
-#elif MSI_MEI_SUPPORT
-	m_DefaultTheme = L"MSIMei";
-	m_RecommendTheme = L"MSIMei";
-	m_ThemeKeyName = L"ThemeMSIMei";
+// 	m_MarginButtonTop = 16;
+// 	m_MarginButtonLeft = 0;
+// 	m_MarginButtonBottom = 16;
+// 	m_MarginButtonRight = 0;
+// 	m_MarginMeterTop = 0;
+// 	m_MarginMeterLeft = 0;
+// 	m_MarginMeterBottom = 0;
+// 	m_MarginMeterRight = 16;
+// 	m_MarginCommentTop = 0;
+// 	m_MarginCommentLeft = 16;
+// 	m_MarginCommentBottom = 0;
+// 	m_MarginCommentRight = 16;
+// 	m_MarginDemoTop = 24;
+// 	m_MarginDemoLeft = 24;
+// 	m_MarginDemoBottom = 24;
+// 	m_MarginDemoRight = 24;
+// #elif MSI_MEI_SUPPORT
+// 	m_DefaultTheme = L"MSIMei";
+// 	m_RecommendTheme = L"MSIMei";
+// 	m_ThemeKeyName = L"ThemeMSIMei";
 
-	m_MarginButtonTop = 8;
-	m_MarginButtonLeft = 0;
-	m_MarginButtonBottom = 8;
-	m_MarginButtonRight = 0;
-	m_MarginMeterTop = 0;
-	m_MarginMeterLeft = 0;
-	m_MarginMeterBottom = 0;
-	m_MarginMeterRight = 16;
-	m_MarginCommentTop = 0;
-	m_MarginCommentLeft = 16;
-	m_MarginCommentBottom = 0;
-	m_MarginCommentRight = 64;
-	m_MarginDemoTop = 24;
-	m_MarginDemoLeft = 24;
-	m_MarginDemoBottom = 24;
-	m_MarginDemoRight = 24;
-#elif SUISHO_SHIZUKU_SUPPORT
-	m_DefaultTheme = L"Shizuku";
-	m_RecommendTheme = L"ShizukuIdol";
-	m_ThemeKeyName = L"ThemeShizuku";
+// 	m_MarginButtonTop = 8;
+// 	m_MarginButtonLeft = 0;
+// 	m_MarginButtonBottom = 8;
+// 	m_MarginButtonRight = 0;
+// 	m_MarginMeterTop = 0;
+// 	m_MarginMeterLeft = 0;
+// 	m_MarginMeterBottom = 0;
+// 	m_MarginMeterRight = 16;
+// 	m_MarginCommentTop = 0;
+// 	m_MarginCommentLeft = 16;
+// 	m_MarginCommentBottom = 0;
+// 	m_MarginCommentRight = 64;
+// 	m_MarginDemoTop = 24;
+// 	m_MarginDemoLeft = 24;
+// 	m_MarginDemoBottom = 24;
+// 	m_MarginDemoRight = 24;
+// #elif SUISHO_SHIZUKU_SUPPORT
+// 	m_DefaultTheme = L"Shizuku";
+// 	m_RecommendTheme = L"ShizukuIdol";
+// 	m_ThemeKeyName = L"ThemeShizuku";
 
-	m_MarginButtonTop = 8;
-	m_MarginButtonLeft = 0;
-	m_MarginButtonBottom = 8;
-	m_MarginButtonRight = 0;
-	m_MarginMeterTop = 0;
-	m_MarginMeterLeft = 0;
-	m_MarginMeterBottom = 0;
-	m_MarginMeterRight = 16;
-	m_MarginCommentTop = 0;
-	m_MarginCommentLeft = 16;
-	m_MarginCommentBottom = 0;
-	m_MarginCommentRight = 64;
-	m_MarginDemoTop = 24;
-	m_MarginDemoLeft = 24;
-	m_MarginDemoBottom = 24;
-	m_MarginDemoRight = 24;
-#else
+// 	m_MarginButtonTop = 8;
+// 	m_MarginButtonLeft = 0;
+// 	m_MarginButtonBottom = 8;
+// 	m_MarginButtonRight = 0;
+// 	m_MarginMeterTop = 0;
+// 	m_MarginMeterLeft = 0;
+// 	m_MarginMeterBottom = 0;
+// 	m_MarginMeterRight = 16;
+// 	m_MarginCommentTop = 0;
+// 	m_MarginCommentLeft = 16;
+// 	m_MarginCommentBottom = 0;
+// 	m_MarginCommentRight = 64;
+// 	m_MarginDemoTop = 24;
+// 	m_MarginDemoLeft = 24;
+// 	m_MarginDemoBottom = 24;
+// 	m_MarginDemoRight = 24;
+// #else
 	//m_DefaultTheme = L"Default";
 	//m_ThemeKeyName = L"Theme";
 
-	m_MarginButtonTop = 4;
-	m_MarginButtonLeft = 0;
-	m_MarginButtonBottom = 4;
-	m_MarginButtonRight = 0;
-	m_MarginMeterTop = 0;
-	m_MarginMeterLeft = 0;
-	m_MarginMeterBottom = 0;
-	m_MarginMeterRight = 4;
-	m_MarginCommentTop = 0;
-	m_MarginCommentLeft = 4;
-	m_MarginCommentBottom = 0;
-	m_MarginCommentRight = 4;
-	m_MarginDemoTop = 8;
-	m_MarginDemoLeft = 8;
-	m_MarginDemoBottom = 8;
-	m_MarginDemoRight = 8;
-#endif
+	// m_MarginButtonTop = 4;
+	// m_MarginButtonLeft = 0;
+	// m_MarginButtonBottom = 4;
+	// m_MarginButtonRight = 0;
+	// m_MarginMeterTop = 0;
+	// m_MarginMeterLeft = 0;
+	// m_MarginMeterBottom = 0;
+	// m_MarginMeterRight = 4;
+	// m_MarginCommentTop = 0;
+	// m_MarginCommentLeft = 4;
+	// m_MarginCommentBottom = 0;
+	// m_MarginCommentRight = 4;
+	// m_MarginDemoTop = 8;
+	// m_MarginDemoLeft = 8;
+	// m_MarginDemoBottom = 8;
+	// m_MarginDemoRight = 8;
+// #endif
 
 	//m_BackgroundName = L"Background";
 	//m_RandomThemeLabel = L"Random";
@@ -546,583 +540,583 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 }
 */
 
-void CDiskMarkDlg::showEvent(QShowEvent* event)
-{
-	QMainWindow::showEvent(event);
-
-// 	// m_hAccelerator = ::LoadAccelerators(AfxGetInstanceHandle(),
-// 	// 	                                MAKEINTRESOURCE(IDR_ACCELERATOR));
-	setWindowIcon(m_hIcon);
-// 	//setWindowIcon(m_hIconMini);
-
-	char str[256] = "Arial";
-
-// 	// CClientDC dc(this);
-// 	// LOGFONT logfont;
-// 	// QString defaultFontFace;
-// 	// bool hasDefaultFont = false;
-// 	// ZeroMemory(&logfont, sizeof(LOGFONT));
-// 	// logfont.lfCharSet = DEFAULT_CHARSET;
-// 	// ::EnumFontFamiliesExW(dc.m_hDC, &logfont, (FONTENUMPROC)EnumFontFamExProcDefaultFont, (INT_PTR)(&hasDefaultFont), 0);
-
-// 	// if (hasDefaultFont)
-// 	// {
-// 	// 	defaultFontFace = DEFAULT_FONT_FACE_1;
-// 	// }
-// 	// else
-// 	// {
-// 	// 	defaultFontFace = DEFAULT_FONT_FACE_2;
-// 	// }
-
-// 	// GetPrivateProfileString(L"Setting", L"FontFace", defaultFontFace, str, 256, m_Ini);
-	m_FontFace = str;
-
-// 	// m_TestData = GetPrivateProfileInt(L"Setting", L"TestData", TEST_DATA_RANDOM, m_Ini);
-	if (m_TestData != TEST_DATA_ALL0X00)
-	{
-		m_TestData = TEST_DATA_RANDOM;
-	}
-
-// 	// m_Profile = GetPrivateProfileInt(L"Setting", L"Profile", PROFILE_DEFAULT, m_Ini);
-
-#ifdef MIX_MODE
-	if (PROFILE_DEFAULT > m_Profile || m_Profile > PROFILE_REAL_MIX)
-#else
-	if (PROFILE_DEFAULT > m_Profile || m_Profile > PROFILE_DEMO)
-#endif
-	{
-		m_Profile = PROFILE_DEFAULT;
-	}
-
-// // 	m_Benchmark = GetPrivateProfileInt(L"Setting", L"Benchmark", BENCHMARK_READ_WRITE, m_Ini);
-	if (BENCHMARK_READ > m_Benchmark || m_Benchmark > BENCHMARK_READ_WRITE)
-	{
-		m_Benchmark = BENCHMARK_READ_WRITE;
-	}
-
-	if (m_Profile == PROFILE_DEFAULT_MIX || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL_MIX)
-	{
-		m_MixMode = true;
-	}
-	else
-	{
-		m_MixMode = false;
-	}
-
-// // 	m_FontScale = GetPrivateProfileInt(L"Setting", L"FontScale", 100, m_Ini);
-// // 	if (m_FontScale > 200 || m_FontScale < 50)
-// // 	{
-// // 		m_FontScale = 100;
-// // 		m_FontRatio = 1.0;
-// // 	}
-// // 	else
-// // 	{
-// // 		m_FontRatio = m_FontScale / 100.0;
-// // 	}
-
-// // 	m_FontRender = GetPrivateProfileInt(L"Setting", L"FontRender", CLEARTYPE_NATURAL_QUALITY, m_Ini);
-// // 	if (m_FontRender > CLEARTYPE_NATURAL_QUALITY)
-// // 	{
-// // 		m_FontRender = CLEARTYPE_NATURAL_QUALITY;
-// // 	}
-
-	// Unit
-	m_ComboUnit->addItem("MB/s");
-	m_ComboUnit->addItem("GB/s");
-	m_ComboUnit->addItem("IOPS");
-	m_ComboUnit->addItem("μs");
-
-	// Count
-	for (int i = 1; i < 10; i++)
-	{
-		QString cstr;
-		cstr = QString::number(i);
-		m_ComboCount->addItem(cstr);
-	}
-
-#ifdef MIX_MODE
-	// Mix
-	for (int i = 1; i < 10; i++)
-	{
-		CString cstr;
-		cstr.Format(L"R%d%%/W%d%%", i * 10, 100 - i*10);
-		m_ComboMix.AddString(cstr);
-	}
-#endif
-
-	m_WinThread = NULL;
-	m_DiskBenchStatus = false;
-
-	// InitThemeLang();
-	// InitMenu();
-	// UpdateThemeInfo();
-	ChangeLang();
-
-	UpdateQueuesThreads();
-
-// 	// m_IndexTestCount = GetPrivateProfileInt(L"Setting", L"TestCount", 4, m_Ini);
-	if (m_IndexTestCount < 0 || m_IndexTestCount >= 9)
-	{
-		m_IndexTestCount = 4;	// default value is 5.
-	}
-	m_ComboCount->setCurrentIndex(m_IndexTestCount);
-
-	// Size
-	wchar_t size[13][8] = { L"16MiB", L"32MiB", L"64MiB", L"128MiB", L"256MiB", L"512MiB", L"1GiB", L"2GiB", L"4GiB",  L"8GiB", L"16GiB", L"32GiB", L"64GiB" };
-
-	for (int i = 0; i < 13; i++)
-	{
-		QString cstr;
-		cstr = QString::fromWCharArray(size[i]);
-		m_ComboSize->addItem(cstr);
-	}
-// 	m_IndexTestSize = GetPrivateProfileInt(L"Setting", L"TestSize", 6, m_Ini);
-	if (m_IndexTestSize < 0 || m_IndexTestSize > 13)
-	{
-		m_IndexTestSize = 6;	// default value is 1GiB;
-	}
-	m_ComboSize->setCurrentIndex(m_IndexTestSize);
-
-// 	// m_IndexTestUnit = GetPrivateProfileInt(L"Setting", L"TestUnit", 0, m_Ini);
-	if (m_IndexTestUnit < 0 || m_IndexTestUnit >= 3)
-	{
-		m_IndexTestUnit = 0;
-	}
-	m_ComboUnit->setCurrentIndex(m_IndexTestUnit);
-
-// 	// m_IndexTestMix = GetPrivateProfileInt(L"Setting", L"TestMix", 6, m_Ini);
-	if (m_IndexTestMix < 0 || m_IndexTestMix > 10)
-	{
-		m_IndexTestMix = 6;	// default retio is R70W30;
-	}
-	m_MixRatio = (9 - m_IndexTestMix) * 10;
-
-#ifdef MIX_MODE
-	m_ComboMix.SetCurSel(m_IndexTestMix);
-#endif
-
-	//UpdateData(false);
-
-	// Drive
-	InitDrive();
-
-	InitScore();
-	UpdateUnitLabel();
-	
-// 	// switch(GetPrivateProfileInt(L"Setting", L"ZoomType", 0, m_Ini))
-// 	// {
-// 	// case 100:  CheckRadioZoomType(ID_ZOOM_100, 100); break;
-// 	// case 125:  CheckRadioZoomType(ID_ZOOM_125, 125); break;
-// 	// case 150:  CheckRadioZoomType(ID_ZOOM_150, 150); break;
-// 	// case 200:  CheckRadioZoomType(ID_ZOOM_200, 200); break;
-// 	// case 250:  CheckRadioZoomType(ID_ZOOM_250, 250); break;
-// 	// case 300:  CheckRadioZoomType(ID_ZOOM_300, 300); break;
-// 	// default:   CheckRadioZoomType(ID_ZOOM_AUTO, 0); break;
-// 	// }
-
-// 	// ChangeZoomType(m_ZoomType);
-	
-	m_SizeX = SIZE_X;
-	m_SizeY = SIZE_Y;
-
-#ifdef MIX_MODE
-	if (m_MixMode)
-	{
-		m_SizeX = SIZE_X_MIX;
-	}
-#endif
-
-	setWindowTitle("");
-
-	resize(m_SizeX, m_SizeY);
-
-// 	// m_bShowWindow = true;
-// 	move(QGuiApplication::screens().first()->geometry().center() - rect().center());
-// 	move(QGuiApplication::primaryScreen()->geometry().center() - rect().center());
-
-// 	UpdateDialogSize();
-// 	//ChangeButtonStatus(true);
-
-// 	//m_bInitializing = FALSE;
-
-// 	//SetForegroundWindow();
-}
-
-void CDiskMarkDlg::resizeEvent(QResizeEvent* event)
-{
-	QMainWindow::resizeEvent(event);
-// 	CDialogFx::UpdateDialogSize();
-// 	m_bHighContrast = FALSE;
-
-// 	ShowWindow(SW_HIDE);
-	int offsetX = 0;
-	int comboDriveX = 0;
-
-	m_SizeX = SIZE_X;
-	m_SizeY = SIZE_Y;
-#ifdef MIX_MODE
-	if (m_MixMode)
-	{
-		m_SizeX = SIZE_X_MIX;
-	}
-#endif
-	resize(m_SizeX, m_SizeY);
-
-#ifdef SUISHO_SHIZUKU_SUPPORT
-	if (m_CharacterPosition == 0)
-	{
-		offsetX = OFFSET_X;
-	}
-#endif
-
-// 	UpdateBackground(TRUE, m_bDarkMode);
-// 	SetControlFont();
-
-	if (m_Profile != PROFILE_DEFAULT && m_Profile != PROFILE_DEFAULT_MIX)
-	{
-#ifdef SUISHO_SHIZUKU_SUPPORT
-		comboDriveX = 120;
-#else
-		comboDriveX = 72;
-#endif
-	}
-	else
-	{
-		comboDriveX = 0;
-	}
-
-	// m_TestRead0.SetDrawFrame(m_bHighContrast);
-	// m_TestRead1.SetDrawFrame(m_bHighContrast);
-	// m_TestRead2.SetDrawFrame(m_bHighContrast);
-	// m_TestRead3.SetDrawFrame(m_bHighContrast);
-	// m_TestWrite0.SetDrawFrame(m_bHighContrast);
-	// m_TestWrite1.SetDrawFrame(m_bHighContrast);
-	// m_TestWrite2.SetDrawFrame(m_bHighContrast);
-	// m_TestWrite3.SetDrawFrame(m_bHighContrast);
-	// m_Comment.SetDrawFrame(m_bHighContrast);
-
-#ifdef MIX_MODE
-	m_TestMix0.SetDrawFrame(m_bHighContrast);
-	m_TestMix1.SetDrawFrame(m_bHighContrast);
-	m_TestMix2.SetDrawFrame(m_bHighContrast);
-	m_TestMix3.SetDrawFrame(m_bHighContrast);
-#endif
-
-	if (m_Profile == PROFILE_DEMO)
-	{
-		m_ReadUnit->hide();
-		m_WriteUnit->hide();
-
-		m_TestRead1->hide();
-		m_TestRead2->hide();
-		m_TestRead3->hide();
-		m_TestWrite1->hide();
-		m_TestWrite2->hide();
-		m_TestWrite3->hide();
-
-		m_DemoSetting->show();
-	}
-	else
-	{
-		m_ReadUnit->show();
-		m_WriteUnit->show();
-
-		m_TestRead1->show();
-		m_TestRead2->show();
-		m_TestRead3->show();
-		m_TestWrite1->show();
-		m_TestWrite2->show();
-		m_TestWrite3->show();
-
-		m_DemoSetting->hide();
-	}
-
-	if (m_Profile == PROFILE_DEMO)
-	{
-#ifdef SUISHO_SHIZUKU_SUPPORT
-// 		m_ButtonAll.InitControl(12 + offsetX, 8, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_ButtonAll.SetHandCursor(TRUE);
-// /*
-// 		m_TestRead0.SetGlassColor(m_Glass, m_GlassAlpha);
-// 		m_TestWrite0.SetGlassColor(m_Glass, m_GlassAlpha);
-
-// 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawGlass, m_bHighContrast, FALSE);
-// 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawGlass, m_bHighContrast, FALSE);
-// */
-#ifdef SUISHO_AOI_SUPPORT
-// 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 344, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 344, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 		m_Comment.InitControl(12 + offsetX, 440, 776, 60, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-#else
-// 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// 		m_Comment.InitControl(12 + offsetX, 452, 776, 40, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-#endif
-// 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
-// 		m_Comment.Adjust();
-
-// 		m_DemoSetting.InitControl(140 + offsetX, 56, 528, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-// 		m_ReadUnit.InitControl(12 + offsetX, 96, 120, 32, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-// 		m_WriteUnit.InitControl(672 + offsetX, 96, 116, 32, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-
-		m_ComboCount->setGeometry(140 + offsetX, 8, 60, 500);
-		m_ComboSize->setGeometry(204 + offsetX, 8, 140, 500);
-		m_ComboDrive->setGeometry(348 + offsetX, 8, 320, 500);
-		m_ComboUnit->setGeometry(672 + offsetX, 8, 116, 500);
-#else
-		// m_TestRead0.SetDrawFrameEx(TRUE, m_Frame);
-		// m_TestWrite0.SetDrawFrameEx(TRUE, m_Frame);
-
-		m_ButtonAll->setGeometry(8 + offsetX, 8, 72, 48);
-		m_ButtonAll->setText("All");
-		m_ButtonAll->setCursor(Qt::PointingHandCursor);
-
-// 		m_TestRead0.SetGlassColor(m_Glass, m_GlassAlpha);
-// 		m_TestWrite0.SetGlassColor(m_Glass, m_GlassAlpha);
-
-		m_TestRead0->setGeometry(8 + offsetX, 64, 228, 196);
-		m_TestWrite0->setGeometry(244 + offsetX, 64, 228, 196);
-
-		m_Comment->setGeometry(8 + offsetX, 268, 464, 24);
-// 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
-		// m_Comment.Adjust(); // Removed invalid method call
-
-		m_DemoSetting->setGeometry(84 + offsetX, 36, 320, 24);
-		m_ReadUnit->setGeometry(84 + offsetX, 36, 124, 24);
-		m_ReadUnit->setText("Read");
-		m_WriteUnit->setGeometry(280 + offsetX, 36, 124, 24);
-
-		m_ComboCount->setGeometry(84 + offsetX, 16, 40, 30);
-		m_ComboSize->setGeometry(128 + offsetX, 8, 80, 30);
-		m_ComboDrive->setGeometry(212 + offsetX, 12, 188, 30);
-		m_ComboUnit->setGeometry(404 + offsetX, 8, 68, 30);
-#endif
-	}
-	else
-	{
-#ifdef SUISHO_SHIZUKU_SUPPORT
-// 		m_ButtonAll.InitControl(12 + offsetX, 8, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_ButtonTest0.InitControl(12 + offsetX, 96, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_ButtonTest1.InitControl(12 + offsetX, 184, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_ButtonTest2.InitControl(12 + offsetX, 272, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_ButtonTest3.InitControl(12 + offsetX, 360, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-
-// 		m_ButtonAll.SetHandCursor(TRUE);
-// 		m_ButtonTest0.SetHandCursor(TRUE);
-// 		m_ButtonTest1.SetHandCursor(TRUE);
-// 		m_ButtonTest2.SetHandCursor(TRUE);
-// 		m_ButtonTest3.SetHandCursor(TRUE);
-
-// 		m_TestRead0.InitControl(140 + offsetX, 96, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_TestRead1.InitControl(140 + offsetX, 184, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_TestRead2.InitControl(140 + offsetX, 272, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_TestRead3.InitControl(140 + offsetX, 360, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-
-// 		m_TestWrite0.InitControl(468 + offsetX, 96, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_TestWrite1.InitControl(468 + offsetX, 184, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_TestWrite2.InitControl(468 + offsetX, 272, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 		m_TestWrite3.InitControl(468 + offsetX, 360, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-
-#ifdef SUISHO_AOI_SUPPORT
-// 		m_Comment.InitControl(12 + offsetX, 440, 776, 60, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-#else
-// 		m_Comment.InitControl(12 + offsetX, 452, 776, 40, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-#endif
-
-// 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
-// 		m_Comment.Adjust();
-
-// 		m_ReadUnit.InitControl(140 + offsetX, 56, 320, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-// 		m_WriteUnit.InitControl(468 + offsetX, 56, 320, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-
-		m_ComboCount->setGeometry(140 + offsetX, 8, 60, 500);
-		m_ComboSize->setGeometry(204 + offsetX, 8, 140, 500);
-		m_ComboUnit->setGeometry(672 + offsetX, 8, 116, 500);
-
-// 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_REAL)
-// 		{
-// 			m_ComboDrive.InitControl(348 + offsetX, 8, 440, 500, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
-// 		}
-// 		else
-// 		{
-// 			m_ComboDrive.InitControl(348 + offsetX, 8, 320, 500, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
-// 		}
-#else
-
-		m_ButtonAll->setGeometry(8 + offsetX, 8, 72, 48);
-		m_ButtonAll->setText("All");
-		m_ButtonTest0->setGeometry(8 + offsetX, 60, 72, 48);
-		m_ButtonTest0->setText("Button");
-		m_ButtonTest1->setGeometry(8 + offsetX, 112, 72, 48);
-		m_ButtonTest1->setText("Button");
-		m_ButtonTest2->setGeometry(8 + offsetX, 164, 72, 48);
-		m_ButtonTest2->setText("Button");
-		m_ButtonTest3->setGeometry(8 + offsetX, 216, 72, 48);
-		m_ButtonTest3->setText("Button");
-
-		m_ButtonAll->setCursor(Qt::PointingHandCursor);
-		m_ButtonTest0->setCursor(Qt::PointingHandCursor);
-		m_ButtonTest1->setCursor(Qt::PointingHandCursor);
-		m_ButtonTest2->setCursor(Qt::PointingHandCursor);
-		m_ButtonTest3->setCursor(Qt::PointingHandCursor);
-
-		m_TestRead0->setGeometry(84 + offsetX, 60, 192, 48);
-		m_TestRead0->setText("Read0");
-		m_TestRead1->setGeometry(84 + offsetX, 112, 192, 48);
-		m_TestRead1->setText("Read1");
-		m_TestRead2->setGeometry(84 + offsetX, 164, 192, 48);
-		m_TestRead2->setText("Read2");
-		m_TestRead3->setGeometry(84 + offsetX, 216, 192, 48);
-		m_TestRead3->setText("Read3");
-
-		m_TestWrite0->setGeometry(280 + offsetX, 60, 192, 48);
-		m_TestWrite0->setText("Write0");
-		m_TestWrite1->setGeometry(280 + offsetX, 112, 192, 48);
-		m_TestWrite1->setText("Write1");
-		m_TestWrite2->setGeometry(280 + offsetX, 164, 192, 48);
-		m_TestWrite2->setText("Write2");
-		m_TestWrite3->setGeometry(280 + offsetX, 216, 192, 48);
-		m_TestWrite3->setText("Write3");
-		if (m_MixMode)
-		{
-			m_Comment->setGeometry(8 + offsetX, 268, 664, 24);
-		}
-		else
-		{
-			m_Comment->setGeometry(8 + offsetX, 268, 464, 24);
-		}
-// 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
-// 		m_Comment.Adjust();
-		m_Comment->setReadOnly(true);
-
-		m_ReadUnit->setGeometry(84 + offsetX, 36, 192, 24);
-		m_ReadUnit->setText("Read");
-		m_WriteUnit->setGeometry(280 + offsetX, 36, 192, 24);
-		m_WriteUnit->setText("Write");
-
-		m_ComboCount->setGeometry(84 + offsetX, 8, 40, 30);
-		m_ComboSize->setGeometry(128 + offsetX, 8, 80, 30);
-		m_ComboUnit->setGeometry(404 + offsetX, 8, 68, 30);
-
-		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_REAL || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL_MIX)
-		{
-			m_ComboDrive->setGeometry(212 + offsetX, 8, 260, 30);
-		}
-		else
-		{
-			m_ComboDrive->setGeometry(212 + offsetX, 8, 188, 30);
-		}
-#endif
-	}
-
-	if(m_Profile == PROFILE_DEMO)
-	{
-// 		m_TestRead0.SetMargin(m_MarginDemoTop, m_MarginDemoLeft, m_MarginDemoBottom, m_MarginDemoRight, m_ZoomRatio);
-// 		m_TestWrite0.SetMargin(m_MarginDemoTop, m_MarginDemoLeft, m_MarginDemoBottom, m_MarginDemoRight, m_ZoomRatio);
-
-#ifdef SUISHO_AOI_SUPPORT
-// 		m_TestRead0.SetLabelUnitFormat(DT_LEFT | DT_BOTTOM | DT_SINGLELINE, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
-// 		m_TestWrite0.SetLabelUnitFormat(DT_LEFT | DT_BOTTOM | DT_SINGLELINE, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
-#endif
-	}
-	else
-	{
-// 		m_TestRead0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 		m_TestRead1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 		m_TestRead2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 		m_TestRead3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-
-// 		m_TestWrite0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 		m_TestWrite1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 		m_TestWrite2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 		m_TestWrite3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-	}
-
-// 	m_ComboCount.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-// 	m_ComboSize.SetMargin (0, 4, 0, 0, m_ZoomRatio);
-// 	m_ComboDrive.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-// m_ComboUnit.SetMargin (0, 4, 0, 0, m_ZoomRatio); // Removed invalid method call
-
-#ifdef MIX_MODE
-// 	m_TestMix0.InitControl(480 + offsetX, 60, 192, 48, m_ZoomRatio,  &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 	m_TestMix1.InitControl(480 + offsetX, 112, 192, 48, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 	m_TestMix2.InitControl(480 + offsetX, 164, 192, 48, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 	m_TestMix3.InitControl(480 + offsetX, 216, 192, 48, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// 	m_ComboMix.InitControl(480 + offsetX, 8, 192, 300, m_ZoomRatio,  &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
-// 	m_MixUnit.InitControl(480 + offsetX, 36, 192, 24, m_ZoomRatio,   &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-
-// 	m_TestMix0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 	m_TestMix1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 	m_TestMix2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 	m_TestMix3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 	m_ComboMix.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-
-// 	if (m_MixMode)
+// void CDiskMarkDlg::showEvent(QShowEvent* event)
+// {
+// 	QMainWindow::showEvent(event);
+
+// // 	// m_hAccelerator = ::LoadAccelerators(AfxGetInstanceHandle(),
+// // 	// 	                                MAKEINTRESOURCE(IDR_ACCELERATOR));
+// 	setWindowIcon(m_hIcon);
+// // 	//setWindowIcon(m_hIconMini);
+
+// 	char str[256] = "Arial";
+
+// // 	// CClientDC dc(this);
+// // 	// LOGFONT logfont;
+// // 	// QString defaultFontFace;
+// // 	// bool hasDefaultFont = false;
+// // 	// ZeroMemory(&logfont, sizeof(LOGFONT));
+// // 	// logfont.lfCharSet = DEFAULT_CHARSET;
+// // 	// ::EnumFontFamiliesExW(dc.m_hDC, &logfont, (FONTENUMPROC)EnumFontFamExProcDefaultFont, (INT_PTR)(&hasDefaultFont), 0);
+
+// // 	// if (hasDefaultFont)
+// // 	// {
+// // 	// 	defaultFontFace = DEFAULT_FONT_FACE_1;
+// // 	// }
+// // 	// else
+// // 	// {
+// // 	// 	defaultFontFace = DEFAULT_FONT_FACE_2;
+// // 	// }
+
+// // 	// GetPrivateProfileString(L"Setting", L"FontFace", defaultFontFace, str, 256, m_Ini);
+// 	m_FontFace = str;
+
+// // 	// m_TestData = GetPrivateProfileInt(L"Setting", L"TestData", TEST_DATA_RANDOM, m_Ini);
+// 	if (m_TestData != TEST_DATA_ALL0X00)
 // 	{
-// 		m_TestMix0.ShowWindow(SW_SHOW);
-// 		m_TestMix1.ShowWindow(SW_SHOW);
-// 		m_TestMix2.ShowWindow(SW_SHOW);
-// 		m_TestMix3.ShowWindow(SW_SHOW);
-// 		m_ComboMix.ShowWindow(SW_SHOW);
-// 		m_MixUnit.ShowWindow(SW_SHOW);
+// 		m_TestData = TEST_DATA_RANDOM;
+// 	}
+
+// // 	// m_Profile = GetPrivateProfileInt(L"Setting", L"Profile", PROFILE_DEFAULT, m_Ini);
+
+// #ifdef MIX_MODE
+// 	if (PROFILE_DEFAULT > m_Profile || m_Profile > PROFILE_REAL_MIX)
+// #else
+// 	if (PROFILE_DEFAULT > m_Profile || m_Profile > PROFILE_DEMO)
+// #endif
+// 	{
+// 		m_Profile = PROFILE_DEFAULT;
+// 	}
+
+// // // 	m_Benchmark = GetPrivateProfileInt(L"Setting", L"Benchmark", BENCHMARK_READ_WRITE, m_Ini);
+// 	if (BENCHMARK_READ > m_Benchmark || m_Benchmark > BENCHMARK_READ_WRITE)
+// 	{
+// 		m_Benchmark = BENCHMARK_READ_WRITE;
+// 	}
+
+// 	if (m_Profile == PROFILE_DEFAULT_MIX || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL_MIX)
+// 	{
+// 		m_MixMode = true;
 // 	}
 // 	else
 // 	{
-// 		m_TestMix0.ShowWindow(SW_HIDE);
-// 		m_TestMix1.ShowWindow(SW_HIDE);
-// 		m_TestMix2.ShowWindow(SW_HIDE);
-// 		m_TestMix3.ShowWindow(SW_HIDE);
-// 		m_ComboMix.ShowWindow(SW_HIDE);
-// 		m_MixUnit.ShowWindow(SW_HIDE);
+// 		m_MixMode = false;
 // 	}
-#endif
 
-// 	m_Comment.Adjust();
+// // // 	m_FontScale = GetPrivateProfileInt(L"Setting", L"FontScale", 100, m_Ini);
+// // // 	if (m_FontScale > 200 || m_FontScale < 50)
+// // // 	{
+// // // 		m_FontScale = 100;
+// // // 		m_FontRatio = 1.0;
+// // // 	}
+// // // 	else
+// // // 	{
+// // // 		m_FontRatio = m_FontScale / 100.0;
+// // // 	}
 
-	UpdateScore();
+// // // 	m_FontRender = GetPrivateProfileInt(L"Setting", L"FontRender", CLEARTYPE_NATURAL_QUALITY, m_Ini);
+// // // 	if (m_FontRender > CLEARTYPE_NATURAL_QUALITY)
+// // // 	{
+// // // 		m_FontRender = CLEARTYPE_NATURAL_QUALITY;
+// // // 	}
 
-	update();
+// 	// Unit
+// 	m_ComboUnit->addItem("MB/s");
+// 	m_ComboUnit->addItem("GB/s");
+// 	m_ComboUnit->addItem("IOPS");
+// 	m_ComboUnit->addItem("μs");
 
-	m_ComboCount->hide();
-	m_ComboSize->hide();
-	m_ComboDrive->hide();
+// 	// Count
+// 	for (int i = 1; i < 10; i++)
+// 	{
+// 		QString cstr;
+// 		cstr = QString::number(i);
+// 		m_ComboCount->addItem(cstr);
+// 	}
 
-// 	COMBOBOXINFO info = { 0 };
-// 	info.cbSize = sizeof(COMBOBOXINFO);
-// 	m_ComboCount.GetComboBoxInfo(&info);
-// 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
-// 	m_ComboSize.GetComboBoxInfo(&info);
-// 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
-// 	m_ComboDrive.GetComboBoxInfo(&info);
-// 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
-	// m_ComboUnit->comboBoxInfo(&info);
-// 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
-#ifdef MIX_MODE
+// #ifdef MIX_MODE
+// 	// Mix
+// 	for (int i = 1; i < 10; i++)
+// 	{
+// 		CString cstr;
+// 		cstr.Format(L"R%d%%/W%d%%", i * 10, 100 - i*10);
+// 		m_ComboMix.AddString(cstr);
+// 	}
+// #endif
+
+// 	m_WinThread = NULL;
+// 	m_DiskBenchStatus = false;
+
+// 	// InitThemeLang();
+// 	// InitMenu();
+// 	// UpdateThemeInfo();
+// 	ChangeLang();
+
+// 	UpdateQueuesThreads();
+
+// // 	// m_IndexTestCount = GetPrivateProfileInt(L"Setting", L"TestCount", 4, m_Ini);
+// 	if (m_IndexTestCount < 0 || m_IndexTestCount >= 9)
+// 	{
+// 		m_IndexTestCount = 4;	// default value is 5.
+// 	}
+// 	m_ComboCount->setCurrentIndex(m_IndexTestCount);
+
+// 	// Size
+// 	wchar_t size[13][8] = { L"16MiB", L"32MiB", L"64MiB", L"128MiB", L"256MiB", L"512MiB", L"1GiB", L"2GiB", L"4GiB",  L"8GiB", L"16GiB", L"32GiB", L"64GiB" };
+
+// 	for (int i = 0; i < 13; i++)
+// 	{
+// 		QString cstr;
+// 		cstr = QString::fromWCharArray(size[i]);
+// 		m_ComboSize->addItem(cstr);
+// 	}
+// // 	m_IndexTestSize = GetPrivateProfileInt(L"Setting", L"TestSize", 6, m_Ini);
+// 	if (m_IndexTestSize < 0 || m_IndexTestSize > 13)
+// 	{
+// 		m_IndexTestSize = 6;	// default value is 1GiB;
+// 	}
+// 	m_ComboSize->setCurrentIndex(m_IndexTestSize);
+
+// // 	// m_IndexTestUnit = GetPrivateProfileInt(L"Setting", L"TestUnit", 0, m_Ini);
+// 	if (m_IndexTestUnit < 0 || m_IndexTestUnit >= 3)
+// 	{
+// 		m_IndexTestUnit = 0;
+// 	}
+// 	m_ComboUnit->setCurrentIndex(m_IndexTestUnit);
+
+// // 	// m_IndexTestMix = GetPrivateProfileInt(L"Setting", L"TestMix", 6, m_Ini);
+// 	if (m_IndexTestMix < 0 || m_IndexTestMix > 10)
+// 	{
+// 		m_IndexTestMix = 6;	// default retio is R70W30;
+// 	}
+// 	m_MixRatio = (9 - m_IndexTestMix) * 10;
+
+// #ifdef MIX_MODE
+// 	m_ComboMix.SetCurSel(m_IndexTestMix);
+// #endif
+
+// 	//UpdateData(false);
+
+// 	// Drive
+// 	InitDrive();
+
+// 	InitScore();
+// 	UpdateUnitLabel();
+	
+// // 	// switch(GetPrivateProfileInt(L"Setting", L"ZoomType", 0, m_Ini))
+// // 	// {
+// // 	// case 100:  CheckRadioZoomType(ID_ZOOM_100, 100); break;
+// // 	// case 125:  CheckRadioZoomType(ID_ZOOM_125, 125); break;
+// // 	// case 150:  CheckRadioZoomType(ID_ZOOM_150, 150); break;
+// // 	// case 200:  CheckRadioZoomType(ID_ZOOM_200, 200); break;
+// // 	// case 250:  CheckRadioZoomType(ID_ZOOM_250, 250); break;
+// // 	// case 300:  CheckRadioZoomType(ID_ZOOM_300, 300); break;
+// // 	// default:   CheckRadioZoomType(ID_ZOOM_AUTO, 0); break;
+// // 	// }
+
+// // 	// ChangeZoomType(m_ZoomType);
+	
+// 	m_SizeX = SIZE_X;
+// 	m_SizeY = SIZE_Y;
+
+// #ifdef MIX_MODE
 // 	if (m_MixMode)
 // 	{
-// 		m_ComboMix.GetComboBoxInfo(&info);
-// 		SetLayeredWindow(info.hwndList, m_ComboAlpha);
-// 		m_ComboMix.ShowWindow(SW_SHOW);
+// 		m_SizeX = SIZE_X_MIX;
 // 	}
-#endif
+// #endif
 
-	m_ComboCount->show();
-	m_ComboSize->show();
-	m_ComboDrive->show();
+// 	setWindowTitle("");
 
-	if (m_Profile != PROFILE_DEFAULT && m_Profile != PROFILE_DEFAULT_MIX && m_Profile != PROFILE_DEMO)
-	{
-		m_ComboUnit->hide();
-	}
-	else
-	{
-		m_ComboUnit->show();
-	}
+// 	resize(m_SizeX, m_SizeY);
 
-	UpdateComboTooltip();
+// // 	// m_bShowWindow = true;
+// // 	move(QGuiApplication::screens().first()->geometry().center() - rect().center());
+// // 	move(QGuiApplication::primaryScreen()->geometry().center() - rect().center());
 
-	// ShowWindow(SW_SHOW);
-}
+// // 	UpdateDialogSize();
+// // 	//ChangeButtonStatus(true);
+
+// // 	//m_bInitializing = FALSE;
+
+// // 	//SetForegroundWindow();
+// }
+
+// void CDiskMarkDlg::resizeEvent(QResizeEvent* event)
+// {
+// 	QMainWindow::resizeEvent(event);
+// // 	CDialogFx::UpdateDialogSize();
+// // 	m_bHighContrast = FALSE;
+
+// // 	ShowWindow(SW_HIDE);
+// 	int offsetX = 0;
+// 	int comboDriveX = 0;
+
+// 	m_SizeX = SIZE_X;
+// 	m_SizeY = SIZE_Y;
+// #ifdef MIX_MODE
+// 	if (m_MixMode)
+// 	{
+// 		m_SizeX = SIZE_X_MIX;
+// 	}
+// #endif
+// 	resize(m_SizeX, m_SizeY);
+
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// 	if (m_CharacterPosition == 0)
+// 	{
+// 		offsetX = OFFSET_X;
+// 	}
+// #endif
+
+// // 	UpdateBackground(TRUE, m_bDarkMode);
+// // 	SetControlFont();
+
+// 	if (m_Profile != PROFILE_DEFAULT && m_Profile != PROFILE_DEFAULT_MIX)
+// 	{
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// 		comboDriveX = 120;
+// #else
+// 		comboDriveX = 72;
+// #endif
+// 	}
+// 	else
+// 	{
+// 		comboDriveX = 0;
+// 	}
+
+// 	// m_TestRead0.SetDrawFrame(m_bHighContrast);
+// 	// m_TestRead1.SetDrawFrame(m_bHighContrast);
+// 	// m_TestRead2.SetDrawFrame(m_bHighContrast);
+// 	// m_TestRead3.SetDrawFrame(m_bHighContrast);
+// 	// m_TestWrite0.SetDrawFrame(m_bHighContrast);
+// 	// m_TestWrite1.SetDrawFrame(m_bHighContrast);
+// 	// m_TestWrite2.SetDrawFrame(m_bHighContrast);
+// 	// m_TestWrite3.SetDrawFrame(m_bHighContrast);
+// 	// m_Comment.SetDrawFrame(m_bHighContrast);
+
+// #ifdef MIX_MODE
+// 	m_TestMix0.SetDrawFrame(m_bHighContrast);
+// 	m_TestMix1.SetDrawFrame(m_bHighContrast);
+// 	m_TestMix2.SetDrawFrame(m_bHighContrast);
+// 	m_TestMix3.SetDrawFrame(m_bHighContrast);
+// #endif
+
+// 	if (m_Profile == PROFILE_DEMO)
+// 	{
+// 		m_ReadUnit->hide();
+// 		m_WriteUnit->hide();
+
+// 		m_TestRead1->hide();
+// 		m_TestRead2->hide();
+// 		m_TestRead3->hide();
+// 		m_TestWrite1->hide();
+// 		m_TestWrite2->hide();
+// 		m_TestWrite3->hide();
+
+// 		m_DemoSetting->show();
+// 	}
+// 	else
+// 	{
+// 		m_ReadUnit->show();
+// 		m_WriteUnit->show();
+
+// 		m_TestRead1->show();
+// 		m_TestRead2->show();
+// 		m_TestRead3->show();
+// 		m_TestWrite1->show();
+// 		m_TestWrite2->show();
+// 		m_TestWrite3->show();
+
+// 		m_DemoSetting->hide();
+// 	}
+
+// 	if (m_Profile == PROFILE_DEMO)
+// 	{
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// // 		m_ButtonAll.InitControl(12 + offsetX, 8, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_ButtonAll.SetHandCursor(TRUE);
+// // /*
+// // 		m_TestRead0.SetGlassColor(m_Glass, m_GlassAlpha);
+// // 		m_TestWrite0.SetGlassColor(m_Glass, m_GlassAlpha);
+
+// // 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawGlass, m_bHighContrast, FALSE);
+// // 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawGlass, m_bHighContrast, FALSE);
+// // */
+// #ifdef SUISHO_AOI_SUPPORT
+// // 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 344, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
+// // 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 344, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
+// // 		m_Comment.InitControl(12 + offsetX, 440, 776, 60, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// #else
+// // 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
+// // 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
+// // 		m_Comment.InitControl(12 + offsetX, 452, 776, 40, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// #endif
+// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
+// // 		m_Comment.Adjust();
+
+// // 		m_DemoSetting.InitControl(140 + offsetX, 56, 528, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
+// // 		m_ReadUnit.InitControl(12 + offsetX, 96, 120, 32, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
+// // 		m_WriteUnit.InitControl(672 + offsetX, 96, 116, 32, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
+
+// 		m_ComboCount->setGeometry(140 + offsetX, 8, 60, 500);
+// 		m_ComboSize->setGeometry(204 + offsetX, 8, 140, 500);
+// 		m_ComboDrive->setGeometry(348 + offsetX, 8, 320, 500);
+// 		m_ComboUnit->setGeometry(672 + offsetX, 8, 116, 500);
+// #else
+// 		// m_TestRead0.SetDrawFrameEx(TRUE, m_Frame);
+// 		// m_TestWrite0.SetDrawFrameEx(TRUE, m_Frame);
+
+// 		m_ButtonAll->setGeometry(8 + offsetX, 8, 72, 48);
+// 		m_ButtonAll->setText("All");
+// 		m_ButtonAll->setCursor(Qt::PointingHandCursor);
+
+// // 		m_TestRead0.SetGlassColor(m_Glass, m_GlassAlpha);
+// // 		m_TestWrite0.SetGlassColor(m_Glass, m_GlassAlpha);
+
+// 		m_TestRead0->setGeometry(8 + offsetX, 64, 228, 196);
+// 		m_TestWrite0->setGeometry(244 + offsetX, 64, 228, 196);
+
+// 		m_Comment->setGeometry(8 + offsetX, 268, 464, 24);
+// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
+// 		// m_Comment.Adjust(); // Removed invalid method call
+
+// 		m_DemoSetting->setGeometry(84 + offsetX, 36, 320, 24);
+// 		m_ReadUnit->setGeometry(84 + offsetX, 36, 124, 24);
+// 		m_ReadUnit->setText("Read");
+// 		m_WriteUnit->setGeometry(280 + offsetX, 36, 124, 24);
+
+// 		m_ComboCount->setGeometry(84 + offsetX, 16, 40, 30);
+// 		m_ComboSize->setGeometry(128 + offsetX, 8, 80, 30);
+// 		m_ComboDrive->setGeometry(212 + offsetX, 12, 188, 30);
+// 		m_ComboUnit->setGeometry(404 + offsetX, 8, 68, 30);
+// #endif
+// 	}
+// 	else
+// 	{
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// // 		m_ButtonAll.InitControl(12 + offsetX, 8, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_ButtonTest0.InitControl(12 + offsetX, 96, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_ButtonTest1.InitControl(12 + offsetX, 184, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_ButtonTest2.InitControl(12 + offsetX, 272, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_ButtonTest3.InitControl(12 + offsetX, 360, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+
+// // 		m_ButtonAll.SetHandCursor(TRUE);
+// // 		m_ButtonTest0.SetHandCursor(TRUE);
+// // 		m_ButtonTest1.SetHandCursor(TRUE);
+// // 		m_ButtonTest2.SetHandCursor(TRUE);
+// // 		m_ButtonTest3.SetHandCursor(TRUE);
+
+// // 		m_TestRead0.InitControl(140 + offsetX, 96, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_TestRead1.InitControl(140 + offsetX, 184, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_TestRead2.InitControl(140 + offsetX, 272, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_TestRead3.InitControl(140 + offsetX, 360, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+
+// // 		m_TestWrite0.InitControl(468 + offsetX, 96, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_TestWrite1.InitControl(468 + offsetX, 184, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_TestWrite2.InitControl(468 + offsetX, 272, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 		m_TestWrite3.InitControl(468 + offsetX, 360, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+
+// #ifdef SUISHO_AOI_SUPPORT
+// // 		m_Comment.InitControl(12 + offsetX, 440, 776, 60, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// #else
+// // 		m_Comment.InitControl(12 + offsetX, 452, 776, 40, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// #endif
+
+// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
+// // 		m_Comment.Adjust();
+
+// // 		m_ReadUnit.InitControl(140 + offsetX, 56, 320, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
+// // 		m_WriteUnit.InitControl(468 + offsetX, 56, 320, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
+
+// 		m_ComboCount->setGeometry(140 + offsetX, 8, 60, 500);
+// 		m_ComboSize->setGeometry(204 + offsetX, 8, 140, 500);
+// 		m_ComboUnit->setGeometry(672 + offsetX, 8, 116, 500);
+
+// // 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_REAL)
+// // 		{
+// // 			m_ComboDrive.InitControl(348 + offsetX, 8, 440, 500, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
+// // 		}
+// // 		else
+// // 		{
+// // 			m_ComboDrive.InitControl(348 + offsetX, 8, 320, 500, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
+// // 		}
+// #else
+
+// 		m_ButtonAll->setGeometry(8 + offsetX, 8, 72, 48);
+// 		m_ButtonAll->setText("All");
+// 		m_ButtonTest0->setGeometry(8 + offsetX, 60, 72, 48);
+// 		m_ButtonTest0->setText("Button");
+// 		m_ButtonTest1->setGeometry(8 + offsetX, 112, 72, 48);
+// 		m_ButtonTest1->setText("Button");
+// 		m_ButtonTest2->setGeometry(8 + offsetX, 164, 72, 48);
+// 		m_ButtonTest2->setText("Button");
+// 		m_ButtonTest3->setGeometry(8 + offsetX, 216, 72, 48);
+// 		m_ButtonTest3->setText("Button");
+
+// 		m_ButtonAll->setCursor(Qt::PointingHandCursor);
+// 		m_ButtonTest0->setCursor(Qt::PointingHandCursor);
+// 		m_ButtonTest1->setCursor(Qt::PointingHandCursor);
+// 		m_ButtonTest2->setCursor(Qt::PointingHandCursor);
+// 		m_ButtonTest3->setCursor(Qt::PointingHandCursor);
+
+// 		m_TestRead0->setGeometry(84 + offsetX, 60, 192, 48);
+// 		m_TestRead0->setText("Read0");
+// 		m_TestRead1->setGeometry(84 + offsetX, 112, 192, 48);
+// 		m_TestRead1->setText("Read1");
+// 		m_TestRead2->setGeometry(84 + offsetX, 164, 192, 48);
+// 		m_TestRead2->setText("Read2");
+// 		m_TestRead3->setGeometry(84 + offsetX, 216, 192, 48);
+// 		m_TestRead3->setText("Read3");
+
+// 		m_TestWrite0->setGeometry(280 + offsetX, 60, 192, 48);
+// 		m_TestWrite0->setText("Write0");
+// 		m_TestWrite1->setGeometry(280 + offsetX, 112, 192, 48);
+// 		m_TestWrite1->setText("Write1");
+// 		m_TestWrite2->setGeometry(280 + offsetX, 164, 192, 48);
+// 		m_TestWrite2->setText("Write2");
+// 		m_TestWrite3->setGeometry(280 + offsetX, 216, 192, 48);
+// 		m_TestWrite3->setText("Write3");
+// 		if (m_MixMode)
+// 		{
+// 			m_Comment->setGeometry(8 + offsetX, 268, 664, 24);
+// 		}
+// 		else
+// 		{
+// 			m_Comment->setGeometry(8 + offsetX, 268, 464, 24);
+// 		}
+// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
+// // 		m_Comment.Adjust();
+// 		m_Comment->setReadOnly(true);
+
+// 		m_ReadUnit->setGeometry(84 + offsetX, 36, 192, 24);
+// 		m_ReadUnit->setText("Read");
+// 		m_WriteUnit->setGeometry(280 + offsetX, 36, 192, 24);
+// 		m_WriteUnit->setText("Write");
+
+// 		m_ComboCount->setGeometry(84 + offsetX, 8, 40, 30);
+// 		m_ComboSize->setGeometry(128 + offsetX, 8, 80, 30);
+// 		m_ComboUnit->setGeometry(404 + offsetX, 8, 68, 30);
+
+// 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_REAL || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL_MIX)
+// 		{
+// 			m_ComboDrive->setGeometry(212 + offsetX, 8, 260, 30);
+// 		}
+// 		else
+// 		{
+// 			m_ComboDrive->setGeometry(212 + offsetX, 8, 188, 30);
+// 		}
+// #endif
+// 	}
+
+// 	if(m_Profile == PROFILE_DEMO)
+// 	{
+// // 		m_TestRead0.SetMargin(m_MarginDemoTop, m_MarginDemoLeft, m_MarginDemoBottom, m_MarginDemoRight, m_ZoomRatio);
+// // 		m_TestWrite0.SetMargin(m_MarginDemoTop, m_MarginDemoLeft, m_MarginDemoBottom, m_MarginDemoRight, m_ZoomRatio);
+
+// #ifdef SUISHO_AOI_SUPPORT
+// // 		m_TestRead0.SetLabelUnitFormat(DT_LEFT | DT_BOTTOM | DT_SINGLELINE, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
+// // 		m_TestWrite0.SetLabelUnitFormat(DT_LEFT | DT_BOTTOM | DT_SINGLELINE, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
+// #endif
+// 	}
+// 	else
+// 	{
+// // 		m_TestRead0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 		m_TestRead1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 		m_TestRead2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 		m_TestRead3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+
+// // 		m_TestWrite0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 		m_TestWrite1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 		m_TestWrite2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 		m_TestWrite3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// 	}
+
+// // 	m_ComboCount.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// // 	m_ComboSize.SetMargin (0, 4, 0, 0, m_ZoomRatio);
+// // 	m_ComboDrive.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+// // m_ComboUnit.SetMargin (0, 4, 0, 0, m_ZoomRatio); // Removed invalid method call
+
+// #ifdef MIX_MODE
+// // 	m_TestMix0.InitControl(480 + offsetX, 60, 192, 48, m_ZoomRatio,  &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 	m_TestMix1.InitControl(480 + offsetX, 112, 192, 48, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 	m_TestMix2.InitControl(480 + offsetX, 164, 192, 48, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 	m_TestMix3.InitControl(480 + offsetX, 216, 192, 48, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
+// // 	m_ComboMix.InitControl(480 + offsetX, 8, 192, 300, m_ZoomRatio,  &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
+// // 	m_MixUnit.InitControl(480 + offsetX, 36, 192, 24, m_ZoomRatio,   &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
+
+// // 	m_TestMix0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 	m_TestMix1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 	m_TestMix2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 	m_TestMix3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
+// // 	m_ComboMix.SetMargin(0, 4, 0, 0, m_ZoomRatio);
+
+// // 	if (m_MixMode)
+// // 	{
+// // 		m_TestMix0.ShowWindow(SW_SHOW);
+// // 		m_TestMix1.ShowWindow(SW_SHOW);
+// // 		m_TestMix2.ShowWindow(SW_SHOW);
+// // 		m_TestMix3.ShowWindow(SW_SHOW);
+// // 		m_ComboMix.ShowWindow(SW_SHOW);
+// // 		m_MixUnit.ShowWindow(SW_SHOW);
+// // 	}
+// // 	else
+// // 	{
+// // 		m_TestMix0.ShowWindow(SW_HIDE);
+// // 		m_TestMix1.ShowWindow(SW_HIDE);
+// // 		m_TestMix2.ShowWindow(SW_HIDE);
+// // 		m_TestMix3.ShowWindow(SW_HIDE);
+// // 		m_ComboMix.ShowWindow(SW_HIDE);
+// // 		m_MixUnit.ShowWindow(SW_HIDE);
+// // 	}
+// #endif
+
+// // 	m_Comment.Adjust();
+
+// 	UpdateScore();
+
+// 	update();
+
+// 	m_ComboCount->hide();
+// 	m_ComboSize->hide();
+// 	m_ComboDrive->hide();
+
+// // 	COMBOBOXINFO info = { 0 };
+// // 	info.cbSize = sizeof(COMBOBOXINFO);
+// // 	m_ComboCount.GetComboBoxInfo(&info);
+// // 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
+// // 	m_ComboSize.GetComboBoxInfo(&info);
+// // 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
+// // 	m_ComboDrive.GetComboBoxInfo(&info);
+// // 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
+// 	// m_ComboUnit->comboBoxInfo(&info);
+// // 	SetLayeredWindow(info.hwndList, m_ComboAlpha);
+// #ifdef MIX_MODE
+// // 	if (m_MixMode)
+// // 	{
+// // 		m_ComboMix.GetComboBoxInfo(&info);
+// // 		SetLayeredWindow(info.hwndList, m_ComboAlpha);
+// // 		m_ComboMix.ShowWindow(SW_SHOW);
+// // 	}
+// #endif
+
+// 	m_ComboCount->show();
+// 	m_ComboSize->show();
+// 	m_ComboDrive->show();
+
+// 	if (m_Profile != PROFILE_DEFAULT && m_Profile != PROFILE_DEFAULT_MIX && m_Profile != PROFILE_DEMO)
+// 	{
+// 		m_ComboUnit->hide();
+// 	}
+// 	else
+// 	{
+// 		m_ComboUnit->show();
+// 	}
+
+// 	UpdateComboTooltip();
+
+// 	// ShowWindow(SW_SHOW);
+// }
 
 void CDiskMarkDlg::UpdateComboTooltip()
 {
@@ -1156,128 +1150,128 @@ void CDiskMarkDlg::UpdateComboTooltip()
 
 void CDiskMarkDlg::SetControlFont()
 {
-#ifdef SUISHO_SHIZUKU_SUPPORT
-	BYTE textAlpha = 255;
-	COLORREF textColor = RGB(0, 0, 0);
-#else
-	std::byte textAlpha = std::byte{255};
-	QColor textColor = QColor(0, 0, 0);
-#endif
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// 	BYTE textAlpha = 255;
+// 	COLORREF textColor = RGB(0, 0, 0);
+// #else
+// 	std::byte textAlpha = std::byte{255};
+// 	QColor textColor = QColor(0, 0, 0);
+// #endif
 
-#ifdef SUISHO_SHIZUKU_SUPPORT
-	m_ButtonAll.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
-	m_ButtonTest0.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
-	m_ButtonTest1.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
-	m_ButtonTest2.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
-	m_ButtonTest3.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
+// #ifdef SUISHO_SHIZUKU_SUPPORT
+// 	m_ButtonAll.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
+// 	m_ButtonTest0.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
+// 	m_ButtonTest1.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
+// 	m_ButtonTest2.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
+// 	m_ButtonTest3.SetFontEx(m_FontFace, 20, 20, m_ZoomRatio, m_FontRatio, m_ButtonText, FW_BOLD, m_FontRender);
 
-	if (m_Profile == PROFILE_DEMO)
-	{
-		m_TestRead0.SetFontEx(m_FontFace, 80, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-		m_TestWrite0.SetFontEx(m_FontFace,80, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-	}
-	else
-	{
-		m_TestRead0.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-		m_TestWrite0.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-	}
-
-// 	m_TestRead1.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 	m_TestRead2.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 	m_TestRead3.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-
-// 	m_TestWrite1.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 	m_TestWrite2.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 	m_TestWrite3.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-
-// 	m_Comment.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_EditText, FW_BOLD, m_FontRender);
-
-// 	m_ReadUnit.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_LabelText, FW_BOLD, m_FontRender);
-// 	m_WriteUnit.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_LabelText, FW_BOLD, m_FontRender);
-// 	m_DemoSetting.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-
-// 	m_ComboCount.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
-// 	m_ComboSize.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
-// 	m_ComboDrive.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
-// 	m_ComboUnit.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
-
-// 	m_ButtonTest0.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-// 	m_ButtonTest1.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-// 	m_ButtonTest2.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-// 	m_ButtonTest3.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-
-// 	m_ComboCount.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
-// 	m_ComboSize.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
-// 	m_ComboDrive.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
-// 	m_ComboUnit.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
-#else
-	QFont font;
-	font.setFamily(m_FontFace);
-	font.setPointSize(16);
-	font.setBold(true);
-
-	m_ButtonAll->setFont(font);
-	m_ButtonTest0->setFont(font);
-	m_ButtonTest1->setFont(font);
-	m_ButtonTest2->setFont(font);
-	m_ButtonTest3->setFont(font);
-
-	if (m_Profile == PROFILE_DEMO)
-	{
-		m_TestRead0->setFont(QFont(m_FontFace, 48, QFont::Bold));
-		m_TestWrite0->setFont(QFont(m_FontFace, 48, QFont::Bold));
-	}
-	else
-	{
-		m_TestRead0->setFont(QFont(m_FontFace, 35, QFont::Bold));
-		m_TestWrite0->setFont(QFont(m_FontFace, 35, QFont::Bold));
-	}
-
-	m_TestRead1->setFont(QFont(m_FontFace, 35, QFont::Bold));
-	m_TestRead2->setFont(QFont(m_FontFace, 35, QFont::Bold));
-	m_TestRead3->setFont(QFont(m_FontFace, 35, QFont::Bold));
-
-	m_TestWrite1->setFont(QFont(m_FontFace, 35, QFont::Bold));
-	m_TestWrite2->setFont(QFont(m_FontFace, 35, QFont::Bold));
-	m_TestWrite3->setFont(QFont(m_FontFace, 35, QFont::Bold));
-
-	m_Comment->setFont(QFont(m_FontFace, 16, QFont::Bold));
-
-	m_ReadUnit->setFont(QFont(m_FontFace, 16, QFont::Bold));
-	m_WriteUnit->setFont(QFont(m_FontFace, 16, QFont::Bold));
-	m_DemoSetting->setFont(QFont(m_FontFace, 16, QFont::Bold));
-
-	m_ComboCount->setFont(QFont(m_FontFace, 16));
-	m_ComboSize->setFont(QFont(m_FontFace, 16));
-	m_ComboDrive->setFont(QFont(m_FontFace, 16));
-	m_ComboUnit->setFont(QFont(m_FontFace, 16));
-
-// 	m_ButtonTest0.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-// 	m_ButtonTest1.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-// 	m_ButtonTest2.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-// 	m_ButtonTest3.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
-
-// 	m_ComboCount.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
-// 	m_ComboSize.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
-// 	m_ComboDrive.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
-// 	m_ComboUnit.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
-
-#ifdef MIX_MODE
-// 	if(m_MixMode)
+// 	if (m_Profile == PROFILE_DEMO)
 // 	{
-// 		m_ComboMix.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
-// 		m_ComboMix.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
-
-// 		m_MixUnit.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, m_LabelText, FW_BOLD, m_FontRender);
-
-// 		m_TestMix0.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 		m_TestMix1.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 		m_TestMix2.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
-// 		m_TestMix3.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// 		m_TestRead0.SetFontEx(m_FontFace, 80, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// 		m_TestWrite0.SetFontEx(m_FontFace,80, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
 // 	}
-#endif
+// 	else
+// 	{
+// 		m_TestRead0.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// 		m_TestWrite0.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// 	}
 
-#endif
+// // 	m_TestRead1.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 	m_TestRead2.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 	m_TestRead3.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+
+// // 	m_TestWrite1.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 	m_TestWrite2.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 	m_TestWrite3.SetFontEx(m_FontFace, 52, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+
+// // 	m_Comment.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_EditText, FW_BOLD, m_FontRender);
+
+// // 	m_ReadUnit.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_LabelText, FW_BOLD, m_FontRender);
+// // 	m_WriteUnit.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_LabelText, FW_BOLD, m_FontRender);
+// // 	m_DemoSetting.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+
+// // 	m_ComboCount.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
+// // 	m_ComboSize.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
+// // 	m_ComboDrive.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
+// // 	m_ComboUnit.SetFontEx(m_FontFace, 28, 28, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
+
+// // 	m_ButtonTest0.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+// // 	m_ButtonTest1.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+// // 	m_ButtonTest2.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+// // 	m_ButtonTest3.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+
+// // 	m_ComboCount.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
+// // 	m_ComboSize.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
+// // 	m_ComboDrive.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
+// // 	m_ComboUnit.SetItemHeightAll(40, m_ZoomRatio, m_FontRatio);
+// #else
+// 	QFont font;
+// 	font.setFamily(m_FontFace);
+// 	font.setPointSize(16);
+// 	font.setBold(true);
+
+// 	m_ButtonAll->setFont(font);
+// 	m_ButtonTest0->setFont(font);
+// 	m_ButtonTest1->setFont(font);
+// 	m_ButtonTest2->setFont(font);
+// 	m_ButtonTest3->setFont(font);
+
+// 	if (m_Profile == PROFILE_DEMO)
+// 	{
+// 		m_TestRead0->setFont(QFont(m_FontFace, 48, QFont::Bold));
+// 		m_TestWrite0->setFont(QFont(m_FontFace, 48, QFont::Bold));
+// 	}
+// 	else
+// 	{
+// 		m_TestRead0->setFont(QFont(m_FontFace, 35, QFont::Bold));
+// 		m_TestWrite0->setFont(QFont(m_FontFace, 35, QFont::Bold));
+// 	}
+
+// 	m_TestRead1->setFont(QFont(m_FontFace, 35, QFont::Bold));
+// 	m_TestRead2->setFont(QFont(m_FontFace, 35, QFont::Bold));
+// 	m_TestRead3->setFont(QFont(m_FontFace, 35, QFont::Bold));
+
+// 	m_TestWrite1->setFont(QFont(m_FontFace, 35, QFont::Bold));
+// 	m_TestWrite2->setFont(QFont(m_FontFace, 35, QFont::Bold));
+// 	m_TestWrite3->setFont(QFont(m_FontFace, 35, QFont::Bold));
+
+// 	m_Comment->setFont(QFont(m_FontFace, 16, QFont::Bold));
+
+// 	m_ReadUnit->setFont(QFont(m_FontFace, 16, QFont::Bold));
+// 	m_WriteUnit->setFont(QFont(m_FontFace, 16, QFont::Bold));
+// 	m_DemoSetting->setFont(QFont(m_FontFace, 16, QFont::Bold));
+
+// 	m_ComboCount->setFont(QFont(m_FontFace, 16));
+// 	m_ComboSize->setFont(QFont(m_FontFace, 16));
+// 	m_ComboDrive->setFont(QFont(m_FontFace, 16));
+// 	m_ComboUnit->setFont(QFont(m_FontFace, 16));
+
+// // 	m_ButtonTest0.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+// // 	m_ButtonTest1.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+// // 	m_ButtonTest2.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+// // 	m_ButtonTest3.SetMargin(m_MarginButtonTop, m_MarginButtonLeft, m_MarginButtonBottom, m_MarginButtonRight, m_ZoomRatio);
+
+// // 	m_ComboCount.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
+// // 	m_ComboSize.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
+// // 	m_ComboDrive.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
+// // 	m_ComboUnit.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
+
+// #ifdef MIX_MODE
+// // 	if(m_MixMode)
+// // 	{
+// // 		m_ComboMix.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, m_ComboText, m_ComboTextSelected, FW_NORMAL, m_FontRender);
+// // 		m_ComboMix.SetItemHeightAll(24, m_ZoomRatio, m_FontRatio);
+
+// // 		m_MixUnit.SetFontEx(m_FontFace, 16, 16, m_ZoomRatio, m_FontRatio, m_LabelText, FW_BOLD, m_FontRender);
+
+// // 		m_TestMix0.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 		m_TestMix1.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 		m_TestMix2.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 		m_TestMix3.SetFontEx(m_FontFace, 35, 35, m_ZoomRatio, m_FontRatio, m_MeterText, FW_BOLD, m_FontRender);
+// // 	}
+// #endif
+
+// #endif
 
 }
 
@@ -1471,23 +1465,23 @@ void CDiskMarkDlg::SelectDrive()
 	
 	if (m_ComboDrive->currentIndex() == m_MaxIndexTestDrive)
 	{
-		QFileDialog dialog(this);
-		dialog.setFileMode(QFileDialog::Directory);
-		dialog.setOption(QFileDialog::ShowDirsOnly, true);
-		dialog.setWindowTitle("Select Folder");
+		// QFileDialog dialog(this);
+		// dialog.setFileMode(QFileDialog::Directory);
+		// dialog.setOption(QFileDialog::ShowDirsOnly, true);
+		// dialog.setWindowTitle("Select Folder");
 
-		if (dialog.exec())
-		{
-			QString selectedDir = dialog.selectedFiles().first();
-			m_TestTargetPath = selectedDir;
-			m_ComboDrive->setToolTip(m_TestTargetPath);
-		}
-		else
-		{
-			m_IndexTestDrive = previousComboDriveIndex;
-			m_ComboDrive->setCurrentIndex(m_IndexTestDrive);
-			m_ComboDrive->setToolTip("TEST_DRIVE");
-		}
+		// if (dialog.exec())
+		// {
+		// 	QString selectedDir = dialog.selectedFiles().first();
+		// 	m_TestTargetPath = selectedDir;
+		// 	m_ComboDrive->setToolTip(m_TestTargetPath);
+		// }
+		// else
+		// {
+		// 	m_IndexTestDrive = previousComboDriveIndex;
+		// 	m_ComboDrive->setCurrentIndex(m_IndexTestDrive);
+		// 	m_ComboDrive->setToolTip("TEST_DRIVE");
+		// }
 	}
 	else
 	{
@@ -1507,31 +1501,31 @@ void CDiskMarkDlg::OnExitBenchmark()
 	EnableMenus();
 }
 
-void CDiskMarkDlg::paintEvent(QPaintEvent *event)
-{
-	QMainWindow::paintEvent(event);
-// 	// if (IsIconic())
-// 	// {
-// 	// 	CPaintDC dc(this); // device context for painting
+// void CDiskMarkDlg::paintEvent(QPaintEvent *event)
+// {
+// 	QMainWindow::paintEvent(event);
+// // 	// if (IsIconic())
+// // 	// {
+// // 	// 	CPaintDC dc(this); // device context for painting
 
-// 	// 	SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+// // 	// 	SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-// 	// 	// Center icon in client rectangle
-// 	// 	int cxIcon = GetSystemMetrics(SM_CXICON);
-// 	// 	int cyIcon = GetSystemMetrics(SM_CYICON);
-// 	// 	CRect rect;
-// 	// 	GetClientRect(&rect);
-// 	// 	int x = (rect.Width() - cxIcon + 1) / 2;
-// 	// 	int y = (rect.Height() - cyIcon + 1) / 2;
+// // 	// 	// Center icon in client rectangle
+// // 	// 	int cxIcon = GetSystemMetrics(SM_CXICON);
+// // 	// 	int cyIcon = GetSystemMetrics(SM_CYICON);
+// // 	// 	CRect rect;
+// // 	// 	GetClientRect(&rect);
+// // 	// 	int x = (rect.Width() - cxIcon + 1) / 2;
+// // 	// 	int y = (rect.Height() - cyIcon + 1) / 2;
 
-// 	// 	// Draw the icon
-// 	// 	dc.DrawIcon(x, y, m_hIcon);
-// 	// }
-// 	// else
-// 	// {
-// 	// 	CMainDialogFx::OnPaint();
-// 	// }
-}
+// // 	// 	// Draw the icon
+// // 	// 	dc.DrawIcon(x, y, m_hIcon);
+// // 	// }
+// // 	// else
+// // 	// {
+// // 	// 	CMainDialogFx::OnPaint();
+// // 	// }
+// }
 
 // HCURSOR CDiskMarkDlg::OnQueryDragIcon()
 // {
@@ -1543,17 +1537,17 @@ void CDiskMarkDlg::OnOK()
 
 }
 
-void CDiskMarkDlg::closeEvent(QCloseEvent *event)
-{
-	OnCancel();
-	QMainWindow::closeEvent(event);
-}
+// void CDiskMarkDlg::closeEvent(QCloseEvent *event)
+// {
+// 	OnCancel();
+// 	QMainWindow::closeEvent(event);
+// }
 
 void CDiskMarkDlg::OnAbout()
 {
 	// Show About Dialog
-	m_AboutDlg = new CAboutDlg(this);
-	m_AboutDlg->show();
+	// m_AboutDlg = new CAboutDlg(this);
+	// m_AboutDlg->show();
 }
 
 void CDiskMarkDlg::OnCancel()
@@ -2075,12 +2069,12 @@ void CDiskMarkDlg::Stop()
 
 void CDiskMarkDlg::EnableMenus()
 {
-	menuBar()->setEnabled(true);
+	// menuBar()->setEnabled(true);
 }
 
 void CDiskMarkDlg::DisableMenus()
 {
-	menuBar()->setEnabled(false);
+	// menuBar()->setEnabled(false);
 }
 
 QString CDiskMarkDlg::GetButtonText(int type, int size, int queues, int threads, int unit)
@@ -3270,17 +3264,17 @@ void CDiskMarkDlg::CheckRadioPresetMode()
 {
 	if (IsDefaultMode())
 	{
-		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_DEFAULT");
-		if (action) {
-			action->setChecked(true);
-		}
+		// QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_DEFAULT");
+		// if (action) {
+		// 	action->setChecked(true);
+		// }
 	}
 	else if (IsNVMe8Mode())
 	{
-		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_8");
-		if (action) {
-			action->setChecked(true);
-		}
+		// QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_8");
+		// if (action) {
+		// 	action->setChecked(true);
+		// }
 	}
 	/*
 	else if (IsNVMe9Mode())
@@ -3293,14 +3287,14 @@ void CDiskMarkDlg::CheckRadioPresetMode()
 	*/
 	else
 	{
-		QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_DEFAULT");
-		if (action) {
-			action->setChecked(false);
-		}
-		action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_8");
-		if (action) {
-			action->setChecked(false);
-		}
+		// QAction *action = menuBar()->findChild<QAction*>("ID_SETTING_DEFAULT");
+		// if (action) {
+		// 	action->setChecked(false);
+		// }
+		// action = menuBar()->findChild<QAction*>("ID_SETTING_NVME_8");
+		// if (action) {
+		// 	action->setChecked(false);
+		// }
 	}
 }
 
@@ -3412,10 +3406,10 @@ void CDiskMarkDlg::CheckRadioZoomType()
 
 void CDiskMarkDlg::OnModeDefault()
 {
-	QAction *action = menuBar()->findChild<QAction*>("ID_MODE_DEFAULT");
-	if (action) {
-		action->setChecked(true);
-	}
+	// QAction *action = menuBar()->findChild<QAction*>("ID_MODE_DEFAULT");
+	// if (action) {
+	// 	action->setChecked(true);
+	// }
 
 	m_TestData = TEST_DATA_RANDOM;
 	// WritePrivateProfileString(L"Setting", L"TestData", L"0", m_Ini);
@@ -3424,10 +3418,10 @@ void CDiskMarkDlg::OnModeDefault()
 
 void CDiskMarkDlg::OnModeAll0x00()
 {
-	QAction *action = menuBar()->findChild<QAction*>("ID_MODE_ALL0X00");
-	if (action) {
-		action->setChecked(true);
-	}
+	// QAction *action = menuBar()->findChild<QAction*>("ID_MODE_ALL0X00");
+	// if (action) {
+	// 	action->setChecked(true);
+	// }
 
 	m_TestData = TEST_DATA_ALL0X00;
 	// WritePrivateProfileString(L"Setting", L"TestData", L"1", m_Ini);
@@ -3447,10 +3441,10 @@ void CDiskMarkDlg::OnModeAll0x00()
 
 void CDiskMarkDlg::ProfileDefault()
 {
-	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_DEFAULT");
-	if (action) {
-		action->setChecked(true);
-	}
+	// QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_DEFAULT");
+	// if (action) {
+	// 	action->setChecked(true);
+	// }
 
 	m_Profile = PROFILE_DEFAULT;
 	m_MixMode = false;
@@ -3471,10 +3465,10 @@ void CDiskMarkDlg::ProfileDefault()
 
 void CDiskMarkDlg::ProfilePeak()
 {
-	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_PEAK");
-	if (action) {
-		action->setChecked(true);
-	}
+	// QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_PEAK");
+	// if (action) {
+	// 	action->setChecked(true);
+	// }
 
 	m_Profile = PROFILE_PEAK;
 	m_MixMode = false;
@@ -3495,10 +3489,10 @@ void CDiskMarkDlg::ProfilePeak()
 
 void CDiskMarkDlg::ProfileReal()
 {
-	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_REAL");
-	if (action) {
-		action->setChecked(true);
-	}
+	// QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_REAL");
+	// if (action) {
+	// 	action->setChecked(true);
+	// }
 
 	m_Profile = PROFILE_REAL;
 	m_MixMode = false;
@@ -3519,10 +3513,10 @@ void CDiskMarkDlg::ProfileReal()
 
 void CDiskMarkDlg::ProfileDemo()
 {
-	QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_DEMO");
-	if (action) {
-		action->setChecked(true);
-	}
+	// QAction *action = menuBar()->findChild<QAction*>("ID_PROFILE_DEMO");
+	// if (action) {
+	// 	action->setChecked(true);
+	// }
 
 	m_Profile = PROFILE_DEMO;
 	m_MixMode = false;
@@ -3853,7 +3847,7 @@ void CDiskMarkDlg::SetWindowTitle(QString message)
 		title.append(QString::fromWCharArray(L" <0Fill>"));
 	}
 
-	setWindowTitle(" " + title + " ");
+	// setWindowTitle(" " + title + " ");
 }
 
 // void CDiskMarkDlg::OnLButtonDown(UINT nFlags, CPoint point)
@@ -3872,6 +3866,6 @@ void CDiskMarkDlg::OnExit()
 void CDiskMarkDlg::OnSettings()
 {
 	// Show Setting Dialog
-	m_SettingsDlg = new CSettingsDlg(this);
-	m_SettingsDlg->show();
+	// m_SettingsDlg = new CSettingsDlg(this);
+	// m_SettingsDlg->show();
 }
