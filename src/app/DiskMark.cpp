@@ -20,10 +20,9 @@ CDiskMarkApp::CDiskMarkApp(int &argc, char **argv)
 
 bool CDiskMarkApp::InitInstance(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
 	CDiskMarkDlg dlg;
 	dlg.show();
-	return a.exec();
+	return exec();
 }
 
 int main(int argc, char *argv[])

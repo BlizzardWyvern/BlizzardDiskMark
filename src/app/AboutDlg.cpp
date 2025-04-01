@@ -11,7 +11,20 @@
 #include "AboutDlg.h"
 
 CAboutDlg::CAboutDlg(QWidget* parent)
-	: QDialog(parent)
+	: QDialog(parent),
+	m_CtrlLogo(new QPushButton(this)),
+	m_CtrlSecretVoice(new QPushButton(this)),
+	m_CtrlProjectSite1(new QPushButton(this)),
+	m_CtrlProjectSite2(new QPushButton(this)),
+	m_CtrlProjectSite3(new QPushButton(this)),
+	m_CtrlProjectSite4(new QPushButton(this)),
+	m_CtrlProjectSite5(new QPushButton(this)),
+	m_CtrlVersion(new QPushButton(this)),
+	m_CtrlLicense(new QPushButton(this)),
+	m_CtrlEdition(new QLabel(this)),
+	m_CtrlRelease(new QLabel(this)),
+	m_CtrlCopyright1(new QLabel(this)),
+	m_CtrlCopyright2(new QLabel(this))
 {
 	// CMainDialogFx* p = static_cast<CMainDialogFx*>(parent);
 
@@ -36,6 +49,19 @@ CAboutDlg::CAboutDlg(QWidget* parent)
 
 CAboutDlg::~CAboutDlg()
 {
+	delete m_CtrlLogo;
+	delete m_CtrlSecretVoice;
+	delete m_CtrlProjectSite1;
+	delete m_CtrlProjectSite2;
+	delete m_CtrlProjectSite3;
+	delete m_CtrlProjectSite4;
+	delete m_CtrlProjectSite5;
+	delete m_CtrlVersion;
+	delete m_CtrlLicense;
+	delete m_CtrlEdition;
+	delete m_CtrlRelease;
+	delete m_CtrlCopyright1;
+	delete m_CtrlCopyright2;
 }
 
 // void CAboutDlg::DoDataExchange(CDataExchange* pDX)

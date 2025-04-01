@@ -22,7 +22,7 @@
 
 #include "AboutDlg.h"
 #include "DiskBench.h"
-//#include "SettingsDlg.h"
+#include "SettingsDlg.h"
 //#include "FontSelectionDlg.h"
 
 //#include "../Priscilla/DialogFx.h"
@@ -162,6 +162,10 @@ public slots:
 	void OnUpdateMessage(QString* message);
 	void OnUpdateScore();
 	void OnExitBenchmark();
+
+	void OnExit();
+	void OnAbout();
+	void OnSettings();
 protected:
 	void SelectDrive();
 	QString GetResultString(int type, double score, double latency, int size, int queues, int threads);
@@ -181,8 +185,8 @@ protected:
 	int m_SizeX;
 	int m_SizeY;
 
-	//CAboutDlg*		m_AboutDlg;
-	//CSettingsDlg*	m_SettingsDlg;
+	CAboutDlg*		m_AboutDlg;
+	CSettingsDlg*	m_SettingsDlg;
 
 	void SetControlFont();
 	void InitDrive();
@@ -253,7 +257,6 @@ protected:
 	//afx_msg QCursor OnQueryDragIcon();
 	
 	void closeEvent(QCloseEvent* event) override;
-	//afx_msg void OnAbout();
 	//afx_msg void OnFontSetting();
 
 	//LRESULT OnQueryEndSession(WPARAM wParam, LPARAM lParam);

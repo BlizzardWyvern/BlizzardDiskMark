@@ -11,7 +11,49 @@
 #include "SettingsDlg.h"
 
 CSettingsDlg::CSettingsDlg(QWidget* parent)
-	: QDialog(parent)
+	: QDialog(parent),
+	m_LabelType(new QLabel(this)),
+	m_LabelSize(new QLabel(this)),
+	m_LabelQueues(new QLabel(this)),
+	m_LabelThreads(new QLabel(this)),
+	m_LabelDefault(new QLabel(this)),
+	m_LabelPeak(new QLabel(this)),
+	m_LabelDemo(new QLabel(this)),
+	m_LabelMeasureTime(new QLabel(this)),
+	m_LabelIntervalTime(new QLabel(this)),
+	m_ButtonSetDefault(new QPushButton(this)),
+	m_ButtonSetNVMe8(new QPushButton(this)),
+	m_ComboBenchType0(new QComboBox(this)),
+	m_ComboBenchType1(new QComboBox(this)),
+	m_ComboBenchType2(new QComboBox(this)),
+	m_ComboBenchType3(new QComboBox(this)),
+	m_ComboBenchType4(new QComboBox(this)),
+	m_ComboBenchType5(new QComboBox(this)),
+	m_ComboBenchType8(new QComboBox(this)),
+	m_ComboBenchSize0(new QComboBox(this)),
+	m_ComboBenchSize1(new QComboBox(this)),
+	m_ComboBenchSize2(new QComboBox(this)),
+	m_ComboBenchSize3(new QComboBox(this)),
+	m_ComboBenchSize4(new QComboBox(this)),
+	m_ComboBenchSize5(new QComboBox(this)),
+	m_ComboBenchSize8(new QComboBox(this)),
+	m_ComboBenchQueues0(new QComboBox(this)),
+	m_ComboBenchQueues1(new QComboBox(this)),
+	m_ComboBenchQueues2(new QComboBox(this)),
+	m_ComboBenchQueues3(new QComboBox(this)),
+	m_ComboBenchQueues4(new QComboBox(this)),
+	m_ComboBenchQueues5(new QComboBox(this)),
+	m_ComboBenchQueues8(new QComboBox(this)),
+	m_ComboBenchThreads0(new QComboBox(this)),
+	m_ComboBenchThreads1(new QComboBox(this)),
+	m_ComboBenchThreads2(new QComboBox(this)),
+	m_ComboBenchThreads3(new QComboBox(this)),
+	m_ComboBenchThreads4(new QComboBox(this)),
+	m_ComboBenchThreads5(new QComboBox(this)),
+	m_ComboBenchThreads8(new QComboBox(this)),
+	m_ComboMeasureTime(new QComboBox(this)),
+	m_ComboIntervalTime(new QComboBox(this)),
+	m_ButtonOk(new QPushButton(this))
 {
 	// CMainDialogFx* p = static_cast<CMainDialogFx*>(parent);
 
@@ -35,6 +77,48 @@ CSettingsDlg::CSettingsDlg(QWidget* parent)
 
 CSettingsDlg::~CSettingsDlg()
 {
+	delete m_LabelType;
+	delete m_LabelSize;
+	delete m_LabelQueues;
+	delete m_LabelThreads;
+	delete m_LabelDefault;
+	delete m_LabelPeak;
+	delete m_LabelDemo;
+	delete m_LabelMeasureTime;
+	delete m_LabelIntervalTime;
+	delete m_ButtonSetDefault;
+	delete m_ButtonSetNVMe8;
+	delete m_ComboBenchType0;
+	delete m_ComboBenchType1;
+	delete m_ComboBenchType2;
+	delete m_ComboBenchType3;
+	delete m_ComboBenchType4;
+	delete m_ComboBenchType5;
+	delete m_ComboBenchType8;
+	delete m_ComboBenchSize0;
+	delete m_ComboBenchSize1;
+	delete m_ComboBenchSize2;
+	delete m_ComboBenchSize3;
+	delete m_ComboBenchSize4;
+	delete m_ComboBenchSize5;
+	delete m_ComboBenchSize8;
+	delete m_ComboBenchQueues0;
+	delete m_ComboBenchQueues1;
+	delete m_ComboBenchQueues2;
+	delete m_ComboBenchQueues3;
+	delete m_ComboBenchQueues4;
+	delete m_ComboBenchQueues5;
+	delete m_ComboBenchQueues8;
+	delete m_ComboBenchThreads0;
+	delete m_ComboBenchThreads1;
+	delete m_ComboBenchThreads2;
+	delete m_ComboBenchThreads3;
+	delete m_ComboBenchThreads4;
+	delete m_ComboBenchThreads5;
+	delete m_ComboBenchThreads8;
+	delete m_ComboMeasureTime;
+	delete m_ComboIntervalTime;
+	delete m_ButtonOk;
 }
 
 // void CSettingsDlg::DoDataExchange(CDataExchange* pDX)

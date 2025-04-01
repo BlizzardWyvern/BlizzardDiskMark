@@ -193,8 +193,8 @@ CDiskMarkDlg::CDiskMarkDlg(QWidget* pParent /*=NULL*/)
 	m_ReadUnit = new QLabel(this);
 	m_DemoSetting = new QLabel(this);
 
-	//m_AboutDlg = NULL;
-	//m_SettingsDlg = NULL;
+	m_AboutDlg = nullptr;
+	m_SettingsDlg = nullptr;
 
 #ifdef SUISHO_AOI_SUPPORT
 	m_DefaultTheme = L"Aoi";
@@ -1549,11 +1549,12 @@ void CDiskMarkDlg::closeEvent(QCloseEvent *event)
 	QMainWindow::closeEvent(event);
 }
 
-// void CDiskMarkDlg::OnAbout()
-// {
-	// m_AboutDlg = new CAboutDlg(this);
-	// m_AboutDlg->Create(CAboutDlg::IDD, m_AboutDlg, ID_ABOUT, this);
-// }
+void CDiskMarkDlg::OnAbout()
+{
+	// Show About Dialog
+	m_AboutDlg = new CAboutDlg(this);
+	m_AboutDlg->show();
+}
 
 void CDiskMarkDlg::OnCancel()
 {
@@ -3862,3 +3863,15 @@ void CDiskMarkDlg::SetWindowTitle(QString message)
 
 	// CMainDialogFx::OnLButtonDown(nFlags, point);
 // }
+
+void CDiskMarkDlg::OnExit()
+{
+	QApplication::quit();
+}
+
+void CDiskMarkDlg::OnSettings()
+{
+	// Show Setting Dialog
+	m_SettingsDlg = new CSettingsDlg(this);
+	m_SettingsDlg->show();
+}
