@@ -1,5 +1,5 @@
 qt_add_qml_module(BlizzardIgloo
-    STATIC
+    SHARED
     URI BlizzardIgloo
     VERSION 1.0
     QML_FILES
@@ -14,8 +14,3 @@ qt_add_qml_module(BlizzardIgloo
         TextField.qml
     OUTPUT_DIRECTORY BlizzardIgloo
 )
-
-# # Set a custom directory for the compiled DLL
-# set_target_properties(BlizzardIgloo PROPERTIES
-#     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/CustomDllDir"
-# )
