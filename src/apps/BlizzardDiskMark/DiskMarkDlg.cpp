@@ -75,10 +75,7 @@ CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 	InitScore();
 	
 	UpdateQueuesThreads();
-	ChangeButtonStatus(true);
-
 	
-
 // #ifdef MIX_MODE
 // 	m_ComboMix = new QComboBox(this);
 // 	connect(m_ComboMix, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboMix(int)));
@@ -212,7 +209,6 @@ void CDiskMarkDlg::SettingsQueuesThreads(int type)
 			}
 		}
 		UpdateQueuesThreads();
-		ChangeButtonStatus(true);
 		break;
 	case 1: // NVMe SSD Ver.8
 		{
@@ -229,7 +225,6 @@ void CDiskMarkDlg::SettingsQueuesThreads(int type)
 			}
 		}
 		UpdateQueuesThreads();
-		ChangeButtonStatus(true);
 		break;
 	/*
 	case 2: // NVMe SSD Ver.9
@@ -247,7 +242,6 @@ void CDiskMarkDlg::SettingsQueuesThreads(int type)
 		}
 	}
 		UpdateQueuesThreads();
-		ChangeButtonStatus(TRUE);
 	break;
 	*/
 	default:
@@ -304,10 +298,6 @@ void CDiskMarkDlg::OnSequentialPeak()
 		{
 			m_DiskBenchStatus = false;
 		}
-		else
-		{
-			ChangeButtonStatus(false);
-		}
 		;
 	}
 	else
@@ -329,10 +319,6 @@ void CDiskMarkDlg::OnRandomPeak()
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
-		}
-		else
-		{
-			ChangeButtonStatus(false);
 		}
 		;
 	}
@@ -356,10 +342,6 @@ void CDiskMarkDlg::OnSequentialReal()
 		{
 			m_DiskBenchStatus = false;
 		}
-		else
-		{
-			ChangeButtonStatus(false);
-		}
 		;
 	}
 	else
@@ -381,10 +363,6 @@ void CDiskMarkDlg::OnRandomReal()
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
-		}
-		else
-		{
-			ChangeButtonStatus(false);
 		}
 		;
 	}
@@ -420,10 +398,6 @@ void CDiskMarkDlg::OnTest0()
 		{
 			m_DiskBenchStatus = false;
 		}
-		else
-		{
-			ChangeButtonStatus(false);
-		}
 		;
 	}
 	else
@@ -456,10 +430,6 @@ void CDiskMarkDlg::OnTest1()
 		if (m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
-		}
-		else
-		{
-			ChangeButtonStatus(false);
 		}
 		;
 	}
@@ -494,10 +464,6 @@ void CDiskMarkDlg::OnTest2()
 		{
 			m_DiskBenchStatus = false;
 		}
-		else
-		{
-			ChangeButtonStatus(false);
-		}
 		;
 	}
 	else
@@ -530,10 +496,6 @@ void CDiskMarkDlg::OnTest3()
 		if(m_WinThread == NULL)
 		{
 			m_DiskBenchStatus = false;
-		}
-		else
-		{
-			ChangeButtonStatus(false);
 		}
 		;
 	}
@@ -573,10 +535,6 @@ void CDiskMarkDlg::OnAll()
 		{
 			m_DiskBenchStatus = false;
 		}
-		else
-		{
-			ChangeButtonStatus(false);
-		}
 		;
 	}
 	else
@@ -597,181 +555,6 @@ void CDiskMarkDlg::Stop()
 		}
 	}
 	m_DiskBenchStatusChanged();
-}
-
-QString CDiskMarkDlg::GetButtonText(int type, int size, int queues, int threads, int unit) const
-{
-	QString text;
-
-	if (size >= 1024)
-	{
-		if (type == BENCH_RND)
-		{
-			if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-			{
-				if (unit == SCORE_IOPS)
-				{
-					text = QString("RND%1M\n(IOPS)").arg(size / 1024);
-				}
-				else if (unit == SCORE_US)
-				{
-					text = QString("RND%1M\n(μs)").arg(size / 1024);
-				}
-				else if (unit == SCORE_GBS)
-				{
-					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
-				}
-				else
-				{
-					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
-				}
-			}
-			else
-			{
-				if (unit == SCORE_GBS)
-				{
-					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
-				}
-				else
-				{
-					text = QString("RND%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
-				}
-			}
-		}
-		else
-		{
-			if (unit == SCORE_GBS)
-			{
-				text = QString("SEQ%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
-			}
-			else
-			{
-				text = QString("SEQ%1M\nQ%2T%3").arg(size / 1024).arg(queues).arg(threads);
-			}
-		}
-	}
-	else
-	{
-		if (type == BENCH_RND)
-		{
-			if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-			{
-				if (unit == SCORE_IOPS)
-				{
-					text = QString("RND%1K\n(IOPS)").arg(size);
-				}
-				else if (unit == SCORE_US)
-				{
-					text = QString("RND%1K\n(μs)").arg(size);
-				}
-				else if (unit == SCORE_GBS)
-				{
-					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
-				}
-				else
-				{
-					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
-				}
-			}
-			else
-			{
-				if (unit == SCORE_GBS)
-				{
-					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
-				}
-				else
-				{
-					text = QString("RND%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
-				}
-			}
-		}
-		else
-		{
-			if (unit == SCORE_GBS)
-			{
-				text = QString("SEQ%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
-			}
-			else
-			{
-				text = QString("SEQ%1K\nQ%2T%3").arg(size).arg(queues).arg(threads);
-			}
-		}
-	}
-
-	return text;
-}
-QString CDiskMarkDlg::GetButtonToolTipText(int type, int size, int queues, int threads, int unit) const
-{
-	QString text;
-
-	if (size >= 1024)
-	{
-		if (type == BENCH_RND)
-		{
-			if (unit == SCORE_IOPS)
-			{
-				text = QString("Random %1MiB\nQueues=%2\nThreads=%3\n(IOPS)").arg(size / 1024).arg(queues).arg(threads);
-			}
-			else if (unit == SCORE_US)
-			{
-				text = QString("Random %1MiB\nQueues=%2\nThreads=%3\n(μs)").arg(size / 1024).arg(queues).arg(threads);
-			}
-			else if (unit == SCORE_GBS)
-			{
-				text = QString("Random %1MiB\nQueues=%2\nThreads=%3\n(GB/s)").arg(size / 1024).arg(queues).arg(threads);
-			}
-			else
-			{
-				text = QString("Random %1MiB\nQueues=%2\nThreads=%3\n(MB/s)").arg(size / 1024).arg(queues).arg(threads);
-			}
-		}
-		else
-		{
-			if (unit == SCORE_GBS)
-			{
-				text = QString("Sequential %1MiB\nQueues=%2\nThreads=%3\n(GB/s)").arg(size / 1024).arg(queues).arg(threads);
-			}
-			else
-			{
-				text = QString("Sequential %1MiB\nQueues=%2\nThreads=%3\n(MB/s)").arg(size / 1024).arg(queues).arg(threads);
-			}
-		}
-	}
-	else
-	{
-		if (type == BENCH_RND)
-		{
-			if (unit == SCORE_IOPS)
-			{
-				text = QString("Random %1KiB\nQueues=%2\nThreads=%3\n(IOPS)").arg(size).arg(queues).arg(threads);
-			}
-			else if (unit == SCORE_US)
-			{
-				text = QString("Random %1KiB\nQueues=%2\nThreads=%3\n(μs)").arg(size).arg(queues).arg(threads);
-			}
-			else if (unit == SCORE_GBS)
-			{
-				text = QString("Random %1KiB\nQueues=%2\nThreads=%3\n(GB/s)").arg(size).arg(queues).arg(threads);
-			}
-			else
-			{
-				text = QString("Random %1KiB\nQueues=%2\nThreads=%3\n(MB/s)").arg(size).arg(queues).arg(threads);
-			}
-		}
-		else
-		{
-			if (unit == SCORE_GBS)
-			{
-				text = QString("Sequential %1KiB\nQueues=%2\nThreads=%3\n(GB/s)").arg(size).arg(queues).arg(threads);
-			}
-			else
-			{
-				text = QString("Sequential %1KiB\nQueues=%2\nThreads=%3\n(MB/s)").arg(size).arg(queues).arg(threads);
-			}
-		}
-	}
-
-	return text;
 }
 
 void CDiskMarkDlg::InitDrive()
@@ -1303,7 +1086,6 @@ void CDiskMarkDlg::OnProfileDefault()
 	ProfileDefault();
 	
 	InitScore();
-	ChangeButtonStatus(true);
 }
 void CDiskMarkDlg::ProfileDefault()
 {
@@ -1317,7 +1099,6 @@ void CDiskMarkDlg::OnProfilePeak()
 	ProfilePeak();
 	
 	InitScore();
-	ChangeButtonStatus(true);
 }
 void CDiskMarkDlg::ProfilePeak()
 {
@@ -1331,7 +1112,6 @@ void CDiskMarkDlg::OnProfileReal()
 	ProfileReal();
 	
 	InitScore();
-	ChangeButtonStatus(true);
 }
 void CDiskMarkDlg::ProfileReal()
 {
@@ -1345,7 +1125,6 @@ void CDiskMarkDlg::OnProfileDemo()
 	ProfileDemo();
 	
 	InitScore();
-	ChangeButtonStatus(true);
 }
 void CDiskMarkDlg::ProfileDemo()
 {
@@ -1359,7 +1138,6 @@ void CDiskMarkDlg::OnProfileDefaultMix()
 	ProfileDefaultMix();
 	
 	InitScore();
-	ChangeButtonStatus(true);
 }
 void CDiskMarkDlg::ProfileDefaultMix()
 {
@@ -1371,7 +1149,6 @@ void CDiskMarkDlg::ProfileDefaultMix()
 void CDiskMarkDlg::OnProfilePeakMix()
 {
 	ProfilePeakMix();
-	ChangeButtonStatus(true);
 	
 	InitScore();
 }
@@ -1385,7 +1162,6 @@ void CDiskMarkDlg::ProfilePeakMix()
 void CDiskMarkDlg::OnProfileRealMix()
 {
 	ProfileRealMix();
-	ChangeButtonStatus(true);
 	
 	InitScore();
 }
@@ -1435,92 +1211,8 @@ void CDiskMarkDlg::OnSettings()
 {
 }
 
-void CDiskMarkDlg::ChangeButtonStatus(bool status)
-{
-	m_buttonTextList.clear();
-
- 	if(status)
-	{
-		m_buttonToolTipList.clear();
-// 		QString title;
-
-		m_buttonTextList.append("All");
-
-		if (m_Profile == PROFILE_DEMO)
-		{
-			QString text, type;
-			if (*m_BenchType[8] == BENCH_SEQ)
-			{
-				type = QStringLiteral("SEQ");
-			}
-			else
-			{
-				type = QStringLiteral("RND");
-			}
-			if (m_BenchSize[8] > 1000)
-			{
-				text = QString("%1 %2MiB, Q=%3, T=%4").arg(type).arg(m_BenchSize[8] / 1024).arg(m_BenchQueues[8]).arg(m_BenchThreads[8]);
-			}
-			else
-			{
-				text = QString("%1 %2KiB, Q=%3, T=%4").arg(type).arg(m_BenchSize[8]).arg(m_BenchQueues[8]).arg(m_BenchThreads[8]);
-			}
-
-// 			m_DemoSetting->setText(text);
-		}
-		else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
-		{
-			m_buttonTextList.append(GetButtonText(BENCH_SEQ, m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4], SCORE_MBS));
-			m_buttonTextList.append(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_MBS));
-			m_buttonTextList.append(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_IOPS));
-			m_buttonTextList.append(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_US));
-
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_SEQ, m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4], SCORE_MBS));
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_MBS));
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_IOPS));
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_US));
-		}
-		else if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-		{
-			m_buttonTextList.append(GetButtonText(BENCH_SEQ, 1024, 1, 1, SCORE_MBS));
-			m_buttonTextList.append(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_MBS));
-			m_buttonTextList.append(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_IOPS));
-			m_buttonTextList.append(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_US));
-
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_SEQ, 1024, 1, 1, SCORE_MBS));
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_MBS));
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_IOPS));
-			m_buttonToolTipList.append(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_US));
-		}
-		else
-		{
-			m_buttonTextList.append(GetButtonText(*m_BenchType[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0], m_IndexTestUnit));
-			m_buttonTextList.append(GetButtonText(*m_BenchType[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1], m_IndexTestUnit));
-			m_buttonTextList.append(GetButtonText(*m_BenchType[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2], m_IndexTestUnit));
-			m_buttonTextList.append(GetButtonText(*m_BenchType[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3], m_IndexTestUnit));
-
-			m_buttonToolTipList.append(GetButtonToolTipText(*m_BenchType[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0], m_IndexTestUnit));
-			m_buttonToolTipList.append(GetButtonToolTipText(*m_BenchType[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1], m_IndexTestUnit));
-			m_buttonToolTipList.append(GetButtonToolTipText(*m_BenchType[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2], m_IndexTestUnit));
-			m_buttonToolTipList.append(GetButtonToolTipText(*m_BenchType[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3], m_IndexTestUnit));
-		}
-	}
-	else
-	{
-		m_buttonTextList.append("Stop");
-		m_buttonTextList.append("Stop");
-		m_buttonTextList.append("Stop");
-		m_buttonTextList.append("Stop");
-		m_buttonTextList.append("Stop");
-	}
-
-	m_buttonsChanged();
-	m_DiskBenchStatusChanged();
-}
-
 void CDiskMarkDlg::OnExitBenchmark()
 {
-	ChangeButtonStatus(true);
 }
 
 CDiskMarkDlg::Profile CDiskMarkDlg::m_getProfile() const

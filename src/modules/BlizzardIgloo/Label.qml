@@ -12,7 +12,7 @@ T.Label {
 
     property real meter: 0
 
-    font.pixelSize: 35
+    font.pixelSize: height * 35 / 48
     font.family: "Segoe UI"
     font.weight: Font.Bold
 

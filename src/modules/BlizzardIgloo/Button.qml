@@ -18,7 +18,7 @@ T.Button {
     // horizontalPadding: padding + 2
     // spacing: 6
 
-    font.pixelSize: 12
+    font.pixelSize: control.height / 4
     font.family: "Segoe UI"
     font.weight: Font.Bold
 

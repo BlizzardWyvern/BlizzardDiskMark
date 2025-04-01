@@ -22,21 +22,10 @@
 #include <QQmlListProperty>
 #include <QQmlEngine>
 
-// #include "../lib/resource.h"
-
 #include "AboutDlg.h"
 #include "DiskBench.h"
 #include "SettingsDlg.h"
 //#include "FontSelectionDlg.h"
-
-//#include "../Priscilla/DialogFx.h"
-//#include "../Priscilla/MainDialogFx.h"
-//#include "ButtonFx.h"
-//#include "../Priscilla/StaticFx.h"
-//#include "ComboBoxFx.h"
-//#include "EditFx.h"
-//#include "UtilityFx.h"
-//#include "OsInfoFx.h"
 
 class CDiskMarkDlg : public QObject
 {
@@ -258,8 +247,6 @@ public slots:
 	void OnBenchmarkWriteOnly();
 protected:
 	QString GetResultString(int type, double score, double latency, int size, int queues, int threads);
-	QString GetButtonText(int type, int size, int queues, int threads, int unit) const;
-	QString GetButtonToolTipText(int type, int size, int queues, int threads, int unit) const;
 	
 	QString m_TitleTestDrive;
 	QString m_TitleTestCount;
@@ -326,7 +313,6 @@ protected:
 	QLabel* m_DemoSetting;
 
 	virtual void OnCancel();
-	//LRESULT OnQueryEndSession(WPARAM wParam, LPARAM lParam);
 
 public:
 	void ProfileDefault();
