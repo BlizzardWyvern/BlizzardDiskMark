@@ -47,18 +47,20 @@ if(WIN32)
     endif()
 
     # Download fio msi installer dependent on the architecture
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-3.39/fio-3.39-x64.msi")
-    else()
-        set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-3.39/fio-3.39-x86.msi")
-    endif()
-
+    set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-3.39/fio-3.39-${CMAKE_VS_PLATFORM_NAME}.msi")
     set(FIO_INSTALLER ${CMAKE_BINARY_DIR}/installer/fio-${CMAKE_VS_PLATFORM_NAME}.msi)
 
     file(DOWNLOAD ${FIO_INSTALLER_URL} ${FIO_INSTALLER}
         EXPECTED_HASH SHA256=49be53fb6b9517ce4fc5e26136d7c981df84daa31dd50db66ac3bbb5cb7be63a
         SHOW_PROGRESS
     )
+
+    set(VC_REDIST ${CMAKE_BINARY_DIR}/installer/vc_redist.${CMAKE_VS_PLATFORM_NAME}.exe)
+    if (EXISTS ${CMAKE_BINARY_DIR}/Release/vc_redist.${CMAKE_VS_PLATFORM_NAME}.exe)
+        # Move vc_redist installer to the installer directory
+        file(COPY ${CMAKE_BINARY_DIR}/Release/vc_redist.${CMAKE_VS_PLATFORM_NAME}.exe DESTINATION ${CMAKE_BINARY_DIR}/installer)
+        file(REMOVE ${CMAKE_BINARY_DIR}/Release/vc_redist.${CMAKE_VS_PLATFORM_NAME}.exe)
+    endif()
 
     find_program(WIX_EXECUTABLE wix.exe REQUIRED)
 
@@ -75,6 +77,7 @@ if(WIN32)
         OUTPUT ${WIX_OUTPUT_BDM}
         COMMAND ${WIX_EXECUTABLE} build 
         -arch ${CMAKE_VS_PLATFORM_NAME}
+        -d SourceDir=${CMAKE_SOURCE_DIR}
         -d BinaryDir=${CMAKE_BINARY_DIR}
         -pdbtype none
         -o ${WIX_OUTPUT_BDM} 
@@ -89,11 +92,11 @@ if(WIN32)
         -arch ${CMAKE_VS_PLATFORM_NAME}
         -d Standalone=${WIX_OUTPUT_BDM}
         -d FioInstaller=${FIO_INSTALLER}
+        -d VcRedist=${VC_REDIST}
         -d SourceDir=${CMAKE_SOURCE_DIR}
         -d BinaryDir=${CMAKE_BINARY_DIR}
         -pdbtype none
         -ext WixToolset.BootstrapperApplications.wixext
-        # -ext WixToolset.Bal.wixext
         -o ${WIX_OUTPUT_CHAIN} 
         ${WIX_SOURCE_CHAIN}
         DEPENDS BlizzardDiskMark

@@ -4,18 +4,22 @@
             <bal:WixStandardBootstrapperApplication
                 LicenseFile="$(var.SourceDir)/installer/License.rtf"
                 Theme="rtfLicense"
+                SuppressOptionsUI="yes"
+                SuppressRepair="yes"
                 ShowVersion="yes" />
         </BootstrapperApplication>
 
         <Chain>
-            <!-- Main MSI -->
-            <MsiPackage 
-                SourceFile="$(var.Standalone)" />
-
             <!-- Chained installation of fio-x64.msi -->
             <MsiPackage SourceFile="$(var.FioInstaller)" >
                 <MsiProperty Name="UILevel" Value="3" />
             </MsiPackage>
+            <!-- Chained installation of vcredist_x64.exe -->
+            <ExePackage SourceFile="$(var.VcRedist)" Permanent="yes" InstallArguments="/passive /norestart" />
+            <!-- Main MSI -->
+            <MsiPackage SourceFile="$(var.Standalone)" />
+
+            
         </Chain>
     </Bundle>
 </Wix>
