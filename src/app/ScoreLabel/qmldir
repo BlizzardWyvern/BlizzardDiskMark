@@ -1,4 +1,6 @@
 module ScoreLabel
 Label 1.0 Label.qml
+Button 1.0 Button.qml
+ComboBox 1.0 ComboBox.qml
 
 import QtQuick.Controls.Basic auto

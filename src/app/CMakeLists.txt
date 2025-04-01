@@ -13,7 +13,7 @@ add_executable(BlizzardDiskMark
 qt_add_qml_module(ScoreLabel
     URI ScoreLabel
     QML_FILES
-        ScoreLabel/Label.qml
+        ScoreLabel/Label.qml ScoreLabel/Button.qml ScoreLabel/ComboBox.qml
     SOURCES 
         ScoreLabel.cpp ScoreLabel.h
     DEPENDENCIES
@@ -25,7 +25,6 @@ qt_add_qml_module(BlizzardDiskMark
     URI BlizzardDiskMark
     QML_FILES 
         DiskMarkDlg.qml
-        # ScoreLabel/Label.qml
     SOURCES 
         DiskMarkDlg.cpp DiskMarkDlg.h
     DEPENDENCIES
