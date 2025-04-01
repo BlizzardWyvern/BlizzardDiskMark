@@ -1,8 +1,9 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Package Name="BlizzardDiskMark" Manufacturer="Blizzard" Version="1.0.0.0" UpgradeCode="1b9e19ba-f0e7-4365-80c6-116177596235">
         <MajorUpgrade DowngradeErrorMessage="A newer version of BlizzardDiskMark is already installed." />
+        <Media Id="1" Cabinet="BlizzardDiskMark.cab" EmbedCab="yes" />
         <Feature Id="Main">
-            <Files Include="@CMAKE_BINARY_DIR@/Release/**" Directory="INSTALLFOLDER" />
+            <Files Include="$(var.BinaryDir)/Release/**" Directory="INSTALLFOLDER" />
         </Feature>
     </Package>
 

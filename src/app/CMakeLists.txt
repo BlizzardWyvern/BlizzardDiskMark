@@ -33,8 +33,10 @@ set_target_properties(BlizzardDiskMark PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
-# Add a post-build step to run windeployqt for Release builds
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
+# Add WiX build step if on Windows
+if(WIN32)
+    # Add a post-build step to run windeployqt for Release builds
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_custom_command(TARGET BlizzardDiskMark POST_BUILD
         COMMAND ${Qt6_DIR}/../../../bin/windeployqt.exe 
             --release --no-translations
@@ -42,38 +44,66 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
             $<TARGET_FILE:BlizzardDiskMark>
         COMMENT "Running windeployqt on BlizzardDiskMark executable with QML directory"
     )
-endif()
+    endif()
 
-# Add WiX build step if on Windows
-if(WIN32)
+    # Download fio msi installer dependent on the architecture
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-3.39/fio-3.39-x64.msi")
+    else()
+        set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-3.39/fio-3.39-x86.msi")
+    endif()
+
+    set(FIO_INSTALLER ${CMAKE_BINARY_DIR}/installer/fio-${CMAKE_VS_PLATFORM_NAME}.msi)
+
+    file(DOWNLOAD ${FIO_INSTALLER_URL} ${FIO_INSTALLER}
+        EXPECTED_HASH SHA256=49be53fb6b9517ce4fc5e26136d7c981df84daa31dd50db66ac3bbb5cb7be63a
+        SHOW_PROGRESS
+    )
+
     find_program(WIX_EXECUTABLE wix.exe REQUIRED)
 
-    set(WIX_SOURCE ${CMAKE_SOURCE_DIR}/installer/BlizzardDiskMark.wxs)
-    set(WIX_PREPROCESSED ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMark_preprocessed.wxs)
-    set(WIX_OUTPUT ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMark.msi)
-    set(REPLACE_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/replace_in_file.py)
-    
-    # Preprocess the .wxs file
-    add_custom_command(
-        OUTPUT ${WIX_PREPROCESSED}
-        COMMAND ${PYTHON_EXECUTABLE} ${REPLACE_SCRIPT}
-            ${WIX_SOURCE} ${WIX_PREPROCESSED}
-            "@CMAKE_BINARY_DIR@" "${CMAKE_BINARY_DIR}"
-        DEPENDS ${WIX_SOURCE} ${REPLACE_SCRIPT}
-        COMMENT "Preprocessing WiX source file"
-    )
+    # WiX source and output files for BlizzardDiskMark
+    set(WIX_SOURCE_BDM ${CMAKE_SOURCE_DIR}/installer/BlizzardDiskMark.wxs)
+    set(WIX_OUTPUT_BDM ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMarkStandalone.msi)
 
+    # WiX source and output files for ChainInstaller
+    set(WIX_SOURCE_CHAIN ${CMAKE_SOURCE_DIR}/installer/ChainInstaller.wxs)
+    set(WIX_OUTPUT_CHAIN ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMark.exe)
+
+    # Build the MSI installers
     add_custom_command(
-        OUTPUT ${WIX_OUTPUT}
+        OUTPUT ${WIX_OUTPUT_BDM}
         COMMAND ${WIX_EXECUTABLE} build 
         -arch ${CMAKE_VS_PLATFORM_NAME}
-        -o ${WIX_OUTPUT} 
-        ${WIX_PREPROCESSED}
-        DEPENDS ${WIX_PREPROCESSED} BlizzardDiskMark
-        COMMENT "Building MSI installer using WiX 5"
+        -d BinaryDir=${CMAKE_BINARY_DIR}
+        -pdbtype none
+        -o ${WIX_OUTPUT_BDM} 
+        ${WIX_SOURCE_BDM}
+        DEPENDS BlizzardDiskMark
+        COMMENT "Building MSI installer"
     )
 
-    add_custom_target(WiXInstaller ALL DEPENDS ${WIX_OUTPUT})
-    add_dependencies(WiXInstaller BlizzardDiskMark) # Ensure WiX runs after BlizzardDiskMark
+    add_custom_command(
+        OUTPUT ${WIX_OUTPUT_CHAIN}
+        COMMAND ${WIX_EXECUTABLE} build 
+        -arch ${CMAKE_VS_PLATFORM_NAME}
+        -d Standalone=${WIX_OUTPUT_BDM}
+        -d FioInstaller=${FIO_INSTALLER}
+        -d SourceDir=${CMAKE_SOURCE_DIR}
+        -d BinaryDir=${CMAKE_BINARY_DIR}
+        -pdbtype none
+        -ext WixToolset.BootstrapperApplications.wixext
+        # -ext WixToolset.Bal.wixext
+        -o ${WIX_OUTPUT_CHAIN} 
+        ${WIX_SOURCE_CHAIN}
+        DEPENDS BlizzardDiskMark
+        COMMENT "Building bundle installer"
+    )
+
+    add_custom_target(WiXInstaller_BDM ALL DEPENDS ${WIX_OUTPUT_BDM})
+    add_custom_target(WiXInstaller_CHAIN ALL DEPENDS ${WIX_OUTPUT_CHAIN})
+
+    add_dependencies(WiXInstaller_BDM BlizzardDiskMark)
+    add_dependencies(WiXInstaller_CHAIN WiXInstaller_BDM)
 endif()
 

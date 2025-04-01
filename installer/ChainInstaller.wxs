@@ -1,0 +1,21 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+    <Bundle Name="BlizzardDiskMark" Manufacturer="Blizzard" Version="1.0.0.0" UpgradeCode="95537992-8f19-437b-965c-5dd52d3a7e15">
+        <BootstrapperApplication>
+            <bal:WixStandardBootstrapperApplication
+                LicenseFile="$(var.SourceDir)/installer/License.rtf"
+                Theme="rtfLicense"
+                ShowVersion="yes" />
+        </BootstrapperApplication>
+
+        <Chain>
+            <!-- Main MSI -->
+            <MsiPackage 
+                SourceFile="$(var.Standalone)" />
+
+            <!-- Chained installation of fio-x64.msi -->
+            <MsiPackage SourceFile="$(var.FioInstaller)" >
+                <MsiProperty Name="UILevel" Value="3" />
+            </MsiPackage>
+        </Chain>
+    </Bundle>
+</Wix>
