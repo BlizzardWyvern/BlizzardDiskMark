@@ -7,18 +7,15 @@
 
 #pragma once
 
-#include "resource.h"
+#include <QApplication>
 
-class CDiskMarkApp : public CWinApp
+class CDiskMarkApp : public QApplication
 {
 public:
-	CDiskMarkApp();
-
+	CDiskMarkApp(int &argc, char **argv);
+	
 public:
-	virtual BOOL InitInstance();
-
-
-	DECLARE_MESSAGE_MAP()
+	virtual bool InitInstance(int argc, char *argv[]);
 };
 
 extern CDiskMarkApp theApp;

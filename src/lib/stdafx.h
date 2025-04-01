@@ -35,10 +35,10 @@
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
 #define _AFX_ALL_WARNINGS
 
-#include <afxwin.h>         // MFC core and standard component
-#include <afxext.h>         // Extended MFC
-#include <afxdtctl.h>		// MFC IE4 Common Control support
-#include <afxcmn.h>			// MFC Windows Common Control support
+//#include <afxwin.h>         // MFC core and standard component
+//#include <afxext.h>         // Extended MFC
+//#include <afxdtctl.h>		// MFC IE4 Common Control support
+//#include <afxcmn.h>			// MFC Windows Common Control support
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
@@ -108,20 +108,20 @@
 #elif _M_X64
 #define PRODUCT_EDITION			L"x64"
 #else
-#define PRODUCT_EDITION			L"x86"
+#define PRODUCT_EDITION			"x86"
 #endif
 #endif
 #endif
 
 // Version Information
-#define PRODUCT_NAME				L"CrystalDiskMark"
-#define PRODUCT_FILENAME			L"CrystalDiskMark"
-#define PRODUCT_VERSION				L"8.0.6"
-#define PRODUCT_SHORT_NAME		    L"CDM"
+#define PRODUCT_NAME				"CrystalDiskMark"
+#define PRODUCT_FILENAME			"CrystalDiskMark"
+#define PRODUCT_VERSION				"8.0.6"
+#define PRODUCT_SHORT_NAME		    "CDM"
 
-#define PRODUCT_RELEASE				L"2024/11/20"
-#define PRODUCT_COPY_YEAR			L"2007-2024"
-#define PRODUCT_LICENSE				L"MIT License"
+#define PRODUCT_RELEASE				 "2024/11/20"
+#define PRODUCT_COPY_YEAR			 "2007-2024"
+#define PRODUCT_LICENSE				 "MIT License"
 
 #ifdef SUISHO_AOI_SUPPORT
 #define PRODUCT_COPYRIGHT_1         L"© 2007-2024 hiyohiyo"

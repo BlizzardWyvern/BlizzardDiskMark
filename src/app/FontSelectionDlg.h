@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "afxwin.h"
+//#include "afxwin.h"
 #include "ButtonFx.h"
 #include "ComboBoxFx.h"
 #include "FontComboBoxFx.h"

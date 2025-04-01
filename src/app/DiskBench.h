@@ -7,10 +7,12 @@
 
 #pragma once
 
+#include "DiskMarkDlg.h"
+
 #define TIMER_ID 5963
 
 // Common Message
-#define ALL_0X00_0FILL L"<0Fill>"
+#define ALL_0X00_0FILL "<0Fill>"
 
 // Benchmark
 #define BENCHMARK_READ       1
@@ -74,15 +76,15 @@ enum DISK_SPD_CMD
 	TEST_MIX_8,
 };
 
-UINT ExecDiskBenchAll(LPVOID  dlg);
-UINT ExecDiskBenchAllPeak(LPVOID  dlg);
-UINT ExecDiskBenchAllReal(LPVOID  dlg);
-UINT ExecDiskBenchAllDemo(LPVOID  dlg);
-UINT ExecDiskBench0(LPVOID  dlg);
-UINT ExecDiskBench1(LPVOID  dlg);
-UINT ExecDiskBench2(LPVOID  dlg);
-UINT ExecDiskBench3(LPVOID  dlg);
-UINT ExecDiskBench4(LPVOID  dlg);
-UINT ExecDiskBench5(LPVOID  dlg);
-UINT ExecDiskBench6(LPVOID  dlg);
-UINT ExecDiskBench7(LPVOID  dlg);
+u_int ExecDiskBenchAll(void* dlg);
+u_int ExecDiskBenchAllPeak(void* dlg);
+u_int ExecDiskBenchAllReal(void* dlg);
+u_int ExecDiskBenchAllDemo(void* dlg);
+u_int ExecDiskBench0(void* dlg);
+u_int ExecDiskBench1(void* dlg);
+u_int ExecDiskBench2(void* dlg);
+u_int ExecDiskBench3(void* dlg);
+u_int ExecDiskBench4(void* dlg);
+u_int ExecDiskBench5(void* dlg);
+u_int ExecDiskBench6(void* dlg);
+u_int ExecDiskBench7(void* dlg);

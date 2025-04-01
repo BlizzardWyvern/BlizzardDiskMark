@@ -1,4 +1,6 @@
 .vs/
+.vscode/
+.DS_Store
 Build/
 DiskMark.vcxproj.user
 DiskMark.aps
