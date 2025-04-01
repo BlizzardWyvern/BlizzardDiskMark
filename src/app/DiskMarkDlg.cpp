@@ -24,80 +24,43 @@
 #include <QStorageInfo>
 #include <QFileDialog>
 
-#ifdef SUISHO_SHIZUKU_SUPPORT
-#define SIZE_X		1000
-#define SIZE_Y		500
-#define SIZE_MIN_Y	500
-#define OFFSET_X    200
-#define MAX_METER_LENGTH	320
-#else
-#define SIZE_X		480
+
 #define SIZE_X_MIX	680
-#define SIZE_Y		300
-#define SIZE_MIN_Y	300
-#define OFFSET_X    0
 #define MAX_METER_LENGTH	192
-#endif
 
 CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 	: QObject(parent)
 {
-// 	QMenuBar *menuBar = this->menuBar();
-// 	QMenu *menu = nullptr;
 
-// 	menu = new QMenu(tr("File"), this);
-// 	menuBar->addMenu(menu);
-// 	menu = new QMenu(tr("Settings"), this);
-// 	menuBar->addMenu(menu);
-// 	menu = new QMenu(tr("Profile"), this);
-// 	menuBar->addMenu(menu);
-// 	menu = new QMenu(tr("Theme"), this);
-// 	menuBar->addMenu(menu);
-// 	menu = new QMenu(tr("Help"), this);
-// 	menuBar->addMenu(menu);
-// 	menu = new QMenu(tr("Language"), this);
-// 	menuBar->addMenu(menu);
+	m_ReadScore = QVector<double*>(9, nullptr);
+	m_WriteScore = QVector<double*>(9, nullptr);
+	m_ReadLatency = QVector<double*>(9, nullptr);
+	m_WriteLatency = QVector<double*>(9, nullptr);
+	for (int i = 0; i < m_ReadScore.size(); ++i) {
+		m_ReadScore[i] = new double(0.0);
+	}
+	for (int i = 0; i < m_WriteScore.size(); ++i) {
+		m_WriteScore[i] = new double(0.0);
+	}
+	for (int i = 0; i < m_ReadLatency.size(); ++i) {
+		m_ReadLatency[i] = new double(0.0);
+	}
+	for (int i = 0; i < m_WriteLatency.size(); ++i) {
+		m_WriteLatency[i] = new double(0.0);
+	}
 
-// 	menuBar->setNativeMenuBar(false);
+	m_DriveList = QStringList();
 
-// 	QAction *action = nullptr;
+	m_WinThread = NULL;
 
-// 	action = new QAction(tr("Exit") + "\tAlt + F4", this);
-// 	action->setObjectName("actionExit");
-// 	menuBar->actions().at(0)->menu()->addAction(action);
-// 	action = new QAction(tr("Save Text") + "\tCtrl + T", this);
-// 	action->setObjectName("actionSaveText");
-// 	menuBar->actions().at(0)->menu()->addAction(action);
-// 	action = new QAction(tr("Save Image") + "\tCtrl + S", this);
-// 	action->setObjectName("actionSaveImage");
-// 	menuBar->actions().at(0)->menu()->addAction(action);
-// 	action = new QAction(tr("Copy") + "\tCtrl + Shift + C", this);
-// 	action->setObjectName("actionCopy");
-// 	menuBar->actions().at(0)->menu()->addAction(action);
-// 	menu = menuBar->actions().at(1)->menu();
-// 	action = new QAction(tr("Test Data"), this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("Default Random"), this);
-// 	action->setObjectName("actionModeDefault");
-// 	menu->addAction(action);
-// 	action = new QAction(tr("All Zero"), this);
-// 	action->setObjectName("actionModeAllZero");
-// 	menu->addAction(action);
-// 	menu = menuBar->actions().at(2)->menu();
-// 	action = new QAction(tr("Profile Default"), this);
-// 	menu->addAction(action);
-// 	menu = menuBar->actions().at(1)->menu();
-// 	action = new QAction(tr("Settings") + "\tCtrl + Q", this);
-// 	menu->addAction(action);
-// 	menu = menuBar->actions().at(2)->menu();
-// 	action = new QAction(tr("Profile Default"), this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("Profile Peak"), this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("Profile Real"), this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("Profile Demo"), this);
-// 	menu->addAction(action);
+	if (BENCHMARK_READ > m_Benchmark || m_Benchmark > BENCHMARK_READ_WRITE)
+	{
+		m_Benchmark = BENCHMARK_READ_WRITE;
+	}
+
+	InitDrive();
+	UpdateUnitLabel();
+	UpdateQueuesThreads();
 
 // 	#ifdef MIX_MODE
 // 	action = new QAction(tr("Profile Default") + " [+Mix]", this);
@@ -107,19 +70,6 @@ CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 // 	action = new QAction(tr("Profile Real") + " [+Mix]", this);
 // 	menu->addAction(action);
 // 	#endif
-
-// 	menu = menuBar->actions().at(4)->menu();
-// 	action = new QAction(tr("Help") + " [Web]" + "\tF1", this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("About"), this);
-// 	menu->addAction(action);
-// 	menu = menuBar->actions().at(3)->menu();
-// 	action = new QAction(tr("Zoom"), this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("Auto"), this);
-// 	menu->addAction(action);
-// 	action = new QAction(tr("Font Setting") + "\tCtrl + F", this);
-// 	menu->addAction(action);
 
 // 	connect(menuBar->actions().at(0)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnExit()));
 // 	connect(menuBar->actions().at(0)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnSaveText()));
@@ -142,37 +92,13 @@ CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 // 	connect(menuBar->actions().at(4)->menu()->actions().at(0), SIGNAL(triggered()), this, SLOT(OnHelp()));
 // 	connect(menuBar->actions().at(4)->menu()->actions().at(1), SIGNAL(triggered()), this, SLOT(OnAbout()));
 
-// 	m_hIcon = QIcon(":/resources/mainframe.ico");
-// 	m_hIconMini = QIcon(":/resources/tray_icon.ico");
-
-// 	m_ButtonAll = new QPushButton(this);
-// 	m_ButtonTest0 = new QPushButton(this);
-// 	m_ButtonTest1 = new QPushButton(this);
-// 	m_ButtonTest2 = new QPushButton(this);
-// 	m_ButtonTest3 = new QPushButton(this);
-
 // 	connect(m_ButtonAll, SIGNAL(clicked()), this, SLOT(OnAll()));
 // 	connect(m_ButtonTest0, SIGNAL(clicked()), this, SLOT(OnTest0()));
 // 	connect(m_ButtonTest1, SIGNAL(clicked()), this, SLOT(OnTest1()));
 // 	connect(m_ButtonTest2, SIGNAL(clicked()), this, SLOT(OnTest2()));
 // 	connect(m_ButtonTest3, SIGNAL(clicked()), this, SLOT(OnTest3()));
 
-// 	m_TestRead0 = new QLabel(this);
-// 	m_TestRead1 = new QLabel(this);
-// 	m_TestRead2 = new QLabel(this);
-// 	m_TestRead3 = new QLabel(this);
-
-// 	m_TestWrite0 = new QLabel(this);
-// 	m_TestWrite1 = new QLabel(this);
-// 	m_TestWrite2 = new QLabel(this);
-// 	m_TestWrite3 = new QLabel(this);
-
 // 	m_Comment = new QLineEdit(this);
-
-// 	m_ComboCount = new QComboBox(this);
-// 	m_ComboSize = new QComboBox(this);
-// 	m_ComboDrive = new QComboBox(this);
-// 	m_ComboUnit = new QComboBox(this);
 
 // 	connect(m_ComboCount, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboCount(int)));
 // 	connect(m_ComboSize, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboSize(int)));
@@ -183,97 +109,18 @@ CDiskMarkDlg::CDiskMarkDlg(QObject* parent)
 // 	connect(m_ComboMix, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCbnSelchangeComboMix(int)));
 // #endif
 
-// 	m_WriteUnit = new QLabel(this);
-// 	m_ReadUnit = new QLabel(this);
 // 	m_DemoSetting = new QLabel(this);
 
 // 	m_AboutDlg = nullptr;
 // 	m_SettingsDlg = nullptr;
 
-// #ifdef SUISHO_AOI_SUPPORT
-// 	m_DefaultTheme = L"Aoi";
-// 	m_RecommendTheme = L"Aoi";
-// 	m_ThemeKeyName = L"ThemeAoi";
-
-// 	m_MarginButtonTop = 16;
-// 	m_MarginButtonLeft = 0;
-// 	m_MarginButtonBottom = 16;
-// 	m_MarginButtonRight = 0;
-// 	m_MarginMeterTop = 0;
-// 	m_MarginMeterLeft = 0;
-// 	m_MarginMeterBottom = 0;
-// 	m_MarginMeterRight = 16;
-// 	m_MarginCommentTop = 0;
-// 	m_MarginCommentLeft = 16;
-// 	m_MarginCommentBottom = 0;
-// 	m_MarginCommentRight = 16;
-// 	m_MarginDemoTop = 24;
-// 	m_MarginDemoLeft = 24;
-// 	m_MarginDemoBottom = 24;
-// 	m_MarginDemoRight = 24;
-// #elif MSI_MEI_SUPPORT
-// 	m_DefaultTheme = L"MSIMei";
-// 	m_RecommendTheme = L"MSIMei";
-// 	m_ThemeKeyName = L"ThemeMSIMei";
-
-// 	m_MarginButtonTop = 8;
-// 	m_MarginButtonLeft = 0;
-// 	m_MarginButtonBottom = 8;
-// 	m_MarginButtonRight = 0;
-// 	m_MarginMeterTop = 0;
-// 	m_MarginMeterLeft = 0;
-// 	m_MarginMeterBottom = 0;
-// 	m_MarginMeterRight = 16;
-// 	m_MarginCommentTop = 0;
-// 	m_MarginCommentLeft = 16;
-// 	m_MarginCommentBottom = 0;
-// 	m_MarginCommentRight = 64;
-// 	m_MarginDemoTop = 24;
-// 	m_MarginDemoLeft = 24;
-// 	m_MarginDemoBottom = 24;
-// 	m_MarginDemoRight = 24;
-// #elif SUISHO_SHIZUKU_SUPPORT
-// 	m_DefaultTheme = L"Shizuku";
-// 	m_RecommendTheme = L"ShizukuIdol";
-// 	m_ThemeKeyName = L"ThemeShizuku";
-
-// 	m_MarginButtonTop = 8;
-// 	m_MarginButtonLeft = 0;
-// 	m_MarginButtonBottom = 8;
-// 	m_MarginButtonRight = 0;
-// 	m_MarginMeterTop = 0;
-// 	m_MarginMeterLeft = 0;
-// 	m_MarginMeterBottom = 0;
-// 	m_MarginMeterRight = 16;
-// 	m_MarginCommentTop = 0;
-// 	m_MarginCommentLeft = 16;
-// 	m_MarginCommentBottom = 0;
-// 	m_MarginCommentRight = 64;
-// 	m_MarginDemoTop = 24;
-// 	m_MarginDemoLeft = 24;
-// 	m_MarginDemoBottom = 24;
-// 	m_MarginDemoRight = 24;
-// #else
 	//m_DefaultTheme = L"Default";
 	//m_ThemeKeyName = L"Theme";
 
-	// m_MarginButtonTop = 4;
-	// m_MarginButtonLeft = 0;
-	// m_MarginButtonBottom = 4;
-	// m_MarginButtonRight = 0;
-	// m_MarginMeterTop = 0;
-	// m_MarginMeterLeft = 0;
-	// m_MarginMeterBottom = 0;
-	// m_MarginMeterRight = 4;
-	// m_MarginCommentTop = 0;
-	// m_MarginCommentLeft = 4;
-	// m_MarginCommentBottom = 0;
-	// m_MarginCommentRight = 4;
 	// m_MarginDemoTop = 8;
 	// m_MarginDemoLeft = 8;
 	// m_MarginDemoBottom = 8;
 	// m_MarginDemoRight = 8;
-// #endif
 
 	//m_BackgroundName = L"Background";
 	//m_RandomThemeLabel = L"Random";
@@ -367,23 +214,6 @@ CDiskMarkDlg::~CDiskMarkDlg()
 
 /*void CDiskMarkDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CMainDialogFx::DoDataExchange(pDX);
-
-	DDX_Control(pDX, IDC_BUTTON_ALL, m_ButtonAll);
-	DDX_Control(pDX, IDC_BUTTON_TEST_0, m_ButtonTest0);
-	DDX_Control(pDX, IDC_BUTTON_TEST_1, m_ButtonTest1);
-	DDX_Control(pDX, IDC_BUTTON_TEST_2, m_ButtonTest2);
-	DDX_Control(pDX, IDC_BUTTON_TEST_3, m_ButtonTest3);
-
-	DDX_Control(pDX, IDC_TEST_READ_0, m_TestRead0);
-	DDX_Control(pDX, IDC_TEST_READ_1, m_TestRead1);
-	DDX_Control(pDX, IDC_TEST_READ_2, m_TestRead2);
-	DDX_Control(pDX, IDC_TEST_READ_3, m_TestRead3);
-
-	DDX_Control(pDX, IDC_TEST_WRITE_0, m_TestWrite0);
-	DDX_Control(pDX, IDC_TEST_WRITE_1, m_TestWrite1);
-	DDX_Control(pDX, IDC_TEST_WRITE_2, m_TestWrite2);
-	DDX_Control(pDX, IDC_TEST_WRITE_3, m_TestWrite3);
 
 #ifdef MIX_MODE
 	DDX_Control(pDX, IDC_TEST_MIX_0, m_TestMix0);
@@ -589,10 +419,6 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // 	}
 
 // // // 	m_Benchmark = GetPrivateProfileInt(L"Setting", L"Benchmark", BENCHMARK_READ_WRITE, m_Ini);
-// 	if (BENCHMARK_READ > m_Benchmark || m_Benchmark > BENCHMARK_READ_WRITE)
-// 	{
-// 		m_Benchmark = BENCHMARK_READ_WRITE;
-// 	}
 
 // 	if (m_Profile == PROFILE_DEFAULT_MIX || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL_MIX)
 // 	{
@@ -620,20 +446,6 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // // // 		m_FontRender = CLEARTYPE_NATURAL_QUALITY;
 // // // 	}
 
-// 	// Unit
-// 	m_ComboUnit->addItem("MB/s");
-// 	m_ComboUnit->addItem("GB/s");
-// 	m_ComboUnit->addItem("IOPS");
-// 	m_ComboUnit->addItem("μs");
-
-// 	// Count
-// 	for (int i = 1; i < 10; i++)
-// 	{
-// 		QString cstr;
-// 		cstr = QString::number(i);
-// 		m_ComboCount->addItem(cstr);
-// 	}
-
 // #ifdef MIX_MODE
 // 	// Mix
 // 	for (int i = 1; i < 10; i++)
@@ -652,37 +464,9 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // 	// UpdateThemeInfo();
 // 	ChangeLang();
 
-// 	UpdateQueuesThreads();
-
 // // 	// m_IndexTestCount = GetPrivateProfileInt(L"Setting", L"TestCount", 4, m_Ini);
-// 	if (m_IndexTestCount < 0 || m_IndexTestCount >= 9)
-// 	{
-// 		m_IndexTestCount = 4;	// default value is 5.
-// 	}
-// 	m_ComboCount->setCurrentIndex(m_IndexTestCount);
-
-// 	// Size
-// 	wchar_t size[13][8] = { L"16MiB", L"32MiB", L"64MiB", L"128MiB", L"256MiB", L"512MiB", L"1GiB", L"2GiB", L"4GiB",  L"8GiB", L"16GiB", L"32GiB", L"64GiB" };
-
-// 	for (int i = 0; i < 13; i++)
-// 	{
-// 		QString cstr;
-// 		cstr = QString::fromWCharArray(size[i]);
-// 		m_ComboSize->addItem(cstr);
-// 	}
 // // 	m_IndexTestSize = GetPrivateProfileInt(L"Setting", L"TestSize", 6, m_Ini);
-// 	if (m_IndexTestSize < 0 || m_IndexTestSize > 13)
-// 	{
-// 		m_IndexTestSize = 6;	// default value is 1GiB;
-// 	}
-// 	m_ComboSize->setCurrentIndex(m_IndexTestSize);
-
 // // 	// m_IndexTestUnit = GetPrivateProfileInt(L"Setting", L"TestUnit", 0, m_Ini);
-// 	if (m_IndexTestUnit < 0 || m_IndexTestUnit >= 3)
-// 	{
-// 		m_IndexTestUnit = 0;
-// 	}
-// 	m_ComboUnit->setCurrentIndex(m_IndexTestUnit);
 
 // // 	// m_IndexTestMix = GetPrivateProfileInt(L"Setting", L"TestMix", 6, m_Ini);
 // 	if (m_IndexTestMix < 0 || m_IndexTestMix > 10)
@@ -762,23 +546,12 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // #endif
 // 	resize(m_SizeX, m_SizeY);
 
-// #ifdef SUISHO_SHIZUKU_SUPPORT
-// 	if (m_CharacterPosition == 0)
-// 	{
-// 		offsetX = OFFSET_X;
-// 	}
-// #endif
-
 // // 	UpdateBackground(TRUE, m_bDarkMode);
 // // 	SetControlFont();
 
 // 	if (m_Profile != PROFILE_DEFAULT && m_Profile != PROFILE_DEFAULT_MIX)
 // 	{
-// #ifdef SUISHO_SHIZUKU_SUPPORT
-// 		comboDriveX = 120;
-// #else
 // 		comboDriveX = 72;
-// #endif
 // 	}
 // 	else
 // 	{
@@ -833,43 +606,10 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 
 // 	if (m_Profile == PROFILE_DEMO)
 // 	{
-// #ifdef SUISHO_SHIZUKU_SUPPORT
-// // 		m_ButtonAll.InitControl(12 + offsetX, 8, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_ButtonAll.SetHandCursor(TRUE);
-// // /*
-// // 		m_TestRead0.SetGlassColor(m_Glass, m_GlassAlpha);
-// // 		m_TestWrite0.SetGlassColor(m_Glass, m_GlassAlpha);
-
-// // 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawGlass, m_bHighContrast, FALSE);
-// // 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawGlass, m_bHighContrast, FALSE);
-// // */
-// #ifdef SUISHO_AOI_SUPPORT
-// // 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 344, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// // 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 344, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// // 		m_Comment.InitControl(12 + offsetX, 440, 776, 60, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// #else
-// // 		m_TestRead0.InitControl(12 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// // 		m_TestWrite0.InitControl(404 + offsetX, 96, 384, 348, m_ZoomRatio, &m_BkDC, IP(L"Demo"), 1, SS_CENTER, OwnerDrawImage, FALSE, FALSE, FALSE);
-// // 		m_Comment.InitControl(12 + offsetX, 452, 776, 40, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// #endif
-// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
-// // 		m_Comment.Adjust();
-
-// // 		m_DemoSetting.InitControl(140 + offsetX, 56, 528, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-// // 		m_ReadUnit.InitControl(12 + offsetX, 96, 120, 32, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-// // 		m_WriteUnit.InitControl(672 + offsetX, 96, 116, 32, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-
-// 		m_ComboCount->setGeometry(140 + offsetX, 8, 60, 500);
-// 		m_ComboSize->setGeometry(204 + offsetX, 8, 140, 500);
-// 		m_ComboDrive->setGeometry(348 + offsetX, 8, 320, 500);
-// 		m_ComboUnit->setGeometry(672 + offsetX, 8, 116, 500);
-// #else
 // 		// m_TestRead0.SetDrawFrameEx(TRUE, m_Frame);
 // 		// m_TestWrite0.SetDrawFrameEx(TRUE, m_Frame);
 
 // 		m_ButtonAll->setGeometry(8 + offsetX, 8, 72, 48);
-// 		m_ButtonAll->setText("All");
-// 		m_ButtonAll->setCursor(Qt::PointingHandCursor);
 
 // // 		m_TestRead0.SetGlassColor(m_Glass, m_GlassAlpha);
 // // 		m_TestWrite0.SetGlassColor(m_Glass, m_GlassAlpha);
@@ -877,106 +617,13 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // 		m_TestRead0->setGeometry(8 + offsetX, 64, 228, 196);
 // 		m_TestWrite0->setGeometry(244 + offsetX, 64, 228, 196);
 
-// 		m_Comment->setGeometry(8 + offsetX, 268, 464, 24);
-// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
 // 		// m_Comment.Adjust(); // Removed invalid method call
 
 // 		m_DemoSetting->setGeometry(84 + offsetX, 36, 320, 24);
-// 		m_ReadUnit->setGeometry(84 + offsetX, 36, 124, 24);
-// 		m_ReadUnit->setText("Read");
-// 		m_WriteUnit->setGeometry(280 + offsetX, 36, 124, 24);
-
-// 		m_ComboCount->setGeometry(84 + offsetX, 16, 40, 30);
-// 		m_ComboSize->setGeometry(128 + offsetX, 8, 80, 30);
-// 		m_ComboDrive->setGeometry(212 + offsetX, 12, 188, 30);
-// 		m_ComboUnit->setGeometry(404 + offsetX, 8, 68, 30);
-// #endif
 // 	}
 // 	else
 // 	{
-// #ifdef SUISHO_SHIZUKU_SUPPORT
-// // 		m_ButtonAll.InitControl(12 + offsetX, 8, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_ButtonTest0.InitControl(12 + offsetX, 96, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_ButtonTest1.InitControl(12 + offsetX, 184, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_ButtonTest2.InitControl(12 + offsetX, 272, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_ButtonTest3.InitControl(12 + offsetX, 360, 120, 80, m_ZoomRatio, &m_BkDC, IP(L"Button"), 3, BS_CENTER, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
 
-// // 		m_ButtonAll.SetHandCursor(TRUE);
-// // 		m_ButtonTest0.SetHandCursor(TRUE);
-// // 		m_ButtonTest1.SetHandCursor(TRUE);
-// // 		m_ButtonTest2.SetHandCursor(TRUE);
-// // 		m_ButtonTest3.SetHandCursor(TRUE);
-
-// // 		m_TestRead0.InitControl(140 + offsetX, 96, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_TestRead1.InitControl(140 + offsetX, 184, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_TestRead2.InitControl(140 + offsetX, 272, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_TestRead3.InitControl(140 + offsetX, 360, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-
-// // 		m_TestWrite0.InitControl(468 + offsetX, 96, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_TestWrite1.InitControl(468 + offsetX, 184, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_TestWrite2.InitControl(468 + offsetX, 272, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// // 		m_TestWrite3.InitControl(468 + offsetX, 360, 320, 80, m_ZoomRatio, &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-
-// #ifdef SUISHO_AOI_SUPPORT
-// // 		m_Comment.InitControl(12 + offsetX, 440, 776, 60, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// #else
-// // 		m_Comment.InitControl(12 + offsetX, 452, 776, 40, m_ZoomRatio, &m_BkDC, IP(L"Comment"), 1, ES_LEFT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
-// #endif
-
-// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
-// // 		m_Comment.Adjust();
-
-// // 		m_ReadUnit.InitControl(140 + offsetX, 56, 320, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-// // 		m_WriteUnit.InitControl(468 + offsetX, 56, 320, 40, m_ZoomRatio, &m_BkDC, NULL, 0, SS_CENTER, OwnerDrawTransparent, m_bHighContrast, FALSE, FALSE);
-
-// 		m_ComboCount->setGeometry(140 + offsetX, 8, 60, 500);
-// 		m_ComboSize->setGeometry(204 + offsetX, 8, 140, 500);
-// 		m_ComboUnit->setGeometry(672 + offsetX, 8, 116, 500);
-
-// // 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_REAL)
-// // 		{
-// // 			m_ComboDrive.InitControl(348 + offsetX, 8, 440, 500, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
-// // 		}
-// // 		else
-// // 		{
-// // 			m_ComboDrive.InitControl(348 + offsetX, 8, 320, 500, m_ZoomRatio, &m_BkDC, NULL, 0, ES_LEFT, OwnerDrawGlass, m_bHighContrast, FALSE, m_ComboBk, m_ComboBkSelected, m_Glass, m_GlassAlpha);
-// // 		}
-// #else
-
-// 		m_ButtonAll->setGeometry(8 + offsetX, 8, 72, 48);
-// 		m_ButtonAll->setText("All");
-// 		m_ButtonTest0->setGeometry(8 + offsetX, 60, 72, 48);
-// 		m_ButtonTest0->setText("Button");
-// 		m_ButtonTest1->setGeometry(8 + offsetX, 112, 72, 48);
-// 		m_ButtonTest1->setText("Button");
-// 		m_ButtonTest2->setGeometry(8 + offsetX, 164, 72, 48);
-// 		m_ButtonTest2->setText("Button");
-// 		m_ButtonTest3->setGeometry(8 + offsetX, 216, 72, 48);
-// 		m_ButtonTest3->setText("Button");
-
-// 		m_ButtonAll->setCursor(Qt::PointingHandCursor);
-// 		m_ButtonTest0->setCursor(Qt::PointingHandCursor);
-// 		m_ButtonTest1->setCursor(Qt::PointingHandCursor);
-// 		m_ButtonTest2->setCursor(Qt::PointingHandCursor);
-// 		m_ButtonTest3->setCursor(Qt::PointingHandCursor);
-
-// 		m_TestRead0->setGeometry(84 + offsetX, 60, 192, 48);
-// 		m_TestRead0->setText("Read0");
-// 		m_TestRead1->setGeometry(84 + offsetX, 112, 192, 48);
-// 		m_TestRead1->setText("Read1");
-// 		m_TestRead2->setGeometry(84 + offsetX, 164, 192, 48);
-// 		m_TestRead2->setText("Read2");
-// 		m_TestRead3->setGeometry(84 + offsetX, 216, 192, 48);
-// 		m_TestRead3->setText("Read3");
-
-// 		m_TestWrite0->setGeometry(280 + offsetX, 60, 192, 48);
-// 		m_TestWrite0->setText("Write0");
-// 		m_TestWrite1->setGeometry(280 + offsetX, 112, 192, 48);
-// 		m_TestWrite1->setText("Write1");
-// 		m_TestWrite2->setGeometry(280 + offsetX, 164, 192, 48);
-// 		m_TestWrite2->setText("Write2");
-// 		m_TestWrite3->setGeometry(280 + offsetX, 216, 192, 48);
-// 		m_TestWrite3->setText("Write3");
 // 		if (m_MixMode)
 // 		{
 // 			m_Comment->setGeometry(8 + offsetX, 268, 664, 24);
@@ -985,18 +632,7 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // 		{
 // 			m_Comment->setGeometry(8 + offsetX, 268, 464, 24);
 // 		}
-// // 		m_Comment.SetMargin(m_MarginCommentTop, m_MarginCommentLeft, m_MarginCommentBottom, m_MarginCommentRight, m_ZoomRatio);
 // // 		m_Comment.Adjust();
-// 		m_Comment->setReadOnly(true);
-
-// 		m_ReadUnit->setGeometry(84 + offsetX, 36, 192, 24);
-// 		m_ReadUnit->setText("Read");
-// 		m_WriteUnit->setGeometry(280 + offsetX, 36, 192, 24);
-// 		m_WriteUnit->setText("Write");
-
-// 		m_ComboCount->setGeometry(84 + offsetX, 8, 40, 30);
-// 		m_ComboSize->setGeometry(128 + offsetX, 8, 80, 30);
-// 		m_ComboUnit->setGeometry(404 + offsetX, 8, 68, 30);
 
 // 		if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_REAL || m_Profile == PROFILE_PEAK_MIX || m_Profile == PROFILE_REAL_MIX)
 // 		{
@@ -1006,36 +642,7 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 // 		{
 // 			m_ComboDrive->setGeometry(212 + offsetX, 8, 188, 30);
 // 		}
-// #endif
 // 	}
-
-// 	if(m_Profile == PROFILE_DEMO)
-// 	{
-// // 		m_TestRead0.SetMargin(m_MarginDemoTop, m_MarginDemoLeft, m_MarginDemoBottom, m_MarginDemoRight, m_ZoomRatio);
-// // 		m_TestWrite0.SetMargin(m_MarginDemoTop, m_MarginDemoLeft, m_MarginDemoBottom, m_MarginDemoRight, m_ZoomRatio);
-
-// #ifdef SUISHO_AOI_SUPPORT
-// // 		m_TestRead0.SetLabelUnitFormat(DT_LEFT | DT_BOTTOM | DT_SINGLELINE, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
-// // 		m_TestWrite0.SetLabelUnitFormat(DT_LEFT | DT_BOTTOM | DT_SINGLELINE, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
-// #endif
-// 	}
-// 	else
-// 	{
-// // 		m_TestRead0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// // 		m_TestRead1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// // 		m_TestRead2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// // 		m_TestRead3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-
-// // 		m_TestWrite0.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// // 		m_TestWrite1.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// // 		m_TestWrite2.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// // 		m_TestWrite3.SetMargin(m_MarginMeterTop, m_MarginMeterLeft, m_MarginMeterBottom, m_MarginMeterRight, m_ZoomRatio);
-// 	}
-
-// // 	m_ComboCount.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-// // 	m_ComboSize.SetMargin (0, 4, 0, 0, m_ZoomRatio);
-// // 	m_ComboDrive.SetMargin(0, 4, 0, 0, m_ZoomRatio);
-// // m_ComboUnit.SetMargin (0, 4, 0, 0, m_ZoomRatio); // Removed invalid method call
 
 // #ifdef MIX_MODE
 // // 	m_TestMix0.InitControl(480 + offsetX, 60, 192, 48, m_ZoomRatio,  &m_BkDC, IP(L"Meter"), 2, SS_RIGHT, OwnerDrawImage, m_bHighContrast, FALSE, FALSE);
@@ -1120,9 +727,6 @@ BOOL CDiskMarkDlg::IsNVMe9Mode()
 
 void CDiskMarkDlg::UpdateComboTooltip()
 {
-	m_ComboCount->setToolTip(tr("TEST_COUNT"));
-	m_ComboSize->setToolTip(tr("TEST_SIZE"));
-	m_ComboUnit->setToolTip(tr("TEST_UNIT"));
 #ifdef MIX_MODE
 	if (m_MixMode)
 	{
@@ -1310,7 +914,7 @@ void CDiskMarkDlg::UpdateQueuesThreads()
 	{
 		m_TestData = TEST_DATA_RANDOM;
 	}
-	SetWindowTitle("");
+	//SetWindowTitle("");
 
 	bool bMeasureflag = false;
 	//m_MeasureTime = GetPrivateProfileInt(L"Setting", L"MeasureTime", 5, m_Ini);
@@ -1474,18 +1078,17 @@ void CDiskMarkDlg::SelectDrive()
 		// {
 		// 	QString selectedDir = dialog.selectedFiles().first();
 		// 	m_TestTargetPath = selectedDir;
-		// 	m_ComboDrive->setToolTip(m_TestTargetPath);
+		// // 	m_ComboDrive->setToolTip(m_TestTargetPath);
 		// }
 		// else
 		// {
 		// 	m_IndexTestDrive = previousComboDriveIndex;
-		// 	m_ComboDrive->setCurrentIndex(m_IndexTestDrive);
-		// 	m_ComboDrive->setToolTip("TEST_DRIVE");
+		// 	// m_ComboDrive->setToolTip("TEST_DRIVE");
 		// }
 	}
 	else
 	{
-		m_ComboDrive->setToolTip("TEST_DRIVE");
+		// m_ComboDrive->setToolTip("TEST_DRIVE");
 	}
 }
 
@@ -1587,41 +1190,24 @@ void CDiskMarkDlg::OnCancel()
 // 	CMainDialogFx::OnCancel();
 }
 
-void CDiskMarkDlg::InitScore()
-{
-	for (int i = 0; i < 9; i++)
-	{
-		m_ReadScore[i] = 0.0;
-		m_ReadLatency[i] = 0.0;
-		m_WriteScore[i] = 0.0;
-		m_WriteLatency[i] = 0.0;
-#ifdef MIX_MODE
-		m_MixScore[i] = 0.0;
-		m_MixLatency[i] = 0.0;
-#endif
-	}
-
-	UpdateScore();
-}
-
 void CDiskMarkDlg::UpdateScore()
 {
 // 	UpdateData(TRUE);
 	if (m_Profile == PROFILE_DEMO)
 	{
-		SetMeter(m_TestRead0, m_ReadScore[8], m_ReadLatency[8], m_BenchSize[8] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestWrite0, m_WriteScore[8], m_WriteLatency[8], m_BenchSize[8] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestRead0, *m_ReadScore.at(8), *m_ReadLatency.at(8), m_BenchSize[8] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestWrite0, *m_WriteScore.at(8), *m_WriteLatency.at(8), m_BenchSize[8] * 1024, m_IndexTestUnit);
 	}
 	else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
 	{
-		SetMeter(m_TestRead0, m_ReadScore[4], m_ReadLatency[4], m_BenchSize[4] * 1024, SCORE_MBS);
-		SetMeter(m_TestRead1, m_ReadScore[5], m_ReadLatency[5], m_BenchSize[5] * 1024, SCORE_MBS);
-		SetMeter(m_TestRead2, m_ReadScore[5], m_ReadLatency[5], m_BenchSize[5] * 1024, SCORE_IOPS);
-		SetMeter(m_TestRead3, m_ReadScore[5], m_ReadLatency[5], m_BenchSize[5] * 1024, SCORE_US);
-		SetMeter(m_TestWrite0, m_WriteScore[4], m_WriteLatency[4], m_BenchSize[4] * 1024, SCORE_MBS);
-		SetMeter(m_TestWrite1, m_WriteScore[5], m_WriteLatency[5], m_BenchSize[5] * 1024, SCORE_MBS);
-		SetMeter(m_TestWrite2, m_WriteScore[5], m_WriteLatency[5], m_BenchSize[5] * 1024, SCORE_IOPS);
-		SetMeter(m_TestWrite3, m_WriteScore[5], m_WriteLatency[5], m_BenchSize[5] * 1024, SCORE_US);
+		SetMeter(m_TestRead0, *m_ReadScore.at(4), *m_ReadLatency.at(4), m_BenchSize[4] * 1024, SCORE_MBS);
+		SetMeter(m_TestRead1, *m_ReadScore.at(5), *m_ReadLatency.at(5), m_BenchSize[5] * 1024, SCORE_MBS);
+		SetMeter(m_TestRead2, *m_ReadScore.at(5), *m_ReadLatency.at(5), m_BenchSize[5] * 1024, SCORE_IOPS);
+		SetMeter(m_TestRead3, *m_ReadScore.at(5), *m_ReadLatency.at(5), m_BenchSize[5] * 1024, SCORE_US);
+		SetMeter(m_TestWrite0, *m_WriteScore.at(4), *m_WriteLatency.at(4), m_BenchSize[4] * 1024, SCORE_MBS);
+		SetMeter(m_TestWrite1, *m_WriteScore.at(5), *m_WriteLatency.at(5), m_BenchSize[5] * 1024, SCORE_MBS);
+		SetMeter(m_TestWrite2, *m_WriteScore.at(5), *m_WriteLatency.at(5), m_BenchSize[5] * 1024, SCORE_IOPS);
+		SetMeter(m_TestWrite3, *m_WriteScore.at(5), *m_WriteLatency.at(5), m_BenchSize[5] * 1024, SCORE_US);
 #ifdef MIX_MODE
 		if (m_MixMode)
 		{
@@ -1634,14 +1220,14 @@ void CDiskMarkDlg::UpdateScore()
 	}
 	else if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
 	{
-		SetMeter(m_TestRead0, m_ReadScore[6], m_ReadLatency[6], 1024 * 1024, SCORE_MBS);
-		SetMeter(m_TestRead1, m_ReadScore[7], m_ReadLatency[7], 4 * 1024, SCORE_MBS);
-		SetMeter(m_TestRead2, m_ReadScore[7], m_ReadLatency[7], 4 * 1024, SCORE_IOPS);
-		SetMeter(m_TestRead3, m_ReadScore[7], m_ReadLatency[7], 4 * 1024, SCORE_US);
-		SetMeter(m_TestWrite0, m_WriteScore[6], m_WriteLatency[6], 1024 * 1024, SCORE_MBS);
-		SetMeter(m_TestWrite1, m_WriteScore[7], m_WriteLatency[7], 4 * 1024, SCORE_MBS);
-		SetMeter(m_TestWrite2, m_WriteScore[7], m_WriteLatency[7], 4 * 1024, SCORE_IOPS);
-		SetMeter(m_TestWrite3, m_WriteScore[7], m_WriteLatency[7], 4 * 1024, SCORE_US);
+		SetMeter(m_TestRead0, *m_ReadScore.at(6), *m_ReadLatency.at(6), 1024 * 1024, SCORE_MBS);
+		SetMeter(m_TestRead1, *m_ReadScore.at(7), *m_ReadLatency.at(7), 4 * 1024, SCORE_MBS);
+		SetMeter(m_TestRead2, *m_ReadScore.at(7), *m_ReadLatency.at(7), 4 * 1024, SCORE_IOPS);
+		SetMeter(m_TestRead3, *m_ReadScore.at(7), *m_ReadLatency.at(7), 4 * 1024, SCORE_US);
+		SetMeter(m_TestWrite0, *m_WriteScore.at(6), *m_WriteLatency.at(6), 1024 * 1024, SCORE_MBS);
+		SetMeter(m_TestWrite1, *m_WriteScore.at(7), *m_WriteLatency.at(7), 4 * 1024, SCORE_MBS);
+		SetMeter(m_TestWrite2, *m_WriteScore.at(7), *m_WriteLatency.at(7), 4 * 1024, SCORE_IOPS);
+		SetMeter(m_TestWrite3, *m_WriteScore.at(7), *m_WriteLatency.at(7), 4 * 1024, SCORE_US);
 #ifdef MIX_MODE
 		if (m_MixMode)
 		{
@@ -1654,21 +1240,21 @@ void CDiskMarkDlg::UpdateScore()
 	}
 	else
 	{
-		SetMeter(m_TestRead0, m_ReadScore[0], m_ReadLatency[0], m_BenchSize[0] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestRead1, m_ReadScore[1], m_ReadLatency[1], m_BenchSize[1] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestRead2, m_ReadScore[2], m_ReadLatency[2], m_BenchSize[2] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestRead3, m_ReadScore[3], m_ReadLatency[3], m_BenchSize[3] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestWrite0, m_WriteScore[0], m_WriteLatency[0], m_BenchSize[0] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestWrite1, m_WriteScore[1], m_WriteLatency[1], m_BenchSize[1] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestWrite2, m_WriteScore[2], m_WriteLatency[2], m_BenchSize[2] * 1024, m_IndexTestUnit);
-		SetMeter(m_TestWrite3, m_WriteScore[3], m_WriteLatency[3], m_BenchSize[3] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestRead0, *m_ReadScore.at(0), *m_ReadLatency.at(0), m_BenchSize[0] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestRead1, *m_ReadScore.at(1), *m_ReadLatency.at(1), m_BenchSize[1] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestRead2, *m_ReadScore.at(2), *m_ReadLatency.at(2), m_BenchSize[2] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestRead3, *m_ReadScore.at(3), *m_ReadLatency.at(3), m_BenchSize[3] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestWrite0, *m_WriteScore.at(0), *m_WriteLatency.at(0), m_BenchSize[0] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestWrite1, *m_WriteScore.at(1), *m_WriteLatency.at(1), m_BenchSize[1] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestWrite2, *m_WriteScore.at(2), *m_WriteLatency.at(2), m_BenchSize[2] * 1024, m_IndexTestUnit);
+		SetMeter(m_TestWrite3, *m_WriteScore.at(3), *m_WriteLatency.at(3), m_BenchSize[3] * 1024, m_IndexTestUnit);
 #ifdef MIX_MODE
 		if (m_MixMode)
 		{
-			SetMeter(&m_TestMix0, m_MixScore[0], m_MixLatency[0], m_BenchSize[0] * 1024, m_IndexTestUnit);
-			SetMeter(&m_TestMix1, m_MixScore[1], m_MixLatency[1], m_BenchSize[1] * 1024, m_IndexTestUnit);
-			SetMeter(&m_TestMix2, m_MixScore[2], m_MixLatency[2], m_BenchSize[2] * 1024, m_IndexTestUnit);
-			SetMeter(&m_TestMix3, m_MixScore[3], m_MixLatency[3], m_BenchSize[3] * 1024, m_IndexTestUnit);
+			SetMeter(&m_TestMix0, m_MixScore.at(0], m_MixLatency.at(0], m_BenchSize[0] * 1024, m_IndexTestUnit);
+			SetMeter(&m_TestMix1, m_MixScore.at(1], m_MixLatency.at(1], m_BenchSize[1] * 1024, m_IndexTestUnit);
+			SetMeter(&m_TestMix2, m_MixScore.at(2], m_MixLatency.at(2], m_BenchSize[2] * 1024, m_IndexTestUnit);
+			SetMeter(&m_TestMix3, m_MixScore.at(3], m_MixLatency.at(3], m_BenchSize[3] * 1024, m_IndexTestUnit);
 		}
 #endif
 	}
@@ -1676,20 +1262,20 @@ void CDiskMarkDlg::UpdateScore()
 
 void CDiskMarkDlg::SetScoreToolTip(QLabel* control, double score, double latency, int blockSize)
 {
-	QString cstr;
-	if (blockSize == -1)
-	{
-		cstr = QString::asprintf("%.3f MB/s\r\n%.3f GB/s", score, score / 1000);
-	}
-	else if (score <= 0.0)
-	{
-		cstr = QString::asprintf("%.3f MB/s\r\n%.3f GB/s\r\n%.3f IOPS\r\n%.3f μs", 0.0, 0.0, 0.0, 0.0);
-	}
-	else
-	{
-		cstr = QString::asprintf("%.3f MB/s\r\n%.3f GB/s\r\n%.3f IOPS\r\n%.3f μs", score, score / 1000, score * 1000 * 1000 / blockSize, latency);
-	}
-	control->setToolTip(cstr);
+	// QString cstr;
+	// if (blockSize == -1)
+	// {
+	// 	cstr = QString::asprintf("%.3f MB/s\r\n%.3f GB/s", score, score / 1000);
+	// }
+	// else if (score <= 0.0)
+	// {
+	// 	cstr = QString::asprintf("%.3f MB/s\r\n%.3f GB/s\r\n%.3f IOPS\r\n%.3f μs", 0.0, 0.0, 0.0, 0.0);
+	// }
+	// else
+	// {
+	// 	cstr = QString::asprintf("%.3f MB/s\r\n%.3f GB/s\r\n%.3f IOPS\r\n%.3f μs", score, score / 1000, score * 1000 * 1000 / blockSize, latency);
+	// }
+	// control->setToolTip(cstr);
 }
 
 void CDiskMarkDlg::OnSequentialPeak()
@@ -1698,13 +1284,13 @@ void CDiskMarkDlg::OnSequentialPeak()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[4] = 0.0;
-		m_WriteScore[4] = 0.0;
-		m_ReadLatency[4] = 0.0;
-		m_WriteLatency[4] = 0.0;
+		*m_ReadScore[4] = 0.0;
+		*m_WriteScore[4] = 0.0;
+		*m_ReadLatency[4] = 0.0;
+		*m_WriteLatency[4] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[4] = 0.0;
-		m_MixLatency[4] = 0.0;
+		m_MixLatency.at(4] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1732,13 +1318,13 @@ void CDiskMarkDlg::OnRandomPeak()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[5] = 0.0;
-		m_WriteScore[5] = 0.0;
-		m_ReadLatency[5] = 0.0;
-		m_WriteLatency[5] = 0.0;
+		*m_ReadScore[5] = 0.0;
+		*m_WriteScore[5] = 0.0;
+		*m_ReadLatency[5] = 0.0;
+		*m_WriteLatency[5] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[5] = 0.0;
-		m_MixLatency[5] = 0.0;
+		m_MixLatency.at(5] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1766,13 +1352,13 @@ void CDiskMarkDlg::OnSequentialReal()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[6] = 0.0;
-		m_WriteScore[6] = 0.0;
-		m_ReadLatency[6] = 0.0;
-		m_WriteLatency[6] = 0.0;
+		*m_ReadScore[6] = 0.0;
+		*m_WriteScore[6] = 0.0;
+		*m_ReadLatency[6] = 0.0;
+		*m_WriteLatency[6] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[6] = 0.0;
-		m_MixLatency[6] = 0.0;
+		m_MixLatency.at(6] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1800,13 +1386,13 @@ void CDiskMarkDlg::OnRandomReal()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[7] = 0.0;
-		m_WriteScore[7] = 0.0;
-		m_ReadLatency[7] = 0.0;
-		m_WriteLatency[7] = 0.0;
+		*m_ReadScore[7] = 0.0;
+		*m_WriteScore[7] = 0.0;
+		*m_ReadLatency[7] = 0.0;
+		*m_WriteLatency[7] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[7] = 0.0;
-		m_MixLatency[7] = 0.0;
+		m_MixLatency.at(7] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1830,6 +1416,9 @@ void CDiskMarkDlg::OnRandomReal()
 
 void CDiskMarkDlg::OnTest0()
 {
+	printf("OnTest0\n");
+	m_WinThread = NULL;
+
 	if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
 	{
 		OnSequentialPeak();
@@ -1843,15 +1432,13 @@ void CDiskMarkDlg::OnTest0()
 
 	if(m_WinThread == NULL)
 	{
-		// UpdateData(TRUE);
-
-		m_ReadScore[0] = 0.0;
-		m_WriteScore[0] = 0.0;
-		m_ReadLatency[0] = 0.0;
-		m_WriteLatency[0] = 0.0;
+		*m_ReadScore[0] = 0.0;
+		*m_WriteScore[0] = 0.0;
+		*m_ReadLatency[0] = 0.0;
+		*m_WriteLatency[0] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[0] = 0.0;
-		m_MixLatency[0] = 0.0;
+		m_MixLatency.at(0] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1890,13 +1477,13 @@ void CDiskMarkDlg::OnTest1()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[1] = 0.0;
-		m_WriteScore[1] = 0.0;
-		m_ReadLatency[1] = 0.0;
-		m_WriteLatency[1] = 0.0;
+		*m_ReadScore[1] = 0.0;
+		*m_WriteScore[1] = 0.0;
+		*m_ReadLatency[1] = 0.0;
+		*m_WriteLatency[1] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[1] = 0.0;
-		m_MixLatency[1] = 0.0;
+		m_MixLatency.at(1] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1935,13 +1522,13 @@ void CDiskMarkDlg::OnTest2()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[2] = 0.0;
-		m_WriteScore[2] = 0.0;
-		m_ReadLatency[2] = 0.0;
-		m_WriteLatency[2] = 0.0;
+		*m_ReadScore[2] = 0.0;
+		*m_WriteScore[2] = 0.0;
+		*m_ReadLatency[2] = 0.0;
+		*m_WriteLatency[2] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[2] = 0.0;
-		m_MixLatency[2] = 0.0;
+		m_MixLatency.at(2] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -1980,13 +1567,13 @@ void CDiskMarkDlg::OnTest3()
 	{
 		// UpdateData(TRUE);
 
-		m_ReadScore[3] = 0.0;
-		m_WriteScore[3] = 0.0;
-		m_ReadLatency[3] = 0.0;
-		m_WriteLatency[3] = 0.0;
+		*m_ReadScore[3] = 0.0;
+		*m_WriteScore[3] = 0.0;
+		*m_ReadLatency[3] = 0.0;
+		*m_WriteLatency[3] = 0.0;
 #ifdef MIX_MODE
 		m_MixScore[3] = 0.0;
-		m_MixLatency[3] = 0.0;
+		m_MixLatency.at(3] = 0.0;
 #endif
 		UpdateScore();
 		m_DiskBenchStatus = true;
@@ -2013,7 +1600,6 @@ void CDiskMarkDlg::OnAll()
 	if(m_WinThread == NULL)
 	{
 		// UpdateData(TRUE);
-		InitScore();
 		m_DiskBenchStatus = true;
 		if (m_Profile == PROFILE_DEMO)
 		{
@@ -2255,116 +1841,116 @@ QString CDiskMarkDlg::GetButtonToolTipText(int type, int size, int queues, int t
 
 void CDiskMarkDlg::ChangeButtonStatus(bool status)
 {
-	if(status)
-	{
-		QString title;
-		QString toolTip;
+// 	if(status)
+// 	{
+// 		QString title;
+// 		QString toolTip;
 
-#ifdef MIX_MODE
-		m_ComboMix->setEnabled(true);
-#endif
-		m_ComboCount->setEnabled(true);
-		m_ComboSize->setEnabled(true);
-		m_ComboDrive->setEnabled(true);
-		m_ComboUnit->setEnabled(true);
+// #ifdef MIX_MODE
+// 		m_ComboMix->setEnabled(true);
+// #endif
+// 		m_ComboCount->setEnabled(true);
+// 		m_ComboSize->setEnabled(true);
+// 		m_ComboDrive->setEnabled(true);
+// 		m_ComboUnit->setEnabled(true);
 
-		m_ButtonAll->setText("All");
+// 		m_ButtonAll->setText("All");
 
-		if (m_Profile == PROFILE_DEMO)
-		{
-			m_ButtonTest0->hide();
-			m_ButtonTest1->hide();
-			m_ButtonTest2->hide();
-			m_ButtonTest3->hide();
+// 		if (m_Profile == PROFILE_DEMO)
+// 		{
+// 			m_ButtonTest0->hide();
+// 			m_ButtonTest1->hide();
+// 			m_ButtonTest2->hide();
+// 			m_ButtonTest3->hide();
 
-			QString text, type;
-			if (m_BenchType[8] == BENCH_SEQ)
-			{
-				type = QStringLiteral("SEQ");
-			}
-			else
-			{
-				type = QStringLiteral("RND");
-			}
-			if (m_BenchSize[8] > 1000)
-			{
-				text = QString("%1 %2MiB, Q=%3, T=%4").arg(type).arg(m_BenchSize[8] / 1024).arg(m_BenchQueues[8]).arg(m_BenchThreads[8]);
-			}
-			else
-			{
-				text = QString("%1 %2KiB, Q=%3, T=%4").arg(type).arg(m_BenchSize[8]).arg(m_BenchQueues[8]).arg(m_BenchThreads[8]);
-			}
+// 			QString text, type;
+// 			if (m_BenchType[8] == BENCH_SEQ)
+// 			{
+// 				type = QStringLiteral("SEQ");
+// 			}
+// 			else
+// 			{
+// 				type = QStringLiteral("RND");
+// 			}
+// 			if (m_BenchSize[8] > 1000)
+// 			{
+// 				text = QString("%1 %2MiB, Q=%3, T=%4").arg(type).arg(m_BenchSize[8] / 1024).arg(m_BenchQueues[8]).arg(m_BenchThreads[8]);
+// 			}
+// 			else
+// 			{
+// 				text = QString("%1 %2KiB, Q=%3, T=%4").arg(type).arg(m_BenchSize[8]).arg(m_BenchQueues[8]).arg(m_BenchThreads[8]);
+// 			}
 
-			m_DemoSetting->setText(text);
-		}
-		else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
-		{
-			m_ButtonTest0->show();
-			m_ButtonTest1->show();
-			m_ButtonTest2->show();
-			m_ButtonTest3->show();
+// 			m_DemoSetting->setText(text);
+// 		}
+// 		else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
+// 		{
+// 			m_ButtonTest0->show();
+// 			m_ButtonTest1->show();
+// 			m_ButtonTest2->show();
+// 			m_ButtonTest3->show();
 
-			m_ButtonTest0->setText(GetButtonText(BENCH_SEQ, m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4], SCORE_MBS));
-			m_ButtonTest1->setText(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_MBS));
-			m_ButtonTest2->setText(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_IOPS));
-			m_ButtonTest3->setText(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_US));
+// 			m_ButtonTest0->setText(GetButtonText(BENCH_SEQ, m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4], SCORE_MBS));
+// 			m_ButtonTest1->setText(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_MBS));
+// 			m_ButtonTest2->setText(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_IOPS));
+// 			m_ButtonTest3->setText(GetButtonText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_US));
 
-			m_ButtonTest0->setToolTip(GetButtonToolTipText(BENCH_SEQ, m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4], SCORE_MBS));
-			m_ButtonTest1->setToolTip(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_MBS));
-			m_ButtonTest2->setToolTip(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_IOPS));
-			m_ButtonTest3->setToolTip(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_US));
-		}
-		else if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-		{
-			m_ButtonTest0->show();
-			m_ButtonTest1->show();
-			m_ButtonTest2->show();
-			m_ButtonTest3->show();
+// 			m_ButtonTest0->setToolTip(GetButtonToolTipText(BENCH_SEQ, m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4], SCORE_MBS));
+// 			m_ButtonTest1->setToolTip(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_MBS));
+// 			m_ButtonTest2->setToolTip(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_IOPS));
+// 			m_ButtonTest3->setToolTip(GetButtonToolTipText(BENCH_RND, m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5], SCORE_US));
+// 		}
+// 		else if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
+// 		{
+// 			m_ButtonTest0->show();
+// 			m_ButtonTest1->show();
+// 			m_ButtonTest2->show();
+// 			m_ButtonTest3->show();
 
-			m_ButtonTest0->setText(GetButtonText(BENCH_SEQ, 1024, 1, 1, SCORE_MBS));
-			m_ButtonTest1->setText(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_MBS));
-			m_ButtonTest2->setText(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_IOPS));
-			m_ButtonTest3->setText(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_US));
+// 			m_ButtonTest0->setText(GetButtonText(BENCH_SEQ, 1024, 1, 1, SCORE_MBS));
+// 			m_ButtonTest1->setText(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_MBS));
+// 			m_ButtonTest2->setText(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_IOPS));
+// 			m_ButtonTest3->setText(GetButtonText(BENCH_RND, 4, 1, 1, SCORE_US));
 
-			m_ButtonTest0->setToolTip(GetButtonToolTipText(BENCH_SEQ, 1024, 1, 1, SCORE_MBS));
-			m_ButtonTest1->setToolTip(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_MBS));
-			m_ButtonTest2->setToolTip(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_IOPS));
-			m_ButtonTest3->setToolTip(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_US));
-		}
-		else
-		{
-			m_ButtonTest0->show();
-			m_ButtonTest1->show();
-			m_ButtonTest2->show();
-			m_ButtonTest3->show();
+// 			m_ButtonTest0->setToolTip(GetButtonToolTipText(BENCH_SEQ, 1024, 1, 1, SCORE_MBS));
+// 			m_ButtonTest1->setToolTip(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_MBS));
+// 			m_ButtonTest2->setToolTip(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_IOPS));
+// 			m_ButtonTest3->setToolTip(GetButtonToolTipText(BENCH_RND, 4, 1, 1, SCORE_US));
+// 		}
+// 		else
+// 		{
+// 			m_ButtonTest0->show();
+// 			m_ButtonTest1->show();
+// 			m_ButtonTest2->show();
+// 			m_ButtonTest3->show();
 
-			m_ButtonTest0->setText(GetButtonText(m_BenchType[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0], m_IndexTestUnit));
-			m_ButtonTest1->setText(GetButtonText(m_BenchType[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1], m_IndexTestUnit));
-			m_ButtonTest2->setText(GetButtonText(m_BenchType[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2], m_IndexTestUnit));
-			m_ButtonTest3->setText(GetButtonText(m_BenchType[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3], m_IndexTestUnit));
+// 			m_ButtonTest0->setText(GetButtonText(m_BenchType[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0], m_IndexTestUnit));
+// 			m_ButtonTest1->setText(GetButtonText(m_BenchType[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1], m_IndexTestUnit));
+// 			m_ButtonTest2->setText(GetButtonText(m_BenchType[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2], m_IndexTestUnit));
+// 			m_ButtonTest3->setText(GetButtonText(m_BenchType[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3], m_IndexTestUnit));
 
-			m_ButtonTest0->setToolTip(GetButtonToolTipText(m_BenchType[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0], m_IndexTestUnit));
-			m_ButtonTest1->setToolTip(GetButtonToolTipText(m_BenchType[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1], m_IndexTestUnit));
-			m_ButtonTest2->setToolTip(GetButtonToolTipText(m_BenchType[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2], m_IndexTestUnit));
-			m_ButtonTest3->setToolTip(GetButtonToolTipText(m_BenchType[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3], m_IndexTestUnit));
-		}
-	}
-	else
-	{
-#ifdef MIX_MODE
-		m_ComboMix.EnableWindow(FALSE);
-#endif
-		m_ComboCount->setEnabled(false);
-		m_ComboSize->setEnabled(false);
-		m_ComboDrive->setEnabled(false);
-		m_ComboUnit->setEnabled(false);
+// 			m_ButtonTest0->setToolTip(GetButtonToolTipText(m_BenchType[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0], m_IndexTestUnit));
+// 			m_ButtonTest1->setToolTip(GetButtonToolTipText(m_BenchType[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1], m_IndexTestUnit));
+// 			m_ButtonTest2->setToolTip(GetButtonToolTipText(m_BenchType[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2], m_IndexTestUnit));
+// 			m_ButtonTest3->setToolTip(GetButtonToolTipText(m_BenchType[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3], m_IndexTestUnit));
+// 		}
+// 	}
+// 	else
+// 	{
+// #ifdef MIX_MODE
+// 		m_ComboMix.EnableWindow(FALSE);
+// #endif
+// 		// m_ComboCount->setEnabled(false);
+// 		// m_ComboSize->setEnabled(false);
+// 		// m_ComboDrive->setEnabled(false);
+// 		// m_ComboUnit->setEnabled(false);
 
-		m_ButtonAll->setText("Stop");
-		m_ButtonTest0->setText("Stop");
-		m_ButtonTest1->setText("Stop");
-		m_ButtonTest2->setText("Stop");
-		m_ButtonTest3->setText("Stop");
-	}
+// 		// m_ButtonAll->setText("Stop");
+// 		// m_ButtonTest0->setText("Stop");
+// 		// m_ButtonTest1->setText("Stop");
+// 		// m_ButtonTest2->setText("Stop");
+// 		// m_ButtonTest3->setText("Stop");
+// 	}
 }
 
 void CDiskMarkDlg::OnUpdateMessage(QString* message)
@@ -2381,8 +1967,6 @@ void CDiskMarkDlg::OnUpdateMessage(QString* message)
 
 void CDiskMarkDlg::SetMeter(QLabel* control, double score, double latency, int blockSize, int unit)
 {
-	QString cstr;
-
 	double meterRatio = 0.0;
 
 	if (unit == SCORE_UNIT::SCORE_US)
@@ -2415,135 +1999,129 @@ void CDiskMarkDlg::SetMeter(QLabel* control, double score, double latency, int b
 
 	if (unit == SCORE_UNIT::SCORE_IOPS)
 	{
-		double iops = score * 1000 * 1000 / blockSize;
+		//double iops = score * 1000 * 1000 / blockSize;
 		if (m_Profile == PROFILE_DEMO)
 		{
-			if (iops >= 100000.0)
-			{
-				cstr = QString::asprintf("%dk", (int)iops / 1000);
-			}
-			else
-			{
-				cstr = QString::asprintf("%d", (int)iops);
-			}
+			// if (iops >= 100000.0)
+			// {
+			// 	cstr = QString::asprintf("%dk", (int)iops / 1000);
+			// }
+			// else
+			// {
+			// 	cstr = QString::asprintf("%d", (int)iops);
+			// }
 		}
 		else
 		{
-			if (iops >= 1000000.0)
-			{
-				cstr = QString::asprintf("%d", (int)iops);
-			}
-			else
-			{
-				cstr = QString::asprintf("%.2f", iops);
-			}
+			// if (iops >= 1000000.0)
+			// {
+			// 	cstr = QString::asprintf("%d", (int)iops);
+			// }
+			// else
+			// {
+			// 	cstr = QString::asprintf("%.2f", iops);
+			// }
 		}
 	}
 	else if (unit == SCORE_UNIT::SCORE_US)
 	{
-		if (m_Profile == PROFILE_DEMO)
-		{
-			if (score <= 0.0)
-			{
-				cstr = QString::asprintf("%.1f", 0.0);
-				if (control == m_TestRead0) { m_TestRead0->setText("Read (μs)"); }
-				if (control == m_TestWrite0) { m_TestWrite0->setText("Write (μs)"); }
-			}
-			else if (latency >= 1000000.0)
-			{
-				cstr = QString::number((int)latency / 1000);
-				if (control == m_TestRead0) { m_TestRead0->setText("Read (ms)"); }
-				if (control == m_TestWrite0) { m_TestWrite0->setText("Write (ms)"); }
-			}
-			else if (latency >= 1000.0)
-			{
-				cstr = QString::number((int)latency);
-				if (control == m_TestRead0) { m_TestRead0->setText("Read (μs)"); }
-				if (control == m_TestWrite0) { m_TestWrite0->setText("Write (μs)"); }
-			}
-			else
-			{
-				cstr = QString::asprintf("%.1f", latency);
-				if (control == m_TestRead0) { m_TestRead0->setText("Read (μs)"); }
-				if (control == m_TestWrite0) { m_TestWrite0->setText("Write (μs)"); }
-			}
-		}
-		else
-		{
-			if (score <= 0.0)
-			{
-				cstr = QString::asprintf("%.2f", 0.0);
-			}
-			else if (latency >= 1000000.0)
-			{
-				cstr = QString::number((int)latency);
-			}
-			else
-			{
-				cstr = QString::asprintf("%.2f", latency);
-			}
-		}
+		// if (m_Profile == PROFILE_DEMO)
+		// {
+		// 	if (score <= 0.0)
+		// 	{
+		// 		cstr = QString::asprintf("%.1f", 0.0);
+		// 		if (control == m_TestRead0) { m_TestRead0->setText("Read (μs)"); }
+		// 		if (control == m_TestWrite0) { m_TestWrite0->setText("Write (μs)"); }
+		// 	}
+		// 	else if (latency >= 1000000.0)
+		// 	{
+		// 		cstr = QString::number((int)latency / 1000);
+		// 		if (control == m_TestRead0) { m_TestRead0->setText("Read (ms)"); }
+		// 		if (control == m_TestWrite0) { m_TestWrite0->setText("Write (ms)"); }
+		// 	}
+		// 	else if (latency >= 1000.0)
+		// 	{
+		// 		cstr = QString::number((int)latency);
+		// 		if (control == m_TestRead0) { m_TestRead0->setText("Read (μs)"); }
+		// 		if (control == m_TestWrite0) { m_TestWrite0->setText("Write (μs)"); }
+		// 	}
+		// 	else
+		// 	{
+		// 		cstr = QString::asprintf("%.1f", latency);
+		// 		if (control == m_TestRead0) { m_TestRead0->setText("Read (μs)"); }
+		// 		if (control == m_TestWrite0) { m_TestWrite0->setText("Write (μs)"); }
+		// 	}
+		// }
+		// else
+		// {
+		// 	if (score <= 0.0)
+		// 	{
+		// 		cstr = QString::asprintf("%.2f", 0.0);
+		// 	}
+		// 	else if (latency >= 1000000.0)
+		// 	{
+		// 		cstr = QString::number((int)latency);
+		// 	}
+		// 	else
+		// 	{
+		// 		cstr = QString::asprintf("%.2f", latency);
+		// 	}
+		// }
 	}
 	else if (unit == SCORE_UNIT::SCORE_GBS)
 	{
-		if (m_Profile == PROFILE_DEMO)
-		{
-			cstr = QString::asprintf("%.1f", score / 1000.0);
-		}
-		else
-		{
-			cstr = QString::asprintf("%.3f", score / 1000.0);
-		}
+		// if (m_Profile == PROFILE_DEMO)
+		// {
+		// 	cstr = QString::asprintf("%.1f", score / 1000.0);
+		// }
+		// else
+		// {
+		// 	cstr = QString::asprintf("%.3f", score / 1000.0);
+		// }
 	}
 	else
 	{
-		if (m_Profile == PROFILE_DEMO)
-		{
-			if (score >= 1000.0)
-			{
-				cstr = QString::number((int)score);
-			}
-			else
-			{
-				cstr = QString::asprintf("%.1f", score);
-			}
-		}
-		else
-		{
-			if (score >= 1000000.0)
-			{
-				cstr = QString::number((int)score);
-			}
-			else
-			{
-				cstr = QString::asprintf("%.2f", score);
-			}
-		}
+		// if (m_Profile == PROFILE_DEMO)
+		// {
+		// 	if (score >= 1000.0)
+		// 	{
+		// 		cstr = QString::number((int)score);
+		// 	}
+		// 	else
+		// 	{
+		// 		cstr = QString::asprintf("%.1f", score);
+		// 	}
+		// }
+		// else
+		// {
+		// 	if (score >= 1000000.0)
+		// 	{
+		// 		cstr = QString::number((int)score);
+		// 	}
+		// 	else
+		// 	{
+		// 		cstr = QString::asprintf("%.2f", score);
+		// 	}
+		// }
 	}
 
 	// UpdateData(FALSE);
 	if (m_Profile == PROFILE_DEMO)
 	{
-		control->setStyleSheet(QString("QLabel { background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:%1, y2:0, stop:0 rgba(0, 255, 0, 255), stop:1 rgba(255, 0, 0, 255)); }").arg(meterRatio));
+		//control->setStyleSheet(QString("QLabel { background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:%1, y2:0, stop:0 rgba(0, 255, 0, 255), stop:1 rgba(255, 0, 0, 255)); }").arg(meterRatio));
 	}
 	else
 	{
-		control->setStyleSheet(QString("QLabel { background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:%1, y2:0, stop:0 rgba(0, 255, 0, 255), stop:1 rgba(255, 0, 0, 255)); }").arg(meterRatio));
+		//control->setStyleSheet(QString("QLabel { background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:%1, y2:0, stop:0 rgba(0, 255, 0, 255), stop:1 rgba(255, 0, 0, 255)); }").arg(meterRatio));
 		//control->SetMeter(TRUE, meterRatio);
 	}
-	control->setText(cstr);
 
 	SetScoreToolTip(control, score, latency, blockSize);
-
-	control->update();
 }
 
 void CDiskMarkDlg::InitDrive()
 {
-	while (m_ComboDrive->count())
-	{
-		m_ComboDrive->removeItem(0);
-	}
+	m_DriveList.clear();
 
 	QString cstr;
 	QString select;
@@ -2585,22 +2163,17 @@ void CDiskMarkDlg::InitDrive()
 			}
 			count++;
 
-			m_ComboDrive->addItem(displayName);
+			m_DriveList.append(displayName);
 		}
 	}
 
-	m_ComboDrive->addItem("Select Folder");
+	m_DriveList.append("Select Folder");
 
 	QString targetPath = ""; // Default to empty
 	m_TestTargetPath = targetPath;
-
-	if (testDriveLetter.isEmpty())
-	{
-		m_IndexTestDrive = count;
-	}
 	m_MaxIndexTestDrive = count;
 
-	UpdateDriveToolTip();
+	// UpdateDriveToolTip();
 
 	// UpdateData(FALSE);
 }
@@ -3114,15 +2687,15 @@ void CDiskMarkDlg::SaveText(QString fileName)
 
 // 	if (m_Profile == PROFILE_DEMO)
 // 	{
-// 		clip.Replace(L"%BenchRead1%", GetResultString(m_BenchType[8], m_ReadScore[8], m_ReadLatency[8], m_BenchSize[8], m_BenchQueues[8], m_BenchThreads[8]));
+// 		clip.Replace(L"%BenchRead1%", GetResultString(m_BenchType[8], m_ReadScore.at(8), m_ReadLatency[8], m_BenchSize[8], m_BenchQueues[8], m_BenchThreads[8]));
 // 		clip.Replace(L"%BenchWrite1%", GetResultString(m_BenchType[8], m_WriteScore[8], m_WriteLatency[8], m_BenchSize[8], m_BenchQueues[8], m_BenchThreads[8]));
 
 // 	}
 // 	else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
 // 	{
-// 		clip.Replace(L"%SequentialRead1%", GetResultString(BENCH_SEQ, m_ReadScore[4], m_ReadLatency[4], m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4]));
+// 		clip.Replace(L"%SequentialRead1%", GetResultString(BENCH_SEQ, m_ReadScore.at(4), m_ReadLatency[4], m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4]));
 // 		clip.Replace(L"%SequentialWrite1%", GetResultString(BENCH_SEQ, m_WriteScore[4], m_WriteLatency[4], m_BenchSize[4], m_BenchQueues[4], m_BenchThreads[4]));
-// 		clip.Replace(L"%RandomRead1%", GetResultString(BENCH_RND, m_ReadScore[5], m_ReadLatency[5], m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5]));
+// 		clip.Replace(L"%RandomRead1%", GetResultString(BENCH_RND, m_ReadScore.at(5), m_ReadLatency[5], m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5]));
 // 		clip.Replace(L"%RandomWrite1%", GetResultString(BENCH_RND, m_WriteScore[5], m_WriteLatency[5], m_BenchSize[5], m_BenchQueues[5], m_BenchThreads[5]));
 
 // #ifdef MIX_MODE
@@ -3137,9 +2710,9 @@ void CDiskMarkDlg::SaveText(QString fileName)
 // 	}
 // 	else if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
 // 	{
-// 		clip.Replace(L"%SequentialRead1%", GetResultString(BENCH_SEQ, m_ReadScore[6], m_ReadLatency[6], 1024, 1, 1));
+// 		clip.Replace(L"%SequentialRead1%", GetResultString(BENCH_SEQ, m_ReadScore.at(6), m_ReadLatency[6], 1024, 1, 1));
 // 		clip.Replace(L"%SequentialWrite1%", GetResultString(BENCH_SEQ, m_WriteScore[6], m_WriteLatency[6], 1024, 1, 1));
-// 		clip.Replace(L"%RandomRead1%", GetResultString(BENCH_RND, m_ReadScore[7], m_ReadLatency[7], 4, 1, 1));
+// 		clip.Replace(L"%RandomRead1%", GetResultString(BENCH_RND, m_ReadScore.at(7), m_ReadLatency[7], 4, 1, 1));
 // 		clip.Replace(L"%RandomWrite1%", GetResultString(BENCH_RND, m_WriteScore[7], m_WriteLatency[7], 4, 1, 1));
 
 // #ifdef MIX_MODE
@@ -3155,10 +2728,10 @@ void CDiskMarkDlg::SaveText(QString fileName)
 
 // 	else 
 // 	{
-// 		clip.Replace(L"%BenchRead1%", GetResultString(m_BenchType[0], m_ReadScore[0], m_ReadLatency[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0]));
-// 		clip.Replace(L"%BenchRead2%", GetResultString(m_BenchType[1], m_ReadScore[1], m_ReadLatency[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1]));
-// 		clip.Replace(L"%BenchRead3%", GetResultString(m_BenchType[2], m_ReadScore[2], m_ReadLatency[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2]));
-// 		clip.Replace(L"%BenchRead4%", GetResultString(m_BenchType[3], m_ReadScore[3], m_ReadLatency[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3]));
+// 		clip.Replace(L"%BenchRead1%", GetResultString(m_BenchType[0], m_ReadScore.at(0), m_ReadLatency[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0]));
+// 		clip.Replace(L"%BenchRead2%", GetResultString(m_BenchType[1], m_ReadScore.at(1), m_ReadLatency[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1]));
+// 		clip.Replace(L"%BenchRead3%", GetResultString(m_BenchType[2], m_ReadScore.at(2), m_ReadLatency[2], m_BenchSize[2], m_BenchQueues[2], m_BenchThreads[2]));
+// 		clip.Replace(L"%BenchRead4%", GetResultString(m_BenchType[3], m_ReadScore.at(3), m_ReadLatency[3], m_BenchSize[3], m_BenchQueues[3], m_BenchThreads[3]));
 
 // 		clip.Replace(L"%BenchWrite1%", GetResultString(m_BenchType[0], m_WriteScore[0], m_WriteLatency[0], m_BenchSize[0], m_BenchQueues[0], m_BenchThreads[0]));
 // 		clip.Replace(L"%BenchWrite2%", GetResultString(m_BenchType[1], m_WriteScore[1], m_WriteLatency[1], m_BenchSize[1], m_BenchQueues[1], m_BenchThreads[1]));
@@ -3615,7 +3188,7 @@ void CDiskMarkDlg::BenchmarkReadWrite()
 	// SetMenu(menu);
 	// DrawMenuBar();
 
-	// m_Benchmark = BENCHMARK_READ_WRITE;
+	m_Benchmark = BENCHMARK_READ_WRITE;
 	// WritePrivateProfileString(L"Setting", L"Benchmark", L"3", m_Ini);
 }
 
@@ -3631,7 +3204,7 @@ void CDiskMarkDlg::BenchmarkReadOnly()
 	// SetMenu(menu);
 	// DrawMenuBar();
 
-	// m_Benchmark = BENCHMARK_READ;
+	m_Benchmark = BENCHMARK_READ;
 	// WritePrivateProfileString(L"Setting", L"Benchmark", L"1", m_Ini);
 }
 
@@ -3647,7 +3220,7 @@ void CDiskMarkDlg::BenchmarkWriteOnly()
 	// SetMenu(menu);
 	// DrawMenuBar();
 
-	// m_Benchmark = BENCHMARK_WRITE;
+	m_Benchmark = BENCHMARK_WRITE;
 	// WritePrivateProfileString(L"Setting", L"Benchmark", L"2", m_Ini);
 }
 
@@ -3687,31 +3260,9 @@ void CDiskMarkDlg::BenchmarkWriteOnly()
 // 	// }
 // }
 
-void CDiskMarkDlg::OnCbnSelchangeComboCount(int index)
+void CDiskMarkDlg::OnCbnSelchangeComboDrive()
 {
-	m_IndexTestCount = index;
-	m_ValueTestCount = m_ComboCount->itemText(index);
-}
-
-void CDiskMarkDlg::OnCbnSelchangeComboSize(int index)
-{
-	m_IndexTestSize = index;
-	m_ValueTestSize = m_ComboSize->itemText(index);
-}
-
-void CDiskMarkDlg::OnCbnSelchangeComboDrive(int index)
-{
-	m_IndexTestDrive = index;
-	m_ValueTestDrive = m_ComboDrive->itemText(index);
 	SelectDrive();
-}
-
-void CDiskMarkDlg::OnCbnSelchangeComboUnit(int index)
-{
-	m_IndexTestUnit = index;
-	m_ValueTestUnit = m_ComboUnit->itemText(index);
-	UpdateScore();
-	UpdateUnitLabel();
 }
 
 #ifdef MIX_MODE
@@ -3729,104 +3280,92 @@ void CDiskMarkDlg::OnCbnSelchangeComboMix()
 
 void CDiskMarkDlg::UpdateUnitLabel()
 {
-	if (m_Profile == PROFILE_DEMO)
-	{
-		if (m_IndexTestUnit == SCORE_UNIT::SCORE_IOPS)
-		{
-			m_TestRead0->setText("Read (IOPS)");
-			m_TestWrite0->setText("Write (IOPS)");
-		}
-		else if (m_IndexTestUnit == SCORE_UNIT::SCORE_US)
-		{
-			if (m_ReadLatency[8] >= 1000000)
-			{
-				m_TestRead0->setText("Read (ms)");
-			}
-			else
-			{
-				m_TestRead0->setText("Read (μs)");
-			}
+// 	if (m_Profile == PROFILE_DEMO)
+// 	{
+// 		if (m_IndexTestUnit == SCORE_UNIT::SCORE_IOPS)
+// 		{
+// 			m_TestRead0->setText("Read (IOPS)");
+// 			m_TestWrite0->setText("Write (IOPS)");
+// 		}
+// 		else if (m_IndexTestUnit == SCORE_UNIT::SCORE_US)
+// 		{
+// 			if (*m_ReadLatency.at(8) >= 1000000)
+// 			{
+// 				m_TestRead0->setText("Read (ms)");
+// 			}
+// 			else
+// 			{
+// 				m_TestRead0->setText("Read (μs)");
+// 			}
 
-			if (m_WriteLatency[8] >= 1000000)
-			{
-				m_TestWrite0->setText("Write (ms)");
-			}
-			else
-			{
-				m_TestWrite0->setText("Write (μs)");
-			}
-		}
-		else if (m_IndexTestUnit == SCORE_UNIT::SCORE_GBS)
-		{
-			m_TestRead0->setText("Read (GB/s)");
-			m_TestWrite0->setText("Write (GB/s)");
-		}
-		else
-		{
-			m_TestRead0->setText("Read (MB/s)");
-			m_TestWrite0->setText("Write (MB/s)");
-		}
-	}
-	else
-	{
-		m_TestRead0->setText("");
-		m_TestWrite0->setText("");
-	}
+// 			if (*m_WriteLatency.at(8) >= 1000000)
+// 			{
+// 				m_TestWrite0->setText("Write (ms)");
+// 			}
+// 			else
+// 			{
+// 				m_TestWrite0->setText("Write (μs)");
+// 			}
+// 		}
+// 		else if (m_IndexTestUnit == SCORE_UNIT::SCORE_GBS)
+// 		{
+// 			m_TestRead0->setText("Read (GB/s)");
+// 			m_TestWrite0->setText("Write (GB/s)");
+// 		}
+// 		else
+// 		{
+// 			m_TestRead0->setText("Read (MB/s)");
+// 			m_TestWrite0->setText("Write (MB/s)");
+// 		}
+// 	}
+// 	else
+// 	{
+// 		m_TestRead0->setText("");
+// 		m_TestWrite0->setText("");
+// 	}
 
-	m_TestRead0->update();
-	m_TestWrite0->update();
+// 	m_TestRead0->update();
+// 	m_TestWrite0->update();
 
-	if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
-	{
-		m_ReadUnit->setText("Read (MB/s)");
-		m_WriteUnit->setText("Write (MB/s)");
-#ifdef MIX_MODE
-		m_MixUnit->setText("Mix (MB/s)");
-#endif
-		return;
-	}
-	else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
-	{
-		m_ReadUnit->setText("Read (MB/s)");
-		m_WriteUnit->setText("Write (MB/s)");
-#ifdef MIX_MODE
-		m_MixUnit->setText("Mix (MB/s)");
-#endif
-		return;
-	}
+// 	if (m_Profile == PROFILE_REAL || m_Profile == PROFILE_REAL_MIX)
+// 	{
+// #ifdef MIX_MODE
+// 		m_MixUnit->setText("Mix (MB/s)");
+// #endif
+// 		return;
+// 	}
+// 	else if (m_Profile == PROFILE_PEAK || m_Profile == PROFILE_PEAK_MIX)
+// 	{
+// #ifdef MIX_MODE
+// 		m_MixUnit->setText("Mix (MB/s)");
+// #endif
+// 		return;
+// 	}
 
-	if (m_IndexTestUnit == SCORE_UNIT::SCORE_IOPS)
-	{
-		m_ReadUnit->setText("Read (IOPS)");
-		m_WriteUnit->setText("Write (IOPS)");
-#ifdef MIX_MODE
-		m_MixUnit->setText("Mix (IOPS)");
-#endif
-	}
-	else if (m_IndexTestUnit == SCORE_UNIT::SCORE_US)
-	{
-		m_ReadUnit->setText("Read (μs)");
-		m_WriteUnit->setText("Write (μs)");
-#ifdef MIX_MODE
-		m_MixUnit->setText("Mix (μs)");
-#endif
-	}
-	else if (m_IndexTestUnit == SCORE_UNIT::SCORE_GBS)
-	{
-		m_ReadUnit->setText("Read (GB/s)");
-		m_WriteUnit->setText("Write (GB/s)");
-#ifdef MIX_MODE
-		m_MixUnit->setText("Mix (GB/s)");
-#endif
-	}
-	else
-	{
-		m_ReadUnit->setText("Read (MB/s)");
-		m_WriteUnit->setText("Write (MB/s)");
-#ifdef MIX_MODE
-		m_MixUnit->setText("Mix (MB/s)");
-#endif
-	}
+// 	if (m_IndexTestUnit == SCORE_UNIT::SCORE_IOPS)
+// 	{
+// #ifdef MIX_MODE
+// 		m_MixUnit->setText("Mix (IOPS)");
+// #endif
+// 	}
+// 	else if (m_IndexTestUnit == SCORE_UNIT::SCORE_US)
+// 	{
+// #ifdef MIX_MODE
+// 		m_MixUnit->setText("Mix (μs)");
+// #endif
+// 	}
+// 	else if (m_IndexTestUnit == SCORE_UNIT::SCORE_GBS)
+// 	{
+// #ifdef MIX_MODE
+// 		m_MixUnit->setText("Mix (GB/s)");
+// #endif
+// 	}
+// 	else
+// 	{
+// #ifdef MIX_MODE
+// 		m_MixUnit->setText("Mix (MB/s)");
+// #endif
+// 	}
 }
 
 void CDiskMarkDlg::SetWindowTitle(QString message)

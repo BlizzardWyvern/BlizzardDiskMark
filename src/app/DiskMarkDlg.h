@@ -17,7 +17,9 @@
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QResizeEvent>
+#include <QVector>
 #include <QtQml/qqmlregistration.h>
+#include <QQmlListProperty>
 
 #include "../lib/resource.h"
 
@@ -38,11 +40,84 @@
 class CDiskMarkDlg : public QObject
 {
 	Q_OBJECT
+	Q_PROPERTY(QStringList m_DriveList MEMBER m_DriveList)
+	Q_PROPERTY(int m_IndexTestCount MEMBER m_IndexTestCount)
+	Q_PROPERTY(int m_IndexTestDrive MEMBER m_IndexTestDrive)
+	Q_PROPERTY(QString m_ValueTestCount MEMBER m_ValueTestCount NOTIFY m_ValueTestCountChanged)
+	Q_PROPERTY(QString m_ValueTestSize MEMBER m_ValueTestSize NOTIFY m_ValueTestSizeChanged)
+	Q_PROPERTY(QString m_ValueTestDrive MEMBER m_ValueTestDrive NOTIFY m_ValueTestDriveChanged)
+	Q_PROPERTY(QString m_ValueTestUnit MEMBER m_ValueTestUnit NOTIFY m_ValueTestUnitChanged)
+	//Q_PROPERTY(QVector<double*> m_ReadScore MEMBER m_ReadScore)
+	Q_PROPERTY(double m_ReadScore0 READ m_ReadScore0 NOTIFY m_ReadScoreChanged)
+	Q_PROPERTY(double m_ReadScore1 READ m_ReadScore1 NOTIFY m_ReadScoreChanged)
+	Q_PROPERTY(double m_ReadScore2 READ m_ReadScore2 NOTIFY m_ReadScoreChanged)
+	Q_PROPERTY(double m_ReadScore3 READ m_ReadScore3 NOTIFY m_ReadScoreChanged)
+	Q_PROPERTY(double m_WriteScore0 READ m_WriteScore0 NOTIFY m_WriteScoreChanged)
+	Q_PROPERTY(double m_WriteScore1 READ m_WriteScore1 NOTIFY m_WriteScoreChanged)
+	Q_PROPERTY(double m_WriteScore2 READ m_WriteScore2 NOTIFY m_WriteScoreChanged)
+	Q_PROPERTY(double m_WriteScore3 READ m_WriteScore3 NOTIFY m_WriteScoreChanged)
+	Q_PROPERTY(double m_ReadLatency0 READ m_ReadLatency0 NOTIFY m_ReadLatencyChanged)
+	Q_PROPERTY(double m_ReadLatency1 READ m_ReadLatency1 NOTIFY m_ReadLatencyChanged)
+	Q_PROPERTY(double m_ReadLatency2 READ m_ReadLatency2 NOTIFY m_ReadLatencyChanged)
+	Q_PROPERTY(double m_ReadLatency3 READ m_ReadLatency3 NOTIFY m_ReadLatencyChanged)
+	Q_PROPERTY(double m_WriteLatency0 READ m_WriteLatency0 NOTIFY m_WriteLatencyChanged)
+	Q_PROPERTY(double m_WriteLatency1 READ m_WriteLatency1 NOTIFY m_WriteLatencyChanged)
+	Q_PROPERTY(double m_WriteLatency2 READ m_WriteLatency2 NOTIFY m_WriteLatencyChanged)
+	Q_PROPERTY(double m_WriteLatency3 READ m_WriteLatency3 NOTIFY m_WriteLatencyChanged)
 	QML_ELEMENT
 
 public:
-	CDiskMarkDlg(QObject* pParent = nullptr);
+	CDiskMarkDlg(QObject* parent = nullptr);
 	~CDiskMarkDlg();
+
+	double m_ReadScore0() const { return *m_ReadScore.at(0); }
+	double m_ReadScore1() const { return *m_ReadScore.at(1); }
+	double m_ReadScore2() const { return *m_ReadScore.at(2); }
+	double m_ReadScore3() const { return *m_ReadScore.at(3); }
+	double m_WriteScore0() const { return *m_WriteScore.at(0); }
+	double m_WriteScore1() const { return *m_WriteScore.at(1); }
+	double m_WriteScore2() const { return *m_WriteScore.at(2); }
+	double m_WriteScore3() const { return *m_WriteScore.at(3); }
+	double m_ReadLatency0() const { return *m_ReadLatency.at(0); }
+	double m_ReadLatency1() const { return *m_ReadLatency.at(1); }
+	double m_ReadLatency2() const { return *m_ReadLatency.at(2); }
+	double m_ReadLatency3() const { return *m_ReadLatency.at(3); }
+	double m_WriteLatency0() const { return *m_WriteLatency.at(0); }
+	double m_WriteLatency1() const { return *m_WriteLatency.at(1); }
+	double m_WriteLatency2() const { return *m_WriteLatency.at(2); }
+	double m_WriteLatency3() const { return *m_WriteLatency.at(3); }
+
+	void OnCbnSelchangeComboDrive();
+
+signals:
+	void m_ValueTestCountChanged();
+	void m_ValueTestSizeChanged();
+	void m_ValueTestDriveChanged();
+	void m_ValueTestUnitChanged();
+
+	void m_ReadScoreChanged();
+	void m_WriteScoreChanged();
+	void m_ReadLatencyChanged();
+	void m_WriteLatencyChanged();
+
+private:
+	QString m_ValueTestCount;
+	QString m_ValueTestUnit;
+
+	int m_IndexTestUnit;
+
+	QStringList m_DriveList;
+
+public:
+	int m_IndexTestCount;
+	int m_IndexTestDrive;
+	QString m_ValueTestSize;
+	QString m_ValueTestDrive;
+
+	QVector<double*> m_ReadScore;
+	QVector<double*> m_WriteScore;
+	QVector<double*> m_ReadLatency;
+	QVector<double*> m_WriteLatency;
 
 	enum { IDD = IDD_DISKMARK_DIALOG };
 
@@ -63,13 +138,7 @@ public:
 	QThread* m_WinThread;
 	volatile bool m_DiskBenchStatus;
 
-	void InitScore();
 	void UpdateScore();
-
-	double m_ReadScore[9];
-	double m_WriteScore[9];
-	double m_ReadLatency[9];
-	double m_WriteLatency[9];
 
 #ifdef MIX_MODE
 	double m_MixScore[9];
@@ -83,20 +152,11 @@ public:
 	void SetScoreToolTip(QLabel* cx, double score, double latency, int blockSize);
 	void UpdateThemeInfo();
 
-	QString m_ValueTestUnit;
-	QString m_ValueTestCount;
-	QString m_ValueTestSize;
-	QString m_ValueTestDrive;
 	QString m_TestDriveInfo;
 	QString m_TestTargetPath;
 	long m_TestDriveLetter;
 
 	int m_MaxIndexTestDrive;
-	int m_IndexTestUnit;
-	int m_IndexTestCount;
-	int m_IndexTestSize;
-	int m_IndexTestDrive;
-	int m_IndexTestMix;
 
 	int m_BenchType[9];
 	int m_BenchSize[9];
@@ -156,11 +216,6 @@ public slots:
 	void OnRandomPeak();
 	void OnSequentialReal();
 	void OnRandomReal();
-
-	void OnCbnSelchangeComboCount(int);
-	void OnCbnSelchangeComboSize(int);
-	void OnCbnSelchangeComboDrive(int);
-	void OnCbnSelchangeComboUnit(int);
 
 	void OnUpdateMessage(QString* message);
 	void OnUpdateScore();

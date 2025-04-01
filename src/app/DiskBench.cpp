@@ -116,6 +116,8 @@ int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 			Code = WEXITSTATUS(status);
 		}
 
+		printf("Output: %s\n", output.toStdString().c_str());
+
 		/*Sample fio output:
 {
   "fio version" : "fio-3.39",
@@ -1553,8 +1555,8 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 			option = QString("--bs=%1K --iodepth=%2 --numjobs=%3 --direct=1 --rw=read").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w0").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
-		maxScore = &(((CDiskMarkDlg*) dlg)->m_ReadScore[index]);
-		minLatency = &(((CDiskMarkDlg*)dlg)->m_ReadLatency[index]);
+		maxScore = ((CDiskMarkDlg*) dlg)->m_ReadScore[index];
+		minLatency = ((CDiskMarkDlg*)dlg)->m_ReadLatency[index];
 		break;
 	case TEST_WRITE_0:
 	case TEST_WRITE_1:
@@ -1579,8 +1581,8 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 			//option = QString("-b%1K -o%2 -t%3 -W0 -S -w100").arg(BenchSize[index]).arg(BenchQueues[index]).arg(BenchThreads[index]);
 		}
 		option += bufOption;
-		maxScore = &(((CDiskMarkDlg*)dlg)->m_WriteScore[index]);
-		minLatency = &(((CDiskMarkDlg*)dlg)->m_WriteLatency[index]);
+		maxScore = ((CDiskMarkDlg*)dlg)->m_WriteScore[index];
+		minLatency = ((CDiskMarkDlg*)dlg)->m_WriteLatency[index];
 		break;
 #ifdef MIX_MODE
 	case TEST_MIX_0:
@@ -1651,13 +1653,15 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 		if (score > *maxScore)
 		{
 			*maxScore = score;
-			QMetaObject::invokeMethod(static_cast<CDiskMarkDlg*>(dlg), "OnUpdateScore", Qt::QueuedConnection);
+			((CDiskMarkDlg*)dlg)->m_ReadScoreChanged();
+			((CDiskMarkDlg*)dlg)->m_WriteScoreChanged();
 		}
 
 		if (score > 0.0 && (latency < *minLatency || *minLatency < 0))
 		{
 			*minLatency = latency;
-			QMetaObject::invokeMethod(static_cast<CDiskMarkDlg*>(dlg), "OnUpdateScore", Qt::QueuedConnection);
+			((CDiskMarkDlg*)dlg)->m_ReadLatencyChanged();
+			((CDiskMarkDlg*)dlg)->m_WriteLatencyChanged();
 		}
 
 		if (!((CDiskMarkDlg*) dlg)->m_DiskBenchStatus)
@@ -1665,5 +1669,8 @@ void DiskSpd(void* dlg, DISK_SPD_CMD cmd)
 			return;
 		}
 	}
-	QMetaObject::invokeMethod(static_cast<CDiskMarkDlg*>(dlg), "OnUpdateScore", Qt::QueuedConnection);
+	((CDiskMarkDlg*)dlg)->m_ReadScoreChanged();
+	((CDiskMarkDlg*)dlg)->m_WriteScoreChanged();
+	((CDiskMarkDlg*)dlg)->m_ReadLatencyChanged();
+	((CDiskMarkDlg*)dlg)->m_WriteLatencyChanged();
 }

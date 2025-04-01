@@ -14,6 +14,8 @@ qt_add_qml_module(BlizzardDiskMark
         DiskMarkDlg.qml
     SOURCES 
         DiskMarkDlg.cpp DiskMarkDlg.h
+    DEPENDENCIES
+        QtQuick
     NO_RESOURCE_TARGET_PATH
 )
 
