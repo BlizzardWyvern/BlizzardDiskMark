@@ -22,7 +22,7 @@
 #include <QQmlListProperty>
 #include <QQmlEngine>
 
-#include "../lib/resource.h"
+// #include "../lib/resource.h"
 
 #include "AboutDlg.h"
 #include "DiskBench.h"
@@ -59,7 +59,11 @@ class CDiskMarkDlg : public QObject
 	Q_PROPERTY(QList<double> m_writeScoreList READ m_writeScoreList NOTIFY m_scoreChanged)
 	Q_PROPERTY(QList<double> m_readLatencyList READ m_readLatencyList NOTIFY m_scoreChanged)
 	Q_PROPERTY(QList<double> m_writeLatencyList READ m_writeLatencyList NOTIFY m_scoreChanged)
-	Q_PROPERTY(QList<int> m_blockSizeList READ m_blockSizeList NOTIFY m_scoreChanged)
+
+	Q_PROPERTY(QList<int> m_benchTypeList READ m_benchTypeList NOTIFY m_DiskBenchStatusChanged)
+	Q_PROPERTY(QList<int> m_blockSizeList READ m_blockSizeList NOTIFY m_DiskBenchStatusChanged)
+	Q_PROPERTY(QList<int> m_benchQueuesList READ m_benchQueuesList NOTIFY m_DiskBenchStatusChanged)
+	Q_PROPERTY(QList<int> m_benchThreadsList READ m_benchThreadsList NOTIFY m_DiskBenchStatusChanged)
 
 	Q_PROPERTY(QStringList m_buttonTextList MEMBER m_buttonTextList NOTIFY m_buttonsChanged)
 	Q_PROPERTY(QStringList m_buttonToolTipList MEMBER m_buttonToolTipList NOTIFY m_buttonsChanged)
@@ -103,6 +107,12 @@ public:
 		BENCH_READ_WRITE,
 	};
 	Q_ENUM(BENCHMODE)
+	enum BENCH_TYPE
+	{
+		BENCH_SEQ = 0,
+		BENCH_RND,
+	};
+	Q_ENUM(BENCH_TYPE)
 
 	QString m_WindowTitle = "";
 	QString m_TestTargetPath;
@@ -115,7 +125,11 @@ public:
 	QList<double> m_writeScoreList() const;
 	QList<double> m_readLatencyList() const;
 	QList<double> m_writeLatencyList() const;
+
+	QList<int> m_benchTypeList() const;
 	QList<int> m_blockSizeList() const;
+	QList<int> m_benchQueuesList() const;
+	QList<int> m_benchThreadsList() const;
 
 signals:
 	void m_WindowTitleChanged();
@@ -163,12 +177,6 @@ public:
 	int m_BenchQueues[9];
 	int m_BenchThreads[9];
 
-	enum BENCH_TYPE
-	{
-		BENCH_SEQ = 0,
-		BENCH_RND,
-	};
-
 	QThread* m_WinThread;
 	volatile bool m_DiskBenchStatus;
 
@@ -187,23 +195,6 @@ public:
 	int m_TestData;
 	int m_Profile;
 	int m_Benchmark;
-
-	int m_MarginButtonTop;
-	int m_MarginButtonLeft;
-	int m_MarginButtonBottom;
-	int m_MarginButtonRight;
-	int m_MarginMeterTop;
-	int m_MarginMeterLeft;
-	int m_MarginMeterBottom;
-	int m_MarginMeterRight;
-	int m_MarginCommentTop;
-	int m_MarginCommentLeft;
-	int m_MarginCommentBottom;
-	int m_MarginCommentRight;
-	int m_MarginDemoTop;
-	int m_MarginDemoLeft;
-	int m_MarginDemoBottom;
-	int m_MarginDemoRight;
 
 	bool m_AdminMode;
 	bool m_MixMode;

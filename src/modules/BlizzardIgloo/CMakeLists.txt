@@ -3,7 +3,13 @@ qt_add_qml_module(BlizzardIgloo
     URI BlizzardIgloo
     VERSION 1.0
     QML_FILES
-        Label.qml Button.qml ComboBox.qml Menu.qml MenuBar.qml MenuItem.qml
+        Label.qml 
+        Button.qml 
+        ComboBox.qml 
+        Menu.qml 
+        MenuBar.qml 
+        MenuItem.qml
+        TestRow.qml
     OUTPUT_DIRECTORY BlizzardIgloo
 )
 

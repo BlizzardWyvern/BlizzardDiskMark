@@ -7,7 +7,7 @@
 
 #include "DiskMarkDlg.h"
 #include "DiskBench.h"
-#include "../lib/stdafx.h"
+#include "../../lib/stdafx.h"
 
 #include <math.h>
 #include <QApplication>
@@ -1572,10 +1572,38 @@ QList<double> CDiskMarkDlg::m_writeLatencyList() const
 	}
 	return list;
 }
+
+QList<int> CDiskMarkDlg::m_benchTypeList() const
+{
+	QList<int> list;
+	for (int* size : m_BenchType)
+	{
+		list.append(*size);
+	}
+	return list;
+}
 QList<int> CDiskMarkDlg::m_blockSizeList() const
 {
 	QList<int> list;
 	for (int size : m_BenchSize)
+	{
+		list.append(size);
+	}
+	return list;
+}
+QList<int> CDiskMarkDlg::m_benchQueuesList() const
+{
+	QList<int> list;
+	for (int size : m_BenchQueues)
+	{
+		list.append(size);
+	}
+	return list;
+}
+QList<int> CDiskMarkDlg::m_benchThreadsList() const
+{
+	QList<int> list;
+	for (int size : m_BenchThreads)
 	{
 		list.append(size);
 	}

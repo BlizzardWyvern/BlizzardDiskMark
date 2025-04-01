@@ -26,7 +26,121 @@ ApplicationWindow {
 
     CDiskMarkDlg {
         id: diskMarkDlg
-
+        function buttonText(type, size, queues, threads, unit) {
+            var text = ""
+            if (size >= 1024) {
+                if (type == CDiskMarkDlg.BENCH_RND) {
+                    if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX) {
+                        switch (unit) {
+                            case CDiskMarkDlg.SCORE_IOPS:
+                                text = "RND" + size / 1024 + "M\n(IOPS)"
+                                break
+                            case CDiskMarkDlg.SCORE_GBS:
+                                text = "RND" + size / 1024 + "M\nQ" + queues + "T" + threads
+                                break
+                            case CDiskMarkDlg.SCORE_US:
+                                text = "RND" + size / 1024 + "M\n(μs)"
+                                break
+                            default:
+                                text = "RND" + size / 1024 + "M\nQ" + queues + "T" + threads
+                                break
+                        }
+                    }
+                    else {
+                        switch (unit) {
+                            case CDiskMarkDlg.SCORE_GBS:
+                                text = "RND" + size / 1024 + "M\nQ" + queues + "T" + threads
+                                break
+                            default:
+                                text = "RND" + size / 1024 + "M\nQ" + queues + "T" + threads
+                                break
+                        }
+                    }
+                }
+                else {
+                    switch (unit) {
+                        case CDiskMarkDlg.SCORE_GBS:
+                            text = "RND" + size / 1024 + "M\nQ" + queues + "T" + threads
+                            break
+                        default:
+                            text = "RND" + size / 1024 + "M\nQ" + queues + "T" + threads
+                            break
+                    }
+                }
+            }
+            else {
+                if (type == CDiskMarkDlg.BENCH_RND) {
+                    if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX) {
+                        switch (unit) {
+                            case CDiskMarkDlg.SCORE_IOPS:
+                                text = "RND" + size + "K\n(IOPS)"
+                                break
+                            case CDiskMarkDlg.SCORE_GBS:
+                                text = "RND" + size + "K\nQ" + queues + "T" + threads
+                                break
+                            case CDiskMarkDlg.SCORE_US:
+                                text = "RND" + size + "K\n(μs)"
+                                break
+                            default:
+                                text = "RND" + size + "K\nQ" + queues + "T" + threads
+                                break
+                        }
+                    }
+                    else {
+                        switch (unit) {
+                            case CDiskMarkDlg.SCORE_GBS:
+                                text = "RND" + size + "K\nQ" + queues + "T" + threads
+                                break
+                            default:
+                                text = "RND" + size + "K\nQ" + queues + "T" + threads
+                                break
+                        }
+                    }
+                }
+                else {
+                    switch (unit) {
+                        case CDiskMarkDlg.SCORE_GBS:
+                            text = "RND" + size + "K\nQ" + queues + "T" + threads
+                            break
+                        default:
+                            text = "RND" + size + "K\nQ" + queues + "T" + threads
+                            break
+                    }
+                }
+            }
+            return text
+        }
+        function buttonDemoText(benchType, blockSize, benchQueues, benchThreads, unitIndex) {
+            switch (benchType) {
+                case CDiskMarkDlg.BENCH_RND:
+                    if (blockSize > 1000) {
+                        "RND " + blockSize / 1024 + "MiB, Q=" + benchQueues + ", T=" + benchThreads
+                    } else {
+                        "RND " + blockSize + "MiB, Q=" + benchQueues + ", T=" + benchThreads
+                    }
+                case CDiskMarkDlg.BENCH_SEQ:
+                    if (blockSize > 1000) {
+                        "SEQ " + blockSize / 1024 + "MiB, Q=" + benchQueues + ", T=" + benchThreads
+                    } else {
+                        "SEQ " + blockSize + "MiB, Q=" + benchQueues + ", T=" + benchThreads
+                    }
+            }
+        }
+        function setButtonText(benchType, blockSize, benchQueues, benchThreads, unitIndex) {
+            if (diskMarkDlg.m_DiskBenchStatus) {
+                return qsTr("Stop")
+            }
+            switch (diskMarkDlg.m_Profile) {
+                case CDiskMarkDlg.PROFILE_DEMO:
+                    return diskMarkDlg.buttonDemoText(benchType, blockSize, benchQueues, benchThreads, unitIndex)
+                case CDiskMarkDlg.PROFILE_REAL:
+                    return diskMarkDlg.buttonText(CDiskMarkDlg.BENCH_SEQ, 1024, 1, 1, CDiskMarkDlg.SCORE_MBS)
+                case CDiskMarkDlg.PROFILE_REAL_MIX:
+                    return diskMarkDlg.buttonText(CDiskMarkDlg.BENCH_SEQ, 1024, 1, 1, CDiskMarkDlg.SCORE_MBS)
+                default:
+                    return diskMarkDlg.buttonText(benchType, blockSize, benchQueues, benchThreads, unitIndex)
+            }   
+        }
         function scoreToText(score, latency, unit = m_ComboUnit.currentIndex) {
             switch(unit) {
                 case CDiskMarkDlg.SCORE_MBS:
@@ -74,8 +188,8 @@ ApplicationWindow {
             }
         }
 
-        function scoreToToolTipText(score, latency, blocksize) {
-            if (blocksize == -1) {
+        function scoreToToolTipText(score, latency) {
+            if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
                 return score.toFixed(3) + " MB/s\n" + (score / 1000).toFixed(3) + " GB/s"
             } else if (score <= 0) {
                 return "0.000 MB/s\n0.000 GB/s\n -- IOPS\n0.000 μs"
@@ -124,7 +238,7 @@ ApplicationWindow {
             //     text: qsTr("&Save Image") + "\tCtrl + S"
             //     onTriggered: diskMarkDlg.OnSaveImage()
             // }
-            MenuSeparator {}
+            // MenuSeparator {}
             Action {
                 text: qsTr("&Exit") + "\tAlt + F4"
                 onTriggered: diskMarkDlg.OnExit()
@@ -159,7 +273,7 @@ ApplicationWindow {
             //     checkable: true
             //     onTriggered: diskMarkDlg.OnSettingNVMe8()
             // }
-            MenuSeparator {}
+            // MenuSeparator {}
             // Action {
             //     text: qsTr("&Settings") + "\tCtrl + Q"
             //     onTriggered: diskMarkDlg.OnSettingsQueuesThreads()
@@ -275,7 +389,7 @@ ApplicationWindow {
             //     text: qsTr("Blizzard World [Web]")
             //     onTriggered: diskMarkDlg.OnBlizzardWorld()
             // }
-            MenuSeparator {}
+            // MenuSeparator {}
             Action {
                 text: qsTr("&About")
                 onTriggered: diskMarkDlg.OnAbout()
@@ -296,7 +410,6 @@ ApplicationWindow {
             text: diskMarkDlg.m_buttonTextList[0]
             font.pixelSize: 16
             onClicked: diskMarkDlg.OnAll()
-            onHoveredChanged: console.log(m_TestRead0.meter + " " + m_TestWrite0.meter)
             ToolTip.visible: false
         }
 
@@ -438,57 +551,38 @@ ApplicationWindow {
             }
         }
 
-        Button {
-            id: m_ButtonTest0
-            text: diskMarkDlg.m_buttonTextList[1]
-            visible: diskMarkDlg.m_Profile != CDiskMarkDlg.PROFILE_DEMO
-            ToolTip.text: diskMarkDlg.m_buttonToolTipList[0]
-            onClicked: diskMarkDlg.OnTest0()
-        }
 
-        Label {
-            id: m_TestRead0
-            property int index:
-                diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? 8 :
+        TestRow {
+            id: m_Test0
+            index: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? 8 :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ? 4 :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ? 6 : 0
-            property real read_score: diskMarkDlg.m_readScoreList[index]
-            property real read_latency: diskMarkDlg.m_readLatencyList[index]
-            text: 
-                diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ?
+            buttonText: diskMarkDlg.setButtonText(diskMarkDlg.m_benchTypeList[m_Test0.index], diskMarkDlg.m_blockSizeList[m_Test0.index], diskMarkDlg.m_benchQueuesList[m_Test0.index], diskMarkDlg.m_benchThreadsList[m_Test0.index], m_ComboUnit.currentIndex)
+            buttonToolTipText: diskMarkDlg.m_buttonToolTipList[0]
+            buttonClicked: function() {diskMarkDlg.OnTest0()}
+            readText: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ?
                     diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ?
                     diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
-                diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
-            ToolTip.text: 
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            meter: diskMarkDlg.calcMeter(read_score, read_latency)
-            Layout.minimumHeight: 48
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.horizontalStretchFactor: 192
-            Layout.verticalStretchFactor: 48
-        }
-
-        Label {
-            id: m_TestWrite0
-            property int index:
-                diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO ? 8 :
-                diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ? 4 :
-                diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ? 6 : 0
-            text:
-                diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ?
+                    diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
+            readToolTipText: diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[m_Test0.index], diskMarkDlg.m_readLatencyList[m_Test0.index])
+            writeText: diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_PEAK_MIX ?
                     diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL || diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_REAL_MIX ?
                     diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
-                diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
-            ToolTip.text: 
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
-            meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
-            Layout.minimumWidth: 192
-            Layout.minimumHeight: 48
+                    diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
+            writeToolTipText: diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[m_Test0.index], diskMarkDlg.m_writeLatencyList[m_Test0.index])
+            read_score: diskMarkDlg.m_readScoreList[m_Test0.index]
+            read_latency: diskMarkDlg.m_readLatencyList[m_Test0.index]
+            write_score: diskMarkDlg.m_writeScoreList[m_Test0.index]
+            write_latency: diskMarkDlg.m_writeLatencyList[m_Test0.index]
+            read_meter: diskMarkDlg.calcMeter(m_Test0.read_score, m_Test0.read_latency)
+            write_meter: diskMarkDlg.calcMeter(m_Test0.write_score, m_Test0.write_latency)
+            buttonVisible: diskMarkDlg.m_Profile != CDiskMarkDlg.PROFILE_DEMO
+            Layout.columnSpan: 3
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.minimumHeight: 48
             Layout.horizontalStretchFactor: 192
             Layout.verticalStretchFactor: 48
         }
@@ -513,7 +607,7 @@ ApplicationWindow {
                     diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text: 
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
@@ -535,7 +629,7 @@ ApplicationWindow {
                     diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text: 
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
@@ -565,7 +659,7 @@ ApplicationWindow {
                     diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text:
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
@@ -587,7 +681,7 @@ ApplicationWindow {
                     diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text:
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
@@ -617,7 +711,7 @@ ApplicationWindow {
                     diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.scoreToText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             ToolTip.text:
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             meter: diskMarkDlg.calcMeter(diskMarkDlg.m_readScoreList[index], diskMarkDlg.m_readLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
@@ -639,7 +733,7 @@ ApplicationWindow {
                     diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], CDiskMarkDlg.SCORE_MBS) :
                 diskMarkDlg.scoreToText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             ToolTip.text:
-                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index], diskMarkDlg.m_blockSizeList[index])
+                diskMarkDlg.scoreToToolTipText(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             meter: diskMarkDlg.calcMeter(diskMarkDlg.m_writeScoreList[index], diskMarkDlg.m_writeLatencyList[index])
             Layout.minimumWidth: 192
             Layout.minimumHeight: 48
