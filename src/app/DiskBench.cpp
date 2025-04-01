@@ -158,10 +158,9 @@ int ExecAndWait(QString *pszCmd, bool bNoWindow, double *score, double *latency)
 	// Set up members of the PROCESS_INFORMATION structure
 	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 
-	// Create the child process
-	//QString command = QString("cmd.exe /C ") + *pszCmd;
+	// Create the child process without showing a window
 	std::wstring commandW = (*pszCmd).toStdWString();
-	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
+	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
 		perror("CreateProcess");
 		return -1;
 	}
@@ -907,7 +906,7 @@ bool Init(void* dlg)
 
 	// Create the child process
 	std::wstring commandW = command.toStdWString();
-	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
+	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
 		DWORD error = GetLastError();
 		LPVOID lpMsgBuf;
 		FormatMessage(
@@ -917,7 +916,7 @@ bool Init(void* dlg)
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(LPTSTR)&lpMsgBuf,
 			0, NULL);
-		fprintf(stderr, "CreateProcess failed with error %d: %s\n", error, (wchar_t*)lpMsgBuf);
+		// fprintf(stderr, "CreateProcess failed with error %d: %s\n", error, (wchar_t*)lpMsgBuf);
 		LocalFree(lpMsgBuf);
 		return false;
 	}
@@ -948,7 +947,7 @@ bool Init(void* dlg)
 	CloseHandle(pi.hThread);
 	CloseHandle(hRead);
 
-	printf("Output: %s\n", output.toStdString().c_str());
+	// printf("Output: %s\n", output.toStdString().c_str());
 #endif
 
 	// printf("TestFilePath: %s\n", TestFilePath.toStdString().c_str());

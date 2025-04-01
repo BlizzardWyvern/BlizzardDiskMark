@@ -112,18 +112,18 @@ ApplicationWindow {
         height: 24
         Menu {
             title: qsTr("&File")
-            Action {
-                text: qsTr("&Copy") + "\tCtrl + Shift + C"
-                onTriggered: diskMarkDlg.OnCopy()
-            }
-            Action {
-                text: qsTr("&Save Text") + "\tCtrl + T"
-                onTriggered: diskMarkDlg.OnSaveText()
-            }
-            Action {
-                text: qsTr("&Save Image") + "\tCtrl + S"
-                onTriggered: diskMarkDlg.OnSaveImage()
-            }
+            // Action {
+            //     text: qsTr("&Copy") + "\tCtrl + Shift + C"
+            //     onTriggered: diskMarkDlg.OnCopy()
+            // }
+            // Action {
+            //     text: qsTr("&Save Text") + "\tCtrl + T"
+            //     onTriggered: diskMarkDlg.OnSaveText()
+            // }
+            // Action {
+            //     text: qsTr("&Save Image") + "\tCtrl + S"
+            //     onTriggered: diskMarkDlg.OnSaveImage()
+            // }
             MenuSeparator {}
             Action {
                 text: qsTr("&Exit") + "\tAlt + F4"
@@ -160,10 +160,10 @@ ApplicationWindow {
             //     onTriggered: diskMarkDlg.OnSettingNVMe8()
             // }
             MenuSeparator {}
-            Action {
-                text: qsTr("&Settings") + "\tCtrl + Q"
-                onTriggered: diskMarkDlg.OnSettingsQueuesThreads()
-            }
+            // Action {
+            //     text: qsTr("&Settings") + "\tCtrl + Q"
+            //     onTriggered: diskMarkDlg.OnSettingsQueuesThreads()
+            // }
         }
         Menu {
             title: qsTr("&Profile")
@@ -267,14 +267,14 @@ ApplicationWindow {
         }
         Menu {
             title: qsTr("&Help")
-            Action {
-                text: qsTr("&Help") + " [Web]" + "\tF1"
-                onTriggered: diskMarkDlg.OnHelp()
-            }
-            Action {
-                text: qsTr("Blizzard World [Web]")
-                onTriggered: diskMarkDlg.OnBlizzardWorld()
-            }
+            // Action {
+            //     text: qsTr("&Help") + " [Web]" + "\tF1"
+            //     onTriggered: diskMarkDlg.OnHelp()
+            // }
+            // Action {
+            //     text: qsTr("Blizzard World [Web]")
+            //     onTriggered: diskMarkDlg.OnBlizzardWorld()
+            // }
             MenuSeparator {}
             Action {
                 text: qsTr("&About")

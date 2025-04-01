@@ -1,0 +1,21 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <Package Name="BlizzardDiskMark" Manufacturer="Blizzard" Version="1.0.0.0" UpgradeCode="1b9e19ba-f0e7-4365-80c6-116177596235">
+        <MajorUpgrade DowngradeErrorMessage="A newer version of BlizzardDiskMark is already installed." />
+        <Feature Id="Main">
+            <Files Include="@CMAKE_BINARY_DIR@/Release/**" Directory="INSTALLFOLDER" />
+        </Feature>
+    </Package>
+
+    <Fragment>
+        <StandardDirectory Id="ProgramFiles6432Folder">
+            <Directory Id="INSTALLFOLDER" Name="!(bind.property.Manufacturer) !(bind.property.ProductName)" />
+        </StandardDirectory>
+    </Fragment>
+
+    <Fragment>
+        <CustomAction Id="InstallVCRedist" FileRef="vc_redist.x64.exe" ExeCommand="/quiet /norestart" Execute="deferred" Return="check" />
+        <InstallExecuteSequence>
+            <Custom Action="InstallVCRedist" After="InstallFiles" Condition="NOT Installed" />
+        </InstallExecuteSequence>
+    </Fragment>
+</Wix>
