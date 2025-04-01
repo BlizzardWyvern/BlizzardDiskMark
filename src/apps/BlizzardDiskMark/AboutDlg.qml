@@ -19,7 +19,7 @@ ApplicationWindow {
 
         Image {
             id: logoImage
-            source: "/images/res/DiskMark.ico"
+            source: "qrc:/images/res/DiskMark128.png"
             fillMode: Image.PreserveAspectFit
             MouseArea {
                 anchors.fill: parent
@@ -49,6 +49,7 @@ ApplicationWindow {
                 font.pixelSize: 22
                 font.bold: true
                 color: "black"
+                horizontalAlignment: Text.AlignHCenter
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
@@ -68,6 +69,7 @@ ApplicationWindow {
                 font.pixelSize: 18
                 font.bold: true
                 color: "black"
+                horizontalAlignment: Text.AlignHCenter
                 Layout.minimumWidth: 340
                 Layout.minimumHeight: 28
                 Layout.fillWidth: true
@@ -79,6 +81,7 @@ ApplicationWindow {
                 text: qsTr("Release: 29th May 2025")
                 font.pixelSize: 16
                 color: "black"
+                horizontalAlignment: Text.AlignHCenter
                 Layout.minimumWidth: 340
                 Layout.minimumHeight: 20
                 Layout.fillWidth: true
@@ -90,6 +93,7 @@ ApplicationWindow {
                 text: qsTr("© 2025 BlizzardWyvern")
                 font.pixelSize: 16
                 color: "black"
+                horizontalAlignment: Text.AlignHCenter
                 Layout.minimumWidth: 340
                 Layout.minimumHeight: 20
                 Layout.fillWidth: true
@@ -101,6 +105,7 @@ ApplicationWindow {
                 text: qsTr("License")
                 font.pixelSize: 16
                 color: "black"
+                horizontalAlignment: Text.AlignHCenter
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor

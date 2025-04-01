@@ -13,6 +13,7 @@ qt_policy(SET QTP0004 NEW)
 set(CMAKE_AUTOMOC ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 set(QML_IMPORT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/modules/BlizzardIgloo")
+set(CMAKE_AUTORCC ON)
 
 add_subdirectory(src/modules/BlizzardIgloo)
 add_subdirectory(src/apps/BlizzardDiskMark)

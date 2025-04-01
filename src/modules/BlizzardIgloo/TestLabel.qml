@@ -39,12 +39,12 @@ Item {
 
     Rectangle {
         id: scoreRect
-        color: "#77db33"
+        color: "#965ec6" // "#77db33"
         border.color: "lightgray"
         gradient: Gradient {
             orientation: Gradient.Vertical
             GradientStop { position: 0.0; color: "white" }
-            GradientStop { position: 0.5; color: "#77db33" }
+            GradientStop { position: 0.5; color: "#965ec6" } // "#77db33" }
             GradientStop { position: 1.0; color: "white" }
         }
         x: 0

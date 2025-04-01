@@ -2,5 +2,6 @@
     <qresource prefix="/images">
         <file>res/DiskMark.ico</file>
         <file>res/DiskMark16.ico</file>
+        <file>res/DiskMark128.png</file>
     </qresource>
 </RCC>
