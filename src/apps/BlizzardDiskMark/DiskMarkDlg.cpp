@@ -259,9 +259,6 @@ void CDiskMarkDlg::OnExit()
 	}
 	QApplication::quit();
 }
-void CDiskMarkDlg::OnAbout()
-{
-}
 
 void CDiskMarkDlg::OnSequentialPeak()
 {

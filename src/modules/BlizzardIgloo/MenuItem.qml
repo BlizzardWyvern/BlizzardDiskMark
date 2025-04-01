@@ -6,20 +6,22 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import QtQuick.Controls
 
+import BlizzardIgloo
+
 T.MenuItem {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding,
-                             implicitIndicatorHeight + topPadding + bottomPadding)
+                             implicitContentHeight + topPadding + bottomPadding)
+                            //  implicitIndicatorHeight + topPadding + bottomPadding)
 
     padding: 4
     spacing: 0
 
-    icon.width: 24
-    icon.height: 24
+    icon.width: 12
+    icon.height: 12
     icon.color: control.palette.windowText
 
     contentItem: IconLabel {
@@ -43,6 +45,7 @@ T.MenuItem {
         x: control.mirrored ? control.width - width - control.rightPadding : control.leftPadding
         y: control.topPadding + (control.availableHeight - height) / 2
 
+        scale: control.checkable ? 0.5 : 0.0
         visible: control.checked
         source: control.checkable ? "qrc:/qt-project.org/imports/QtQuick/Controls/Basic/images/check.png" : ""
         color: control.palette.windowText
@@ -61,8 +64,6 @@ T.MenuItem {
     }
 
     background: Rectangle {
-        implicitWidth: 200
-        implicitHeight: 40
         x: 1
         y: 1
         width: control.width - 2

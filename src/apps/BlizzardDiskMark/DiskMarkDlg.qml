@@ -1,18 +1,18 @@
-import BlizzardIgloo
-import BlizzardDiskMark
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
+import BlizzardIgloo
+import BlizzardDiskMark
+
 ApplicationWindow {
     id: diskMarkApp
     visible: true
     width: 480
-    height: 300 + 32
+    height: 300 + 20
     minimumWidth: 480
-    minimumHeight: 300 + 32
+    minimumHeight: 300 + 20
     onClosing: diskMarkDlg.OnExit()
     title: {
         var title = ""
@@ -285,9 +285,10 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         enabled: !diskMarkDlg.m_DiskBenchStatus
-        height: 24
+        width: parent.width
+        height: 12
         Menu {
-            title: qsTr("&File")
+            title: qsTr("File")
             // Action {
             //     text: qsTr("&Copy") + "\tCtrl + Shift + C"
             //     onTriggered: diskMarkDlg.OnCopy()
@@ -302,12 +303,12 @@ ApplicationWindow {
             // }
             // MenuSeparator {}
             Action {
-                text: qsTr("&Exit") + "\tAlt + F4"
+                text: qsTr("Exit") + "\tAlt + F4"
                 onTriggered: diskMarkDlg.OnExit()
             }
         }
         Menu {
-            title: qsTr("&Settings")
+            title: qsTr("Settings")
             Menu {
                 title: qsTr("&Test Data")
                 Action {
@@ -342,7 +343,7 @@ ApplicationWindow {
             // }
         }
         Menu {
-            title: qsTr("&Profile")
+            title: qsTr("Profile")
             Action {
                 text: qsTr("&Default")
                 checkable: true
@@ -404,7 +405,7 @@ ApplicationWindow {
             // }
         }
         Menu {
-            title: qsTr("&Theme")
+            title: qsTr("Theme")
             Menu {
                 title: qsTr("&Zoom")
                 Action {
@@ -427,7 +428,7 @@ ApplicationWindow {
             }
         }
         Menu {
-            title: qsTr("&Language")
+            title: qsTr("Language")
             Menu {
                 title: "A-N"
                 Action {
@@ -442,7 +443,7 @@ ApplicationWindow {
             }
         }
         Menu {
-            title: qsTr("&Help")
+            title: qsTr("Help")
             // Action {
             //     text: qsTr("&Help") + " [Web]" + "\tF1"
             //     onTriggered: diskMarkDlg.OnHelp()
@@ -453,8 +454,20 @@ ApplicationWindow {
             // }
             // MenuSeparator {}
             Action {
-                text: qsTr("&About")
-                onTriggered: diskMarkDlg.OnAbout()
+                text: qsTr("About")
+                onTriggered: {
+                    var component = Qt.createComponent("AboutDlg.qml")
+                    if (component.status === Component.Ready) {
+                        var aboutDlg = component.createObject(diskMarkApp)
+                        if (aboutDlg === null) {
+                            console.log("Error creating AboutDlg:", component.errorString())
+                        } else {
+                            aboutDlg.show()
+                        }
+                    } else {
+                        console.log("Error loading AboutDlg:", component.errorString())
+                    }
+                }
             }
         }
     }
@@ -592,33 +605,51 @@ ApplicationWindow {
                         Layout.fillHeight: true
                         Layout.minimumWidth: 192 + 4 + 192
                         Layout.minimumHeight: 24
-                        Label {
+                        Item {
                             id: m_ReadUnit
-                            text: qsTr("Read") + " (" + m_ComboUnit.currentText + ")"
-                            font.pixelSize: height * 16 / 24
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignBottom
-                            background: Rectangle {
+                            Text {
+                                text: qsTr("Read") + " (" + m_ComboUnit.currentText + ")"
+                                font.pixelSize: m_ReadUnit.height * 16 / 24
+                                font.weight: Font.Bold
+                                color: "black"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignBottom
+                                width: m_ReadUnit.width
+                                height: m_ReadUnit.height
+                            }
+                            Rectangle {
                                 color: "transparent"
+                                x: 0
+                                y: 0
+                                width: m_ReadUnit.width
+                                height: m_ReadUnit.height
                             }
                             visible: diskMarkDlg.m_Profile != CDiskMarkDlg.PROFILE_DEMO
-                            ToolTip.visible: false
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             Layout.minimumWidth: 192
                             Layout.minimumHeight: 24
                         }
-                        Label {
+                        Item {
                             id: m_WriteUnit
-                            text: qsTr("Write") + " (" + m_ComboUnit.currentText + ")"
-                            font.pixelSize: height * 16 / 24
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignBottom
-                            background: Rectangle {
+                            Text {
+                                text: qsTr("Write") + " (" + m_ComboUnit.currentText + ")"
+                                font.pixelSize: m_ReadUnit.height * 16 / 24
+                                font.weight: Font.Bold
+                                color: "black"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignBottom
+                                width: m_WriteUnit.width
+                                height: m_WriteUnit.height
+                            }
+                            Rectangle {
                                 color: "transparent"
+                                x: 0
+                                y: 0
+                                width: m_WriteUnit.width
+                                height: m_WriteUnit.height
                             }
                             visible: diskMarkDlg.m_Profile != CDiskMarkDlg.PROFILE_DEMO
-                            ToolTip.visible: false
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             Layout.minimumWidth: 192
@@ -743,10 +774,6 @@ ApplicationWindow {
             readOnly: true
             font.pixelSize: height * 16 / 24
             font.weight: Font.Bold
-            background: Rectangle {
-                color: "transparent"
-                border.color: "lightgray"
-            }
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumWidth: 464

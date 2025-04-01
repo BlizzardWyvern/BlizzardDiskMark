@@ -1,4 +1,6 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/images">
+        <file>res/DiskMark.ico</file>
+        <file>res/DiskMark16.ico</file>
     </qresource>
 </RCC>

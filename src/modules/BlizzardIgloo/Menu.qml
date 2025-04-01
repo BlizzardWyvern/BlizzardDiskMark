@@ -6,6 +6,8 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import QtQuick.Controls
 
+import BlizzardIgloo
+
 T.Menu {
     id: control
 
@@ -33,7 +35,7 @@ T.Menu {
 
     background: Rectangle {
         implicitWidth: 200
-        implicitHeight: 40
+        implicitHeight: 20
         color: control.palette.window
         border.color: control.palette.dark
     }

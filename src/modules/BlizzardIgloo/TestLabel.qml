@@ -7,39 +7,35 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import QtQuick.Effects
 
-T.Label {
+import BlizzardIgloo
+
+Item {
     id: control
 
+    property alias text: text.text
     property real meter: 0
 
-    font.pixelSize: height * 35 / 48
-    font.family: "Segoe UI"
-    font.weight: Font.Bold
+    T.ToolTip.visible: mouseArea.containsMouse
 
-    color: "black"
-    linkColor: control.palette.link
-
-    rightPadding: 4
-    horizontalAlignment: Text.AlignRight
-    verticalAlignment: Text.AlignVCenter
-
-    Layout.minimumWidth: 192
-    Layout.minimumHeight: 48
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-    Layout.horizontalStretchFactor: 192
-    Layout.verticalStretchFactor: 48
-
-    Layout.margins: 0
+    Text {
+        id:  text
+        font.pixelSize: control.height * 35 / 48
+        font.family: "Segoe UI"
+        font.weight: Font.Bold
+        color: "black"
+        linkColor: control.palette.link
+        rightPadding: 4
+        horizontalAlignment: Text.AlignRight
+        verticalAlignment: Text.AlignVCenter
+        width: control.width
+        height: control.height
+    }
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: control.meterChanged()
     }
-
-    T.ToolTip.visible: mouseArea.containsMouse
 
     Rectangle {
         id: scoreRect
@@ -58,10 +54,13 @@ T.Label {
         height: control.height
     }
 
-    background: Rectangle {
+    Rectangle {
         id: borderRect
         color: "transparent"
         border.color: "lightgray"
+        border.width: 1
+        x: 0
+        y: 0
         width: control.width
         height: control.height
     }

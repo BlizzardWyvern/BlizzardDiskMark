@@ -1,8 +1,10 @@
 module BlizzardIgloo
-Label 1.0 Label.qml
+TestLabel 1.0 TestLabel.qml
 Button 1.0 Button.qml
 ComboBox 1.0 ComboBox.qml
 Menu 1.0 Menu.qml
 MenuBar 1.0 MenuBar.qml
+MenuBarItem 1.0 MenuBarItem.qml
 MenuItem 1.0 MenuItem.qml
 TestRow 1.0 TestRow.qml
+TextField 1.0 TextField.qml

@@ -694,7 +694,7 @@ bool Init(void* dlg)
 				.arg((totalNumberOfBytes - totalNumberOfFreeBytes) / 1024 / 1024 / 1024.0)
 				.arg(totalNumberOfBytes / 1024 / 1024 / 1024.0);
 		}
-		RootPath = QString("/Volumes/%1").arg(drive);
+		RootPath = QString("/Volumes/%1/").arg(drive);
 		RootPath = QDir().tempPath();
 #elif defined(_WIN32)
 		cstr = QString("%1:\\").arg(drive);
@@ -723,14 +723,14 @@ bool Init(void* dlg)
 		}
 		RootPath = QString("%1:\\").arg(drive);
 #endif
-		TestFileDir = QString("%1/BlizzardDiskMark%2").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
+		TestFileDir = QString("%1BlizzardDiskMark%2/").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
 	}
 	else
 	{
 		RootPath = ((CDiskMarkDlg*)dlg)->m_TestTargetPath;
-		TestFileDir = QString("%1/BlizzardDiskMark%2").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
+		TestFileDir = QString("%1/BlizzardDiskMark%2/").arg(RootPath).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
 	}
-	printf("Test path %s", TestFileDir.toStdString().c_str());
+	qDebug() << "Test path: " << TestFileDir;
 #ifdef __APPLE__
 	if (mkdir(TestFileDir.toStdString().c_str(), 0777) != 0) {
 		perror("mkdir");
@@ -742,8 +742,8 @@ bool Init(void* dlg)
 		return false;
 	}
 #endif
-	TestFilePath = QString("%1/BlizzardDiskMark%2.tmp").arg(TestFileDir).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
-
+	TestFilePath = QString("%1BlizzardDiskMark%2.tmp").arg(TestFileDir).arg(QDateTime::currentMSecsSinceEpoch(), 8, 16, QChar('0'));
+	qDebug() << "Test file: " << TestFilePath;
 #ifdef __APPLE__
 	// Check Read Only //
 	struct statfs fsInfo;
@@ -884,13 +884,13 @@ bool Init(void* dlg)
 	// Create a pipe for the child process's STDOUT
 	if (!CreatePipe(&hRead, &hWrite, &sa, 0)) {
 		perror("CreatePipe");
-		return -1;
+		return false;
 	}
 
 	// Ensure the read handle to the pipe for STDOUT is not inherited
 	if (!SetHandleInformation(hRead, HANDLE_FLAG_INHERIT, 0)) {
 		perror("SetHandleInformation");
-		return -1;
+		return false;
 	}
 
 	// Set up members of the STARTUPINFO structure
@@ -905,6 +905,7 @@ bool Init(void* dlg)
 
 	// Create the child process
 	std::wstring commandW = command.toStdWString();
+	qDebug() << "Command: " << commandW;
 	if (!CreateProcessW(NULL, (LPWSTR)commandW.c_str(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
 		DWORD error = GetLastError();
 		LPVOID lpMsgBuf;
@@ -915,7 +916,7 @@ bool Init(void* dlg)
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(LPTSTR)&lpMsgBuf,
 			0, NULL);
-		// fprintf(stderr, "CreateProcess failed with error %d: %s\n", error, (wchar_t*)lpMsgBuf);
+		qDebug() << "CreateProcess failed with error" << error << ":" << QString::fromWCharArray((wchar_t*)lpMsgBuf);
 		LocalFree(lpMsgBuf);
 		return false;
 	}

@@ -38,31 +38,38 @@ RowLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
         Layout.horizontalStretchFactor: 72
-        Layout.verticalStretchFactor: 48
     }
 
-    Label {
-        id: m_TestRead
-        text: rowLayout.readText
-        ToolTip.text: rowLayout.readToolTipText
-        meter: rowLayout.read_meter
+    RowLayout {
+        id: label_row
+        spacing: 4
+        uniformCellSizes: true
+        Layout.minimumWidth: 192 + 4 + 192
         Layout.minimumHeight: 48
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Layout.horizontalStretchFactor: 192
-        Layout.verticalStretchFactor: 48
-    }
+        Layout.horizontalStretchFactor: 192 + 4 + 192
 
-    Label {
-        id: m_TestWrite
-        text: rowLayout.writeText
-        ToolTip.text: rowLayout.writeToolTipText
-        meter: rowLayout.write_meter
-        Layout.minimumWidth: 192
-        Layout.minimumHeight: 48
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        Layout.horizontalStretchFactor: 192
-        Layout.verticalStretchFactor: 48
+        TestLabel {
+            id: m_TestRead
+            text: rowLayout.readText
+            ToolTip.text: rowLayout.readToolTipText
+            meter: rowLayout.read_meter
+            Layout.minimumWidth: 192
+            Layout.minimumHeight: 48
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        TestLabel {
+            id: m_TestWrite
+            text: rowLayout.writeText
+            ToolTip.text: rowLayout.writeToolTipText
+            meter: rowLayout.write_meter
+            Layout.minimumWidth: 192
+            Layout.minimumHeight: 48
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
     }
 }

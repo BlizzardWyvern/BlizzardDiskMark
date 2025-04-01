@@ -22,7 +22,6 @@
 #include <QQmlListProperty>
 #include <QQmlEngine>
 
-#include "AboutDlg.h"
 #include "DiskBench.h"
 #include "SettingsDlg.h"
 //#include "FontSelectionDlg.h"
@@ -243,7 +242,6 @@ public slots:
 	void OnExitBenchmark();
 
 	void OnExit();
-	void OnAbout();
 	void OnSettings();
 
 	void OnBenchmarkReadWrite();
@@ -258,7 +256,6 @@ protected:
 	QString m_TitleTestQSize;
 
 protected:
-	CAboutDlg*		m_AboutDlg;
 	CSettingsDlg*	m_SettingsDlg;
 
 	void InitDrive();

@@ -6,6 +6,8 @@ import QtQuick.Templates as T
 import QtQuick.Controls.impl
 import QtQuick.Controls
 
+import BlizzardIgloo
+
 T.MenuBar {
     id: control
 

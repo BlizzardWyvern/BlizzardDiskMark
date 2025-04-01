@@ -9,53 +9,29 @@ import QtQuick.Templates as T
 T.Button {
     id: control
 
-    // implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-    //                         implicitContentWidth + leftPadding + rightPadding)
-    // implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-    //                          implicitContentHeight + topPadding + bottomPadding)
-
-    // padding: 6
-    // horizontalPadding: padding + 2
-    // spacing: 6
+    implicitWidth: 72
+    implicitHeight: 48
 
     font.pixelSize: control.height / 4
     font.family: "Segoe UI"
     font.weight: Font.Bold
 
-    Layout.minimumWidth: 72
-    Layout.minimumHeight: 48
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-    Layout.horizontalStretchFactor: 72
-    Layout.verticalStretchFactor: 48
+    T.ToolTip.visible: hovered
 
-    Layout.margins: 0
-    // Layout.topMargin: 4
-    // Layout.bottomMargin: 4
-    // Layout.leftMargin: 0
-    // Layout.rightMargin: 0
-
-    icon.width: 24
-    icon.height: 24
-    icon.color: control.checked || control.highlighted ? control.palette.brightText :
-                control.flat && !control.down ? (control.visualFocus ? control.palette.highlight : control.palette.windowText) : control.palette.buttonText
-
-    contentItem: IconLabel {
-        spacing: control.spacing
-        mirrored: control.mirrored
-        display: control.display
-
-        icon: control.icon
+    contentItem: Text {
         text: control.text
         font: control.font
         color: control.checked || control.highlighted ? control.palette.brightText :
                control.flat && !control.down ? (control.visualFocus ? control.palette.highlight : control.palette.windowText) : control.palette.buttonText
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        width: control.width
+        height: control.height
     }
 
     background: Rectangle {
-        implicitWidth: 100
-        implicitHeight: 40
         border.color: "lightgray"
+        border.width: 1
         gradient: Gradient {
             orientation: Gradient.Vertical
             GradientStop { position: 0.0; color: "white" }
@@ -65,7 +41,6 @@ T.Button {
         color: "lightgreen"
     }
 
-    T.ToolTip.visible: hovered
     HoverHandler { 
         enabled: parent.hovered
         cursorShape: Qt.PointingHandCursor
