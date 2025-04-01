@@ -2,6 +2,7 @@
 .vscode/
 .DS_Store
 Build/
+out/
 DiskMark.vcxproj.user
 DiskMark.aps
 Priscilla/ScrollBarFx.cpp

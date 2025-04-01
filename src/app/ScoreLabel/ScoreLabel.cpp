@@ -1,4 +1,5 @@
 #include "ScoreLabel.h"
+
 #include <QQmlEngine>
 
 ScoreLabel::ScoreLabel(QObject *parent) :

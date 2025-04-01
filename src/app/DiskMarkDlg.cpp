@@ -749,43 +749,6 @@ void CDiskMarkDlg::SettingsQueuesThreads(int type)
 	// return 0;
 }*/
 
-void CDiskMarkDlg::SelectDrive()
-{
-	QString cstr;
-	if (m_DiskBenchStatus)
-	{
-		return ;
-	}
-
-	int previousComboDriveIndex = m_IndexTestDrive;
-
-	// UpdateData(TRUE);
-	
-	if (m_ComboDrive->currentIndex() == m_MaxIndexTestDrive)
-	{
-		// QFileDialog dialog(this);
-		// dialog.setFileMode(QFileDialog::Directory);
-		// dialog.setOption(QFileDialog::ShowDirsOnly, true);
-		// dialog.setWindowTitle("Select Folder");
-
-		// if (dialog.exec())
-		// {
-		// 	QString selectedDir = dialog.selectedFiles().first();
-		// 	m_TestTargetPath = selectedDir;
-		// // 	m_ComboDrive->setToolTip(m_TestTargetPath);
-		// }
-		// else
-		// {
-		// 	m_IndexTestDrive = previousComboDriveIndex;
-		// 	// m_ComboDrive->setToolTip("TEST_DRIVE");
-		// }
-	}
-	else
-	{
-		// m_ComboDrive->setToolTip("TEST_DRIVE");
-	}
-}
-
 void CDiskMarkDlg::InitScore()
 {
 	for (int i = 0; i < 9; i++)
@@ -1533,7 +1496,8 @@ void CDiskMarkDlg::InitDrive()
 	m_TestTargetPath = targetPath;
 	m_MaxIndexTestDrive = count;
 
-	// UpdateDriveToolTip();
+	m_DriveListChanged();
+	m_TestTargetPathChanged();
 
 	// UpdateData(FALSE);
 }
@@ -2544,11 +2508,6 @@ void CDiskMarkDlg::OnFontSetting()
 
 	// 	UpdateDialogSize();
 // 	// }
-}
-
-void CDiskMarkDlg::OnCbnSelchangeComboDrive()
-{
-	SelectDrive();
 }
 
 #ifdef MIX_MODE

@@ -46,11 +46,10 @@ class CDiskMarkDlg : public QObject
 	Q_PROPERTY(CDiskMarkDlg::TEST_DATA_TYPE m_TestData READ m_getTestData NOTIFY m_TestDataChanged)
 	Q_PROPERTY(CDiskMarkDlg::BENCHMODE m_Benchmark READ m_getBenchmark NOTIFY m_BenchmarkChanged)
 
-	Q_PROPERTY(QStringList m_DriveList MEMBER m_DriveList)
+	Q_PROPERTY(QStringList m_DriveList MEMBER m_DriveList NOTIFY m_DriveListChanged)
 	Q_PROPERTY(int m_IndexTestCount MEMBER m_IndexTestCount)
 	Q_PROPERTY(int m_IndexTestDrive MEMBER m_IndexTestDrive)
-	Q_PROPERTY(long m_TestDriveLetter MEMBER m_TestDriveLetter)
-	Q_PROPERTY(QString m_TestTargetPath MEMBER m_TestTargetPath)
+	Q_PROPERTY(QString m_TestTargetPath MEMBER m_TestTargetPath NOTIFY m_TestTargetPathChanged)
 	Q_PROPERTY(QString m_ValueTestCount MEMBER m_ValueTestCount NOTIFY m_ValueTestCountChanged)
 	Q_PROPERTY(QString m_ValueTestSize MEMBER m_ValueTestSize NOTIFY m_ValueTestSizeChanged)
 	Q_PROPERTY(QString m_ValueTestDrive MEMBER m_ValueTestDrive NOTIFY m_ValueTestDriveChanged)
@@ -118,8 +117,6 @@ public:
 	QList<double> m_writeLatencyList() const;
 	QList<int> m_blockSizeList() const;
 
-	void OnCbnSelchangeComboDrive();
-
 signals:
 	void m_WindowTitleChanged();
 	void m_ProfileChanged();
@@ -130,6 +127,9 @@ signals:
 	void m_ValueTestSizeChanged();
 	void m_ValueTestDriveChanged();
 	void m_ValueTestUnitChanged();
+
+	void m_DriveListChanged();
+	void m_TestTargetPathChanged();
 
 	void m_buttonsChanged();
 	void m_scoreChanged();
@@ -187,7 +187,6 @@ public:
 	void UpdateThemeInfo();
 
 	QString m_TestDriveInfo;
-	long m_TestDriveLetter;
 
 	int m_MaxIndexTestDrive;
 
@@ -280,7 +279,6 @@ public slots:
 	void OnBenchmarkReadOnly();
 	void OnBenchmarkWriteOnly();
 protected:
-	void SelectDrive();
 	QString GetResultString(int type, double score, double latency, int size, int queues, int threads);
 	QString GetButtonText(int type, int size, int queues, int threads, int unit) const;
 	QString GetButtonToolTipText(int type, int size, int queues, int threads, int unit) const;

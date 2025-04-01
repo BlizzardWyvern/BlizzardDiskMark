@@ -2,9 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "DiskMarkDlg.h"
-#include "ScoreLabel.h"
-
-#include "moc_ScoreLabel.cpp"
+#include "ScoreLabel/ScoreLabel.h"
 
 int main(int argc, char *argv[])
 {

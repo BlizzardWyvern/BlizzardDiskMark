@@ -4,10 +4,12 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Shapes
+import QtQuick.Dialogs
 
 import BlizzardDiskMark
 
 ApplicationWindow {
+    id: diskMarkApp
     visible: true
     width: 480
     height: 300 + 32
@@ -21,7 +23,6 @@ ApplicationWindow {
         function scoreToText(score, latency, unit = m_ComboUnit.currentIndex) {
             switch(unit) {
                 case CDiskMarkDlg.SCORE_MBS:
-                    console.log("score: " + score)
                     if (diskMarkDlg.m_Profile == CDiskMarkDlg.PROFILE_DEMO) {
                         return score >= 1000.0 ? score.toFixed(0) : score.toFixed(1)
                     } else {
@@ -346,14 +347,27 @@ ApplicationWindow {
 
                 ComboBox {
                     id: m_ComboDrive
+                    property int prev_index: 0
                     enabled: !diskMarkDlg.m_DiskBenchStatus
                     model: diskMarkDlg.m_DriveList
                     currentIndex: 0
-                    onCurrentIndexChanged: diskMarkDlg.m_IndexTestDrive = m_ComboDrive.currentIndex
+                    onCurrentIndexChanged: {
+                        prev_index = diskMarkDlg.m_IndexTestDrive
+                        diskMarkDlg.m_IndexTestDrive = m_ComboDrive.currentIndex
+                        if (!diskMarkDlg.m_DiskBenchStatus && m_ComboDrive.currentIndex == m_ComboDrive.count - 1) {
+                            m_FileDialog.open()
+                        }
+                    }
                     onCurrentValueChanged: diskMarkDlg.m_ValueTestDrive = m_ComboDrive.currentText
-                    onCurrentTextChanged: diskMarkDlg.OnCbnSelchangeComboDrive()
                     ToolTip.visible: hovered
-                    ToolTip.text: diskMarkDlg.m_TestDriveLetter == 99 && !diskMarkDlg.m_TestTargetPath ? diskMarkDlg.m_TestTargetPath : qsTr("Test Drive")
+                    ToolTip.text: {
+                        if (diskMarkDlg.m_TestTargetPath === null || diskMarkDlg.m_TestTargetPath === "" || !(m_ComboDrive.currentIndex == m_ComboDrive.count - 1)) {
+                            return qsTr("Test Drive")
+                        }
+                        else {
+                            return diskMarkDlg.m_TestTargetPath
+                        }
+                    }
                     Layout.margins: 0
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -643,6 +657,17 @@ ApplicationWindow {
             Layout.minimumHeight: 24
             Layout.horizontalStretchFactor: 464
             Layout.verticalStretchFactor: 24
+        }
+    }
+
+    FolderDialog {
+        id: m_FileDialog
+        title: qsTr("Select Folder")
+        onAccepted: {
+            diskMarkDlg.m_TestTargetPath = m_FileDialog.selectedFolder
+        }
+        onRejected: {
+            m_ComboDrive.currentIndex = m_ComboDrive.prev_index
         }
     }
 }

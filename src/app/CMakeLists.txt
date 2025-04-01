@@ -30,7 +30,7 @@ qt_add_qml_module(BlizzardDiskMark
         ScoreLabel/Label.qml ScoreLabel/Button.qml ScoreLabel/ComboBox.qml
     SOURCES 
         DiskMarkDlg.cpp DiskMarkDlg.h
-        ScoreLabel.cpp ScoreLabel.h
+        ScoreLabel/ScoreLabel.cpp ScoreLabel/ScoreLabel.h
     DEPENDENCIES
         QtQuick
     NO_RESOURCE_TARGET_PATH
