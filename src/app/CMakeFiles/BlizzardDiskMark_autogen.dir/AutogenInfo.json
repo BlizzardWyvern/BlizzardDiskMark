@@ -1,0 +1,124 @@
+{
+	"BUILD_DIR" : "/Users/alexander/CrystalDiskMark/src/app/BlizzardDiskMark_autogen",
+	"CMAKE_BINARY_DIR" : "/Users/alexander/CrystalDiskMark",
+	"CMAKE_CURRENT_BINARY_DIR" : "/Users/alexander/CrystalDiskMark/src/app",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/Users/alexander/CrystalDiskMark/src/app",
+	"CMAKE_EXECUTABLE" : "/opt/homebrew/opt/cmake/bin/cmake",
+	"CMAKE_LIST_FILES" : [ "/Users/alexander/CrystalDiskMark/src/app/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "/Users/alexander/CrystalDiskMark",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "/Users/alexander/CrystalDiskMark/src/app/BlizzardDiskMark_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "BlizzardDiskMark_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/AboutDlg.h",
+			"MU",
+			"EWIEGA46WW/moc_AboutDlg.cpp",
+			null
+		],
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/DiskBench.h",
+			"MU",
+			"EWIEGA46WW/moc_DiskBench.cpp",
+			null
+		],
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/DiskMark.h",
+			"MU",
+			"EWIEGA46WW/moc_DiskMark.cpp",
+			null
+		],
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/DiskMarkDlg.h",
+			"MU",
+			"EWIEGA46WW/moc_DiskMarkDlg.cpp",
+			null
+		],
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/SettingsDlg.h",
+			"MU",
+			"EWIEGA46WW/moc_SettingsDlg.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/Users/alexander/CrystalDiskMark/src/app/BlizzardDiskMark_autogen/include",
+	"MOC_COMPILATION_FILE" : "/Users/alexander/CrystalDiskMark/src/app/BlizzardDiskMark_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/opt/homebrew/lib/QtWidgets.framework/Headers",
+		"/opt/homebrew/lib/QtWidgets.framework",
+		"/opt/homebrew/lib/QtCore.framework/Headers",
+		"/opt/homebrew/lib/QtCore.framework",
+		"/opt/homebrew/share/qt/mkspecs/macx-clang",
+		"/opt/homebrew/include",
+		"/opt/homebrew/lib/QtGui.framework/Headers",
+		"/opt/homebrew/lib/QtGui.framework",
+		"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/include/c++/v1",
+		"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/16/include",
+		"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/include",
+		"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT",
+		"Q_ENUM_NS"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++",
+		"-std=gnu++17",
+		"-dM",
+		"-E",
+		"-c",
+		"/opt/homebrew/opt/cmake/share/cmake/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/Users/alexander/CrystalDiskMark/src/app/BlizzardDiskMark_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "/Users/alexander/CrystalDiskMark/src/app/CMakeFiles/BlizzardDiskMark_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/opt/homebrew/share/qt/libexec/moc",
+	"QT_UIC_EXECUTABLE" : "/opt/homebrew/share/qt/libexec/uic",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 8,
+	"SETTINGS_FILE" : "/Users/alexander/CrystalDiskMark/src/app/CMakeFiles/BlizzardDiskMark_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "/Users/alexander/CrystalDiskMark/src/app/AboutDlg.cpp", "MU", null ],
+		[ "/Users/alexander/CrystalDiskMark/src/app/DiskBench.cpp", "MU", null ],
+		[ "/Users/alexander/CrystalDiskMark/src/app/DiskMark.cpp", "MU", null ],
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/DiskMarkDlg.cpp",
+			"MU",
+			null
+		],
+		[
+			"/Users/alexander/CrystalDiskMark/src/app/SettingsDlg.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}
