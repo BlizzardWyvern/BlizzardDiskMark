@@ -1,5 +1,5 @@
 qt_add_qml_module(BlizzardIgloo
-    SHARED
+    STATIC
     URI BlizzardIgloo
     VERSION 1.0
     QML_FILES
@@ -12,5 +12,18 @@ qt_add_qml_module(BlizzardIgloo
         MenuItem.qml
         TestRow.qml
         TextField.qml
-    OUTPUT_DIRECTORY BlizzardIgloo
+)
+
+target_compile_definitions(BlizzardIgloo PRIVATE
+    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
+)
+target_link_libraries(BlizzardIgloo PRIVATE
+    Qt6::Quick
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::Qml
+    Qt6::Core
+)
+target_include_directories(BlizzardIgloo PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )

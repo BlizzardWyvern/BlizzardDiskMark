@@ -28,8 +28,11 @@ qt_add_qml_module(BlizzardDiskMark
 target_link_libraries(BlizzardDiskMark PRIVATE
     Qt6::Widgets
     Qt6::Quick
-    BlizzardIgloo
-    )
+    BlizzardIglooplugin
+)
+target_compile_definitions(BlizzardDiskMark PRIVATE
+    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
+)
 
 set_target_properties(BlizzardDiskMark PROPERTIES
     WIN32_EXECUTABLE TRUE
