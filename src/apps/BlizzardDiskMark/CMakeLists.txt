@@ -9,6 +9,16 @@ add_executable(BlizzardDiskMark
     ${app_icon_resource_windows}
 )
 
+# qt_add_resources(BlizzardDiskMark
+#     # application.qrc
+#     ${app_icon_resource_windows}
+# )
+
+set_target_properties(BlizzardDiskMark PROPERTIES
+    VERSION ${CURRENT_DATE}
+    SOVERSION ${CURRENT_DATE}
+)
+
 qt_add_qml_module(BlizzardDiskMark
     URI BlizzardDiskMark
     QML_FILES 
@@ -17,6 +27,8 @@ qt_add_qml_module(BlizzardDiskMark
     SOURCES 
         DiskMarkDlg.cpp 
         DiskMarkDlg.h
+    RESOURCES
+        application.qrc
     DEPENDENCIES
         QtQuick
         QtQuick.Controls
@@ -41,18 +53,20 @@ set_target_properties(BlizzardDiskMark PROPERTIES
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
+
     if(WIN32)
         add_custom_command(TARGET BlizzardDiskMark POST_BUILD
             COMMAND ${Qt6_DIR}/../../../bin/windeployqt.exe 
                 --release --no-translations
-                --qmldir ${CMAKE_SOURCE_DIR}/src/app 
+                --qmldir ${CMAKE_CURRENT_SOURCE_DIR}
                 $<TARGET_FILE:BlizzardDiskMark>
-            COMMENT "Running windeployqt on BlizzardDiskMark executable with QML directory"
+            COMMENT "Running windeployqt on BlizzardDiskMark"
         )
 
         # Download fio msi installer dependent on the architecture
-        set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-3.39/fio-3.39-${CMAKE_VS_PLATFORM_NAME}.msi")
-        set(FIO_INSTALLER ${CMAKE_BINARY_DIR}/installer/fio-${CMAKE_VS_PLATFORM_NAME}.msi)
+        set(FIO_VERSION "3.39")
+        set(FIO_INSTALLER_URL "https://github.com/axboe/fio/releases/download/fio-${FIO_VERSION}/fio-${FIO_VERSION}-${CMAKE_VS_PLATFORM_NAME}.msi")
+        set(FIO_INSTALLER ${CMAKE_BINARY_DIR}/installer/fio-${FIO_VERSION}-${CMAKE_VS_PLATFORM_NAME}.msi)
 
         file(DOWNLOAD ${FIO_INSTALLER_URL} ${FIO_INSTALLER}
             EXPECTED_HASH SHA256=49be53fb6b9517ce4fc5e26136d7c981df84daa31dd50db66ac3bbb5cb7be63a
@@ -69,26 +83,30 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
         find_program(WIX_EXECUTABLE wix.exe REQUIRED)
 
         # WiX source and output files for BlizzardDiskMark
-        set(WIX_SOURCE_BDM ${CMAKE_SOURCE_DIR}/installer/BlizzardDiskMark.wxs)
-        set(WIX_OUTPUT_BDM ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMarkStandalone.msi)
-
-        # WiX source and output files for ChainInstaller
-        set(WIX_SOURCE_CHAIN ${CMAKE_SOURCE_DIR}/installer/ChainInstaller.wxs)
-        set(WIX_OUTPUT_CHAIN ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMark.exe)
+        set(WIX_SOURCE_BDM ${CMAKE_CURRENT_SOURCE_DIR}/installer/BlizzardDiskMark.wxs)
+        set(WIX_OUTPUT_BDM ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMarkStandalone-${CURRENT_DATE}-${CMAKE_VS_PLATFORM_NAME}.msi)
 
         # Build the MSI installers
         add_custom_command(
             OUTPUT ${WIX_OUTPUT_BDM}
             COMMAND ${WIX_EXECUTABLE} build 
             -arch ${CMAKE_VS_PLATFORM_NAME}
-            -d SourceDir=${CMAKE_SOURCE_DIR}
+            -d SourceDir=${CMAKE_CURRENT_SOURCE_DIR}
             -d BinaryDir=${CMAKE_BINARY_DIR}
+            -d Version=${CURRENT_DATE}
             -pdbtype none
             -o ${WIX_OUTPUT_BDM} 
             ${WIX_SOURCE_BDM}
             DEPENDS BlizzardDiskMark
             COMMENT "Building MSI installer"
         )
+
+        add_custom_target(WiXInstaller_BDM ALL DEPENDS ${WIX_OUTPUT_BDM})
+        add_dependencies(WiXInstaller_BDM BlizzardDiskMark)
+
+        # WiX source and output files for ChainInstaller
+        set(WIX_SOURCE_CHAIN ${CMAKE_CURRENT_SOURCE_DIR}/installer/ChainInstaller.wxs)
+        set(WIX_OUTPUT_CHAIN ${CMAKE_BINARY_DIR}/installer/BlizzardDiskMarkInstaller-${CURRENT_DATE}-${CMAKE_VS_PLATFORM_NAME}.exe)
 
         add_custom_command(
             OUTPUT ${WIX_OUTPUT_CHAIN}
@@ -97,8 +115,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
             -d Standalone=${WIX_OUTPUT_BDM}
             -d FioInstaller=${FIO_INSTALLER}
             -d VcRedist=${VC_REDIST}
-            -d SourceDir=${CMAKE_SOURCE_DIR}
+            -d SourceDir=${CMAKE_CURRENT_SOURCE_DIR}
             -d BinaryDir=${CMAKE_BINARY_DIR}
+            -d Version=${CURRENT_DATE}
             -pdbtype none
             -ext WixToolset.BootstrapperApplications.wixext
             -o ${WIX_OUTPUT_CHAIN} 
@@ -107,10 +126,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
             COMMENT "Building bundle installer"
         )
 
-        add_custom_target(WiXInstaller_BDM ALL DEPENDS ${WIX_OUTPUT_BDM})
         add_custom_target(WiXInstaller_CHAIN ALL DEPENDS ${WIX_OUTPUT_CHAIN})
-
-        add_dependencies(WiXInstaller_BDM BlizzardDiskMark)
+        
+        add_dependencies(WiXInstaller_CHAIN BlizzardDiskMark)
         add_dependencies(WiXInstaller_CHAIN WiXInstaller_BDM)
     endif()
 endif()

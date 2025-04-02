@@ -21,7 +21,7 @@ ApplicationWindow {
     title: {
         var title = ""
         if (diskMarkDlg.m_WindowTitle == null || diskMarkDlg.m_WindowTitle == "") {
-            title = qsTr("Blizzard DiskMark 1.0.0 x64")
+            title = qsTr("Blizzard DiskMark ") + VERSION + " " + ARCHITECTURE
         }
         else {
             title = diskMarkDlg.m_WindowTitle

@@ -17,8 +17,8 @@
             }
         },
         {
-            "name": "VCx86_64",
-            "displayName": "Visual Studio Build Tools 2022 Release - arm64_amd64",
+            "name": "VCx86_64-Debug",
+            "displayName": "Visual Studio Build Tools 2022 Release - arm64_amd64 - Debug",
             "description": "Using compilers for Visual Studio 17 2022 (arm64_x64 architecture)",
             "generator": "Visual Studio 17 2022",
             "toolset": "host=ARM64",
@@ -55,7 +55,7 @@
         {
             "name": "VCx86_64-debug",
             "displayName": "Visual Studio Build Tools 2022 Release - arm64_amd64 - Debug",
-            "configurePreset": "VCx86_64",
+            "configurePreset": "VCx86_64-Debug",
             "configuration": "Debug"
         },
         {

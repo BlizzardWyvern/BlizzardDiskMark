@@ -50,7 +50,7 @@ ApplicationWindow {
             Layout.horizontalStretchFactor: 200
             Layout.verticalStretchFactor: 128
             Text {
-                text: qsTr("Blizzard DiskMark 1.0.0")
+                text: qsTr("Blizzard DiskMark ") + VERSION
                 font.pixelSize: 22
                 font.bold: true
                 color: "black"
@@ -70,7 +70,7 @@ ApplicationWindow {
                 Layout.verticalStretchFactor: 28
             }
             Text {
-                text: qsTr("x64")
+                text: ARCHITECTURE
                 font.pixelSize: 18
                 font.bold: true
                 color: "black"
@@ -83,7 +83,7 @@ ApplicationWindow {
                 Layout.verticalStretchFactor: 28
             }
             Text {
-                text: qsTr("Release: 30th May 2025")
+                text: BUILDTYPE + qsTr(": 2nd April 2025")
                 font.pixelSize: 16
                 color: "black"
                 horizontalAlignment: Text.AlignHCenter

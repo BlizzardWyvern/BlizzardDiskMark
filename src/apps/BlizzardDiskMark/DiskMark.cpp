@@ -68,6 +68,9 @@ int main(int argc, char *argv[])
 	
 	QQmlApplicationEngine engine;
 	engine.addImportPath(QStringLiteral("qrc:/"));
+	engine.rootContext()->setContextProperty("VERSION", QStringLiteral(VERSION));
+	engine.rootContext()->setContextProperty("ARCHITECTURE", QStringLiteral(ARCHITECTURE));
+	engine.rootContext()->setContextProperty("BUILDTYPE", QStringLiteral(BUILDTYPE));
 	engine.load(QUrl(QStringLiteral("qrc:/DiskMarkDlg.qml")));
 
 	if (engine.rootObjects().isEmpty())

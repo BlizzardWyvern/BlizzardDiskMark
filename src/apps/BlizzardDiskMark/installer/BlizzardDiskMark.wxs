@@ -1,6 +1,6 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-    <Package Name="BlizzardDiskMark" Manufacturer="Blizzard" Version="1.0.0.0" UpgradeCode="1b9e19ba-f0e7-4365-80c6-116177596235">
-        <MajorUpgrade DowngradeErrorMessage="A newer version of BlizzardDiskMark is already installed." />
+    <Package Name="Blizzard DiskMark" Manufacturer="BlizzardWyvern" Version="$(var.Version)" UpgradeCode="1b9e19ba-f0e7-4365-80c6-116177596235">
+        <MajorUpgrade DowngradeErrorMessage="A newer version of Blizzard DiskMark is already installed." />
         <Media Id="1" Cabinet="BlizzardDiskMark.cab" EmbedCab="yes" />
         <Feature Id="Main">
             <Files Include="$(var.BinaryDir)/Release/**" Directory="INSTALLFOLDER" />
@@ -10,9 +10,9 @@
 
     <Fragment>
         <StandardDirectory Id="ProgramFiles6432Folder">
-            <Directory Id="INSTALLFOLDER" Name="!(bind.property.Manufacturer) !(bind.property.ProductName)">
+            <Directory Id="INSTALLFOLDER" Name="!(bind.property.ProductName)">
                 <Component Id="DesktopShortcut" Guid="15c846f4-f1b4-4e53-a966-694f31eb23a5">
-                    <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="BlizzardDiskMark" 
+                    <Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="Blizzard DiskMark" 
                               WorkingDirectory="INSTALLFOLDER" Icon="AppIcon.ico" Target="[INSTALLFOLDER]BlizzardDiskMark.exe" />
                     <RemoveFolder Id="DesktopFolder" On="uninstall" />
                     <RegistryValue Root="HKCU" Key="Software\!(bind.property.Manufacturer)\!(bind.property.ProductName)" 
@@ -25,5 +25,6 @@
 
     <Fragment>
         <Icon Id="AppIcon.ico" SourceFile="$(var.SourceDir)/res/DiskMark.ico" />
+        <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
     </Fragment>
 </Wix>
