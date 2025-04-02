@@ -9,7 +9,7 @@ Blizzard DiskMark is a small graphical Windows application for benchmarking disk
 
 ## Installation
 
-1. Download the latest release from the [Releases](#) page.
+1. Download the latest release from the [Releases](https://github.com/BlizzardWyvern/BlizzardDiskMark/releases) page.
 2. Run the installer and follow the on-screen instructions.
 
 ## Usage
@@ -21,7 +21,7 @@ Blizzard DiskMark is a small graphical Windows application for benchmarking disk
 
 ## Screenshots
 
-![Screenshot of Blizzard DiskMark](Screenshot_2025-04-02.png)
+<img src="Screenshot_2025-04-02.png" alt="Screenshot" width="600">
 
 ## Contributing
 
@@ -34,8 +34,7 @@ Contributions are welcome! Please follow these steps:
 5. Open a pull request.
 
 ## Issue Reporting
-
-If you encounter any issues or have suggestions, please report them by opening an issue on the [Issues](#) page. Provide as much detail as possible to help me address the problem.
+If you encounter any issues or have suggestions, please report them by opening an issue on the [Issues](https://github.com/BlizzardWyvern/BlizzardDiskMark/issues) page. Provide as much detail as possible to help us address the problem.
 
 ## License
 
